@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Galerie Photo — Jean-Claude Simon</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- PANNEAU LATÉRAL GAUCHE -->
+<aside id="sidebar">
+
+  <img src="photographe/20251028_104957.jpg" alt="Photographe" id="photo-photographe">
+  <h1>Jean-Claude Simon</h1>
+  <span class="label-photographe">Photographe</span>
+
+  <hr class="sidebar-divider">
+
+  <div class="sidebar-block">
+    <h3>📍 Activité du moment</h3>
+    <p>En cette période je suis axé principalement sur la prise de vues d'oiseaux: j'ai posé des nichoirs et mangeoires à plusieurs endroits dans le jardin pour pouvoir piéger ces petits volatiles.</p>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>📷 Appareils</h3>
+    <ul>
+      <li>Nikon D7500</li>
+      <li>Nikon Z6</li>
+      <li>Nikon D300S</li>
+      <li>Panasonic Lumix</li>
+      <li>Canon PowerShot SX30</li>
+    </ul>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>🔭 Objectifs</h3>
+    <ul>
+      <li>Nikkor 70-200mm f/2.8</li>
+      <li>Nikkor Z 50mm f/1.8S</li>
+      <li>Sigma 70-200mm f/2.8</li>
+      <li>Sigma 10-20mm f/3.5-5.6</li>
+      <li>Nikkor 16-85mm f/3.5-5.6</li>
+    </ul>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>🎒 Autre matériel</h3>
+    <ul>
+      <li>Flash SB 910</li>
+    </ul>
+  </div>
+
+</aside>
+
+<!-- CONTENU PRINCIPAL -->
+<div id="main-content">
+
+  <!-- Photo du jour -->
+  <div id="photo-of-day-section">
+    <div id="photo-of-day-container">
+      <img id="photo-of-day" src="" alt="Photo du jour">
+      <div id="citation-box">
+        <p id="citation-text"></p>
+        <span id="citation-auteur"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sélecteur d'albums -->
+  <div id="selector">
+    <label for="album-select">Choisir un album : </label>
+    <select id="album-select"></select>
+  </div>
+
+  <!-- Mini-albums vedette -->
+  <div id="mini-albums"></div>
+
+  <!-- Galerie principale -->
+  <main id="gallery"></main>
+
+</div>
+
+<!-- Modal -->
+<div id="modal" class="hidden">
+  <div class="modal-content">
+    <img id="modal-img">
+    <aside>
+      <h2 id="photo-title"></h2>
+      <p id="photo-notes"></p>
+      <hr>
+      <ul id="exif"></ul>
+    </aside>
+    <span id="close">×</span>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
