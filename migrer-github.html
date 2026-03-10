@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Migration descriptions GitHub</title>
+  <style>
+    body { font-family: Arial; background: #111; color: #fff; padding: 30px; }
+    .ok { color: #4f4; }
+    .err { color: #f44; }
+    button { background: #444; color: #fff; border: none; padding: 10px 20px; font-size: 1em; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+    button:hover { background: #666; }
+  </style>
+</head>
+<body>
+<h2>🔄 Migration des descriptions vers GitHub Pages</h2>
+<p>Ce script va copier toutes tes descriptions dans le localStorage de cette page GitHub Pages.</p>
+<button onclick="migrer()">Lancer la migration</button>
+<div id="log"></div>
+
+<script>
+// Toutes tes descriptions sauvegardées
+const descriptions = {"note_photo de rue_DSC_4866.JPG":"Carnaval de Saint-Mard","note_https://live.staticflickr.com/65535/55139848501_bcf5cc442b_b.jpg":"Photo prise à monnieckendam. Recadrée dans Luminar Néo. Rectification de la netteté, activation des couleurs en vibrance pour le ciel très bleu.","note_https://live.staticflickr.com/65535/55140101069_be9a6f7447_b.jpg":"Sophie Braconnier : ses 30 ans fiesta à la concordia","note_photo de rue_DSC_4892.JPG":"Olivier André Carnaval de Saint-Mard","note_oiseaux_DSC_1220.jpg":"Photo prise à monnieckendam. Recadrée dans Luminar Néo. Rectification de la netteté, activation des couleurs en vibrance pour le ciel très bleu.","note_paysage__DSC6772.jpg":"Photo prise au Markstein Alsace  : Développement dans Darktable puis retouche dans Luminar Néo","note_oiseaux__DSC6605.jpg":"Test du programme DARKTABLE . Colorisation des nuages en rouge pâle","note_portrait_Sophie vin leffe.jpg":"Sophie Braconnier : ses 30 ans fiesta à la concordia","note_arbres__DSC6760.jpg":"Branche de mon cerisier du japon : vue sur les gouttes d'eau.Retravaillée dans Luminar Néo pour rendre le fond très flou","note_https://live.staticflickr.com/65535/55138978442_0603079be6_b.jpg":"La vue des Alpes ( photo prise du Marstein) avec D7500","note_https://live.staticflickr.com/65535/55138960402_a9fdecfa79_b.jpg":"Branche de mon cerisier du japon : vue sur les gouttes d'eau.Retravaillée dans Luminar Néo pour rendre le fond très flou","note_https://live.staticflickr.com/65535/55139848626_fe9352b5ac_b.jpg":"Test du programme DARKTABLE . Colorisation des nuages en rouge pâle","note_https://live.staticflickr.com/7793/28294974111_a40a4ef21c_b.jpg":"Ford Mustang","note_instruments__DSC6537.jpg":"Photo en double exposition avec le D 7500.","note_https://live.staticflickr.com/65535/55139848386_dba1e774e9_b.jpg":"Prise de vue de l'intérieur: en mode suivi 3D, test de ce mode concluant, il faut enclencher le mode mise au point en continu","note_https://live.staticflickr.com/65535/55140042733_f4ae99f46c_b.jpg":"Photo prise au Markstein Alsace  : Développement dans Darktable puis retouche dans Luminar Néo","note_https://live.staticflickr.com/65535/55139862986_e0bde0395d_b.jpg":"Carnaval de Saint-Mard","note_https://live.staticflickr.com/65535/55140098689_905349221c_b.jpg":"Olivier André Carnaval de Saint-Mard","note_paysage__DSC6776.jpg":"La vue des Alpes ( photo prise du Marstein) avec D7500","note_oiseaux__DSC6570.jpg":"Prise de vue de l'intérieur: en mode suivi 3D, test de ce mode concluant, il faut enclencher le mode mise au point en continu","note_https://live.staticflickr.com/65535/55140099719_de07d6c308_b.jpg":"Démontage ancienne terrasse","note_travaux_IMG_0342.JPG":"La vue de notre ancienne terrasse","note_travaux_IMG_0350.JPG":"Démontage ancienne terrasse","note_https://live.staticflickr.com/65535/55140046088_868d016d2f_b.jpg":"La vue de notre ancienne terrasse","note_https://live.staticflickr.com/65535/55140236600_731b6d0cac_b.jpg":"Photo en double exposition avec le D 7500."};
+
+function log(msg, cls="") {
+  document.getElementById("log").innerHTML += `<p class="${cls}">${msg}</p>`;
+}
+
+function migrer() {
+  document.getElementById("log").innerHTML = "";
+  let count = 0;
+  for (const [cle, val] of Object.entries(descriptions)) {
+    localStorage.setItem(cle, val);
+    log(`✅ ${cle.substring(0,60)}...`, "ok");
+    count++;
+  }
+  log(`<br><b>✅ ${count} descriptions migrées avec succès !</b>`, "ok");
+  log(`<br>Tu peux fermer cette page et retourner sur ta galerie.`);
+}
+</script>
+</body>
+</html>
