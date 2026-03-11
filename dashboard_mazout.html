@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Chaudière Mazout</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --or: #E8621A;
+  --or2: #F58340;
+  --or3: #FFF0E5;
+  --dk: #14120F;
+  --dk2: #1E1A15;
+  --card: #231F1A;
+  --card2: #2C2620;
+  --txt: #F0EAE3;
+  --muted: #9A8F84;
+  --grn: #5CB87A;
+  --ylw: #E8C84A;
+  --red: #D95F5F;
+  --bdr: rgba(232,98,26,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#1A1208 0%,#2A1A08 100%);border-bottom:2px solid var(--or);padding:0 2rem;position:sticky;top:0;z-index:100}
+.hdr{max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:13px}
+.logo-ic{width:42px;height:42px;background:var(--or);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo h1{font-family:'Bebas Neue';font-size:21px;letter-spacing:2.5px;line-height:1}
+.logo span{font-size:10px;color:var(--or);letter-spacing:3px;text-transform:uppercase}
+.hdr-r{display:flex;align-items:center;gap:12px}
+.upd{font-size:11px;color:var(--muted)}
+.rbtn{background:var(--or);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.rbtn:hover{background:var(--or2);transform:translateY(-1px)}
+
+/* SHEET BAR */
+.sbar{background:var(--dk2);border-bottom:1px solid var(--bdr);padding:10px 2rem}
+.sbar-in{max-width:1440px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.sbar label{font-size:11px;color:var(--muted);white-space:nowrap}
+.sbar input{flex:1;background:var(--card);border:1px solid var(--bdr);color:var(--txt);padding:7px 12px;border-radius:7px;font-size:11px;font-family:monospace}
+.sbar input:focus{outline:none;border-color:var(--or)}
+.cbtn{background:var(--card2);color:var(--or);border:1px solid var(--or);padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+.cbtn:hover{background:var(--or);color:#fff}
+
+/* MAIN */
+main{max-width:1440px;margin:0 auto;padding:1.8rem 2rem}
+
+/* SECTION TITLE */
+.stitle{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;color:var(--or);margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* TOP GRID */
+.top{display:grid;grid-template-columns:260px 1fr 1fr;gap:1.4rem;margin-bottom:1.8rem}
+
+/* CUVE */
+.cuve-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:1.4rem;display:flex;flex-direction:column;align-items:center;gap:.9rem;position:relative;overflow:hidden}
+.cuve-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--or),var(--or2))}
+.cuve-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-weight:600}
+.tank-wrap{position:relative;width:100px;height:150px}
+.tank-out{width:100px;height:150px;border:2.5px solid var(--or);border-radius:10px;overflow:hidden;background:var(--dk2);position:relative}
+.tank-fl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#F58340,#E8621A);transition:height 1.8s cubic-bezier(.4,0,.2,1);border-radius:0 0 7px 7px}
+.tank-fl::after{content:'';position:absolute;top:-3px;left:0;right:0;height:6px;background:rgba(255,255,255,0.18);border-radius:50%}
+.tank-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue';font-size:26px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.9);z-index:2}
+.tank-marks{position:absolute;right:-24px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:var(--muted)}
+.cuve-val{text-align:center}
+.cuve-L{font-family:'Bebas Neue';font-size:30px;color:var(--or);line-height:1}
+.cuve-L span{font-size:12px;color:var(--muted);font-family:'DM Sans'}
+.cuve-auto{font-size:11px;color:var(--muted);margin-top:3px}
+.cuve-st{padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.st-ok{background:rgba(92,184,122,.2);color:var(--grn)}
+.st-wn{background:rgba(232,200,74,.2);color:var(--ylw)}
+.st-al{background:rgba(217,95,95,.2);color:var(--red);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* KPI */
+.kpi-col{display:flex;flex-direction:column;gap:.9rem}
+.kpi{background:var(--card);border:1px solid var(--bdr);border-radius:11px;padding:.95rem 1.1rem;display:flex;align-items:center;gap:.9rem;transition:.2s;cursor:default}
+.kpi:hover{border-color:var(--or);transform:translateX(2px)}
+.kpi-ic{width:40px;height:40px;border-radius:9px;background:rgba(232,98,26,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.kpi-b{flex:1}
+.kpi-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.kpi-val{font-family:'Bebas Neue';font-size:24px;line-height:1.1}
+.kpi-val .u{font-size:12px;color:var(--muted);font-family:'DM Sans'}
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px}
+.b-up{background:rgba(217,95,95,.18);color:var(--red)}
+.b-dn{background:rgba(92,184,122,.18);color:var(--grn)}
+.b-ne{background:rgba(154,143,132,.15);color:var(--muted)}
+
+/* YEAR */
+.yr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.8rem}
+.yr{background:var(--card);border:1px solid var(--bdr);border-radius:11px;padding:1.1rem;text-align:center;transition:.2s}
+.yr:hover{border-color:var(--or)}
+.yr.cur{border-color:var(--or);background:rgba(232,98,26,.06)}
+.yr-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.yr-L{font-family:'Bebas Neue';font-size:32px;color:var(--or);line-height:1}
+.yr-c{font-size:12px;color:var(--muted);margin-top:1px}
+.yr-bar-w{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:8px}
+.yr-bar{height:3px;background:var(--or);border-radius:2px;transition:width 1s}
+
+/* CHARTS */
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.8rem}
+.ch{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:1.4rem;position:relative}
+.ch::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--or),transparent);border-radius:14px 14px 0 0}
+.ch-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem}
+.ch-t{font-weight:600;font-size:13px}
+.ch-s{font-size:10px;color:var(--muted);margin-top:2px}
+.ch-wrap{height:215px}
+
+/* TABLE */
+.tbl-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:1.4rem;margin-bottom:1.8rem;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(232,98,26,.06);transition:.15s}
+tbody tr:hover{background:rgba(232,98,26,.05)}
+tbody td{padding:9px 12px;font-size:13px}
+.td-dt{color:var(--muted);font-size:11px}
+.tdv{font-weight:600}
+.tbg{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.tbg-liv{background:rgba(92,184,122,.18);color:var(--grn)}
+.tbg-rel{background:rgba(232,98,26,.15);color:var(--or)}
+.tbg-unk{background:rgba(154,143,132,.15);color:var(--muted)}
+
+/* SAISIE */
+.saisie{background:linear-gradient(135deg,var(--card),rgba(232,98,26,.06));border:1px solid var(--or);border-radius:14px;padding:1.4rem;margin-bottom:1.8rem}
+.sg{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;align-items:end;margin-top:.9rem}
+.f label{font-size:10px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.f input{width:100%;background:var(--dk);border:1px solid var(--bdr);color:var(--txt);padding:8px 11px;border-radius:7px;font-size:14px;font-family:'DM Sans'}
+.f input:focus{outline:none;border-color:var(--or)}
+.sbtn{background:var(--or);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+.sbtn:hover{background:var(--or2);transform:translateY(-2px)}
+.s-note{font-size:10px;color:var(--muted);margin-top:6px}
+
+/* ALERT BOX */
+.alert-box{background:rgba(217,95,95,.1);border:1px solid rgba(217,95,95,.4);border-radius:10px;padding:10px 16px;margin-bottom:1.4rem;font-size:13px;color:var(--red);display:none}
+
+/* STATUS */
+.statusbar{background:var(--dk2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:11px;color:var(--muted)}
+.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;animation:pulse 2s infinite}
+.live{background:var(--grn)}.demo{background:var(--ylw)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+@media(max-width:1100px){.top{grid-template-columns:1fr 1fr}.ch-grid{grid-template-columns:1fr}.yr-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.top{grid-template-columns:1fr}.sg{grid-template-columns:1fr 1fr}.yr-grid{grid-template-columns:repeat(2,1fr)}main{padding:1rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-ic">🛢️</div>
+      <div>
+        <h1>SUIVI MAZOUT</h1>
+        <span>Chaudière · Citerne 2500L · Belgique</span>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div class="upd" id="upd">—</div>
+      <button class="rbtn" onclick="connectSheet()">↻ Actualiser</button>
+    </div>
+  </div>
+</header>
+
+<div class="sbar">
+  <div class="sbar-in">
+    <label>🔗 Google Sheet :</label>
+    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhmfctjtNFEHJ5lSPclusMqoeo6qhlJAZggbm0elnSyjVcQIp07pmTG86ezcDrRg/pub?gid=681570621&single=true&output=csv" />
+    <button class="cbtn" onclick="connectSheet()">🔄 Charger Sheet</button>
+  </div>
+</div>
+
+<main>
+  <div class="alert-box" id="alertBox"></div>
+
+  <!-- SAISIE -->
+  <div class="stitle">✏️ Relevé du Soir</div>
+  <div class="saisie">
+    <div class="sg">
+      <div class="f"><label>Date</label><input type="date" id="sd"></div>
+      <div class="f"><label>Niveau Cuve (L)</label><input type="number" id="sn" placeholder="ex: 2350"></div>
+      <div class="f"><label>Temp. Ext. (°C)</label><input type="number" id="st" placeholder="ex: 4" step="0.1"></div>
+      <div class="f"><label>Remarque</label><input type="text" id="sr" placeholder="Livraison, froid..."></div>
+      <button class="sbtn" onclick="addEntry()">💾 Ajouter</button>
+    </div>
+    <p class="s-note">⚠️ Saisie locale uniquement — copiez la ligne dans votre Google Sheet pour la sauvegarder définitivement.</p>
+  </div>
+
+  <!-- ÉTAT ACTUEL -->
+  <div class="stitle">📊 État Actuel</div>
+  <div class="top">
+    <div class="cuve-card">
+      <div class="cuve-lbl">Niveau de la Citerne</div>
+      <div class="tank-wrap">
+        <div class="tank-out">
+          <div class="tank-fl" id="tfl" style="height:0%"></div>
+          <div class="tank-pct" id="tpct">—</div>
+        </div>
+        <div class="tank-marks"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+      </div>
+      <div class="cuve-val">
+        <div class="cuve-L"><span id="cL">—</span> <span>/ 2500 L</span></div>
+        <div class="cuve-auto" id="cAuto">—</div>
+      </div>
+      <div class="cuve-st" id="cSt">—</div>
+    </div>
+
+    <div class="kpi-col">
+      <div class="kpi">
+        <div class="kpi-ic">📉</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Conso Depuis Dernier Relevé</div>
+          <div class="kpi-val"><span id="k1">—</span> <span class="u">L</span></div>
+        </div>
+        <div class="badge b-ne" id="k1d">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic">📆</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Conso Estimée Ce Mois</div>
+          <div class="kpi-val"><span id="k2">—</span> <span class="u">L</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic">💶</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Coût Dernière Livraison</div>
+          <div class="kpi-val"><span id="k3">—</span> <span class="u">€</span></div>
+        </div>
+        <div class="badge b-ne" id="k3d">TTC</div>
+      </div>
+    </div>
+
+    <div class="kpi-col">
+      <div class="kpi">
+        <div class="kpi-ic">🚛</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Dernière Livraison</div>
+          <div class="kpi-val"><span id="k4">—</span> <span class="u">L</span></div>
+        </div>
+        <div class="badge b-ne" id="k4d">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic">📈</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Conso Annuelle (année en cours)</div>
+          <div class="kpi-val"><span id="k5">—</span> <span class="u">L</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic">⏱️</div>
+        <div class="kpi-b">
+          <div class="kpi-lbl">Autonomie Estimée</div>
+          <div class="kpi-val"><span id="k6">—</span> <span class="u">jours</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAR ANNÉE -->
+  <div class="stitle">📅 Consommation par Année</div>
+  <div class="yr-grid" id="yrGrid"></div>
+
+  <!-- GRAPHIQUES -->
+  <div class="stitle">📈 Graphiques</div>
+  <div class="ch-grid">
+    <div class="ch">
+      <div class="ch-hdr"><div><div class="ch-t">Évolution Niveau Citerne</div><div class="ch-s">Tous les relevés depuis 2021</div></div></div>
+      <div class="ch-wrap"><canvas id="chNiv"></canvas></div>
+    </div>
+    <div class="ch">
+      <div class="ch-hdr"><div><div class="ch-t">Consommation par Période</div><div class="ch-s">Litres consommés entre relevés</div></div></div>
+      <div class="ch-wrap"><canvas id="chConso"></canvas></div>
+    </div>
+    <div class="ch">
+      <div class="ch-hdr"><div><div class="ch-t">Consommation Mensuelle Estimée</div><div class="ch-s">Répartition sur l'année</div></div></div>
+      <div class="ch-wrap"><canvas id="chMens"></canvas></div>
+    </div>
+    <div class="ch">
+      <div class="ch-hdr"><div><div class="ch-t">Livraisons — Litres & Coût</div><div class="ch-s">Historique des remplissages</div></div></div>
+      <div class="ch-wrap"><canvas id="chLiv"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABLE RELEVÉS -->
+  <div class="stitle">📋 Tous les Relevés</div>
+  <div class="tbl-card">
+    <table>
+      <thead><tr><th>Date</th><th>Niveau (L)</th><th>% Cuve</th><th>Conso (L)</th><th>L/jour</th><th>Remarque</th><th>Type</th></tr></thead>
+      <tbody id="tRel"></tbody>
+    </table>
+  </div>
+
+  <!-- TABLE LIVRAISONS -->
+  <div class="stitle">🚛 Livraisons</div>
+  <div class="tbl-card">
+    <table>
+      <thead><tr><th>Date</th><th>Litres livrés</th><th>Avant</th><th>Après</th><th>Prix TTC/L</th><th>Coût total</th><th>Note</th></tr></thead>
+      <tbody id="tLiv"></tbody>
+    </table>
+  </div>
+</main>
+
+<div class="statusbar">
+  <span><span class="sdot demo" id="sdot"></span><span id="smode">Mode démo — données intégrées</span></span>
+  <span>Citerne : 2500 L</span>
+  <span>Dernier prix : 0,88 €/L TTC (0,73 HTVA + 21%)</span>
+  <span id="sclock"></span>
+</div>
+
+<script>
+// ─── DONNÉES RÉELLES INTÉGRÉES ────────────────────────────────
+const CUVE = 2500;
+const PRIX_TTC = 0.883;
+const SEUIL_AL = 400;
+const SEUIL_WN = 800;
+
+const REAL_RELEVES = [
+  {date:"2021-01-19",niveau:1820,note:"Début relevés"},
+  {date:"2021-11-30",niveau:1745,note:""},
+  {date:"2021-12-10",niveau:1660,note:""},
+  {date:"2021-12-23",niveau:1570,note:""},
+  {date:"2022-01-03",niveau:1510,note:""},
+  {date:"2022-01-29",niveau:1260,note:""},
+  {date:"2022-02-04",niveau:1220,note:""},
+  {date:"2022-03-03",niveau:1000,note:""},
+  {date:"2022-04-18",niveau:730,note:""},
+  {date:"2022-04-30",niveau:700,note:""},
+  {date:"2022-07-13",niveau:600,note:""},
+  {date:"2022-09-29",niveau:2480,note:"🚛 Livraison ~1880L"},
+  {date:"2022-10-26",niveau:2450,note:""},
+  {date:"2022-11-24",niveau:2370,note:""},
+  {date:"2023-03-29",niveau:2520,note:"🚛 Livraison (qté inconnue)"},
+  {date:"2023-04-02",niveau:2500,note:""},
+  {date:"2023-08-22",niveau:2390,note:""},
+  {date:"2023-11-01",niveau:2080,note:""},
+  {date:"2023-11-18",niveau:1800,note:""},
+  {date:"2025-08-22",niveau:2390,note:"🚛 Livraison ~610L"},
+  {date:"2025-11-01",niveau:2080,note:""},
+  {date:"2025-12-07",niveau:1780,note:""},
+  {date:"2025-12-26",niveau:1660,note:""},
+  {date:"2025-12-28",niveau:1620,note:""},
+  {date:"2026-01-03",niveau:1580,note:""},
+  {date:"2026-01-07",niveau:1520,note:""},
+  {date:"2026-03-03",niveau:1050,note:"Avant livraison"},
+  {date:"2026-03-03",niveau:2460,note:"🚛 Livraison 1410L · 0,73€ HTVA"},
+  {date:"2026-03-11",niveau:2438,note:"Aujourd'hui"},
+];
+
+const REAL_LIVRAISONS = [
+  {date:"2022-09-29",litres:1880,avant:600,apres:2480,prix:null,note:"Prix inconnu"},
+  {date:"2023-03-29",litres:150,avant:2370,apres:2520,prix:null,note:"Qté estimée"},
+  {date:"2025-08-22",litres:610,avant:1780,apres:2390,prix:null,note:"Gap 2024 inclus"},
+  {date:"2026-03-03",litres:1410,avant:1050,apres:2460,prix:0.883,note:"0,73€ HTVA + TVA 21%"},
+];
+
+let userEntries = [];
+let sheetReleves = null;
+let charts = {};
+
+// ─── UTILS ───────────────────────────────────────────────────
+function allReleves() {
+  const base = sheetReleves || REAL_RELEVES;
+  return [...base, ...userEntries].sort((a,b) => a.date.localeCompare(b.date));
+}
+
+function calcConso(releves) {
+  return releves.map((r,i) => {
+    if (i === 0) return {...r, conso:0, joursEcart:0, lPerJour:0};
+    const prev = releves[i-1];
+    const days = Math.round((new Date(r.date)-new Date(prev.date))/(1000*86400));
+    const conso = prev.niveau > r.niveau ? prev.niveau - r.niveau : 0;
+    const lj = days > 0 ? Math.round(conso/days*10)/10 : 0;
+    return {...r, conso, joursEcart:days, lPerJour:lj};
+  });
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+function render() {
+  const raw = allReleves();
+  const rel = calcConso(raw);
+  const latest = rel[rel.length-1];
+  const prev = rel[rel.length-2];
+
+  // Alert
+  const ab = document.getElementById('alertBox');
+  if (latest.niveau <= SEUIL_AL) {
+    ab.style.display='block';
+    ab.textContent='⚠️ ALERTE : Niveau critique à '+latest.niveau+'L — Commander une livraison urgente !';
+  } else if (latest.niveau <= SEUIL_WN) {
+    ab.style.display='block';
+    ab.style.background='rgba(232,200,74,.1)';
+    ab.style.borderColor='rgba(232,200,74,.4)';
+    ab.style.color='var(--ylw)';
+    ab.textContent='⚡ Niveau bas : '+latest.niveau+'L — Prévoir une livraison prochainement.';
+  } else { ab.style.display='none'; }
+
+  // Gauge
+  const pct = Math.round(latest.niveau/CUVE*100);
+  document.getElementById('tfl').style.height = Math.min(pct,100)+'%';
+  document.getElementById('tpct').textContent = pct+'%';
+  document.getElementById('cL').textContent = latest.niveau;
+  
+  const moyLJ = rel.filter(r=>r.lPerJour>0).reduce((s,r)=>s+r.lPerJour,0) / rel.filter(r=>r.lPerJour>0).length || 5;
+  const auto = Math.round(latest.niveau / moyLJ);
+  document.getElementById('cAuto').textContent = `~${auto} jours d'autonomie`;
+  document.getElementById('k6').textContent = auto;
+  
+  const st = document.getElementById('cSt');
+  if (latest.niveau<=SEUIL_AL){st.textContent='⚠️ Niveau Critique';st.className='cuve-st st-al';}
+  else if (latest.niveau<=SEUIL_WN){st.textContent='⚡ Niveau Bas';st.className='cuve-st st-wn';}
+  else{st.textContent='✅ Niveau Correct';st.className='cuve-st st-ok';}
+
+  // KPIs
+  if (prev) {
+    const c = prev.niveau - latest.niveau;
+    document.getElementById('k1').textContent = c > 0 ? c : 0;
+    const days = latest.joursEcart;
+    document.getElementById('k1d').textContent = days+'j écart';
+  }
+
+  // Conso mois en cours (estimation linéaire)
+  const now = new Date();
+  const joursMois = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  document.getElementById('k2').textContent = Math.round(moyLJ * joursMois);
+
+  // Dernière livraison
+  const lastLiv = REAL_LIVRAISONS[REAL_LIVRAISONS.length-1];
+  document.getElementById('k4').textContent = lastLiv.litres;
+  document.getElementById('k4d').textContent = lastLiv.date;
+  document.getElementById('k3').textContent = lastLiv.prix ? (lastLiv.litres*lastLiv.prix).toFixed(0) : '—';
+
+  // Conso annuelle
+  const yr = now.getFullYear();
+  const consAn = rel.filter(r=>r.date.startsWith(yr+'') && r.conso>0).reduce((s,r)=>s+r.conso,0);
+  document.getElementById('k5').textContent = Math.round(consAn);
+
+  // Year grid
+  renderYears(rel);
+  // Tables
+  renderRelTable(rel);
+  renderLivTable();
+  // Charts
+  renderCharts(rel);
+
+  document.getElementById('upd').textContent = 'Mis à jour : '+new Date().toLocaleString('fr-BE');
+}
+
+function renderYears(rel) {
+  const years = [2021,2022,2023,2024,2025,2026];
+  // Remove 2024 if no data (gap year)
+  const curYr = new Date().getFullYear();
+  const maxC = 2000;
+  const html = years.map(yr => {
+    const yrRel = rel.filter(r => r.date.startsWith(yr+'') && r.conso>0);
+    const conso = Math.round(yrRel.reduce((s,r)=>s+r.conso,0));
+    const isGap = conso === 0 && yr === 2024;
+    const pct = Math.min(Math.round(conso/maxC*100),100);
+    const isCur = yr === curYr;
+    return `<div class="yr ${isCur?'cur':''}">
+      <div class="yr-lbl">${yr}${isCur?' · En cours':''}</div>
+      <div class="yr-L">${isGap?'—':conso}</div>
+      <div class="yr-c">${isGap?'Pas de données':(conso?(conso*PRIX_TTC).toFixed(0)+' € est.':'—')}</div>
+      <div class="yr-bar-w"><div class="yr-bar" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('yrGrid').innerHTML = html;
+}
+
+function renderRelTable(rel) {
+  const rows = [...rel].reverse().map(r => {
+    const isLiv = r.note && r.note.includes('Livraison');
+    const pct = Math.round(r.niveau/CUVE*100);
+    return `<tr>
+      <td class="td-dt">${r.date}</td>
+      <td class="tdv">${r.niveau} L</td>
+      <td>${pct}%</td>
+      <td>${r.conso>0?r.conso+' L':'—'}</td>
+      <td>${r.lPerJour>0?r.lPerJour+' L/j':'—'}</td>
+      <td style="font-size:11px;color:var(--muted)">${r.note||''}</td>
+      <td>${isLiv?'<span class="tbg tbg-liv">🚛 Livraison</span>':'<span class="tbg tbg-rel">Relevé</span>'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tRel').innerHTML = rows;
+}
+
+function renderLivTable() {
+  const rows = [...REAL_LIVRAISONS].reverse().map(l => `<tr>
+    <td class="td-dt">${l.date}</td>
+    <td class="tdv" style="color:var(--grn)">${l.litres} L</td>
+    <td>${l.avant} L</td>
+    <td>${l.apres} L</td>
+    <td>${l.prix ? l.prix.toFixed(3)+' €' : '<span class="tbg tbg-unk">Inconnu</span>'}</td>
+    <td class="tdv">${l.prix ? (l.litres*l.prix).toFixed(2)+' €' : '—'}</td>
+    <td style="font-size:11px;color:var(--muted)">${l.note}</td>
+  </tr>`).join('');
+  document.getElementById('tLiv').innerHTML = rows;
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────
+const CO = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:'#9A8F84',font:{family:'DM Sans',size:11}}}},
+  scales:{
+    x:{ticks:{color:'#9A8F84',font:{size:10},maxTicksLimit:12},grid:{color:'rgba(255,255,255,0.04)'}},
+    y:{ticks:{color:'#9A8F84',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}
+  }
+};
+
+function killCharts(){Object.values(charts).forEach(c=>c&&c.destroy());charts={};}
+
+function renderCharts(rel) {
+  killCharts();
+
+  // 1. NIVEAU TIMELINE
+  charts.niv = new Chart(document.getElementById('chNiv'),{
+    type:'line',
+    data:{
+      labels: rel.map(r=>r.date.slice(5).replace('-','/')+' '+r.date.slice(0,4).slice(2)),
+      datasets:[{
+        label:'Niveau (L)',
+        data: rel.map(r=>r.niveau),
+        borderColor:'#E8621A', backgroundColor:'rgba(232,98,26,0.08)',
+        fill:true, tension:0.3, pointRadius:3, borderWidth:2,
+        pointBackgroundColor: rel.map(r=>r.note&&r.note.includes('Livraison')?'#5CB87A':'#E8621A'),
+        pointRadius: rel.map(r=>r.note&&r.note.includes('Livraison')?6:3),
+      },{
+        label:'Seuil alerte (400L)',
+        data: rel.map(()=>SEUIL_AL),
+        borderColor:'rgba(217,95,95,0.5)', borderDash:[5,5], borderWidth:1,
+        pointRadius:0, fill:false,
+      }]
+    },
+    options:{...CO, interaction:{mode:'index'}}
+  });
+
+  // 2. CONSO PAR PÉRIODE
+  const consoRel = rel.filter(r=>r.conso>0 && !r.note?.includes('Livraison'));
+  charts.conso = new Chart(document.getElementById('chConso'),{
+    type:'bar',
+    data:{
+      labels: consoRel.map(r=>r.date.slice(5)+' '+r.date.slice(0,4).slice(2)),
+      datasets:[{
+        label:'Litres consommés',
+        data: consoRel.map(r=>r.conso),
+        backgroundColor:'rgba(232,98,26,0.6)', borderColor:'#E8621A',
+        borderWidth:1, borderRadius:3,
+      }]
+    },
+    options:CO
+  });
+
+  // 3. MENSUEL ESTIMÉ (interpolation linéaire sur toutes les données)
+  const mois = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const consMois = Array(12).fill(0), comptMois = Array(12).fill(0);
+  consoRel.forEach(r => {
+    const m = new Date(r.date).getMonth();
+    const ljour = r.lPerJour || 0;
+    if (ljour>0){ consMois[m]+=ljour; comptMois[m]++; }
+  });
+  const moyMois = consMois.map((s,i)=>comptMois[i]>0?Math.round(s/comptMois[i]*30):0);
+  charts.mens = new Chart(document.getElementById('chMens'),{
+    type:'bar',
+    data:{
+      labels:mois,
+      datasets:[{
+        label:'Conso estimée (L/mois)',
+        data:moyMois,
+        backgroundColor: moyMois.map(v=>v>150?'rgba(217,95,95,0.7)':v>80?'rgba(232,200,74,0.7)':'rgba(92,184,122,0.7)'),
+        borderRadius:4, borderWidth:0,
+      }]
+    },
+    options:{...CO,plugins:{...CO.plugins,legend:{display:false}}}
+  });
+
+  // 4. LIVRAISONS
+  charts.liv = new Chart(document.getElementById('chLiv'),{
+    type:'bar',
+    data:{
+      labels: REAL_LIVRAISONS.map(l=>l.date),
+      datasets:[{
+        label:'Litres livrés',
+        data: REAL_LIVRAISONS.map(l=>l.litres),
+        backgroundColor:'rgba(92,184,122,0.65)', borderColor:'#5CB87A', borderWidth:1, borderRadius:4, yAxisID:'y',
+      },{
+        label:'Coût (€)',
+        data: REAL_LIVRAISONS.map(l=>l.prix?Math.round(l.litres*l.prix):null),
+        type:'line', borderColor:'#E8621A', backgroundColor:'rgba(232,98,26,0.1)',
+        tension:0.3, pointRadius:5, fill:false, yAxisID:'y1',
+      }]
+    },
+    options:{...CO,scales:{
+      x:{ticks:{color:'#9A8F84',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+      y:{ticks:{color:'#9A8F84',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Litres',color:'#9A8F84'}},
+      y1:{position:'right',ticks:{color:'#E8621A',font:{size:10}},grid:{display:false},title:{display:true,text:'€',color:'#E8621A'}},
+    }}
+  });
+}
+
+// ─── SAISIE ──────────────────────────────────────────────────
+function addEntry() {
+  const date = document.getElementById('sd').value;
+  const niveau = parseFloat(document.getElementById('sn').value);
+  const temp = document.getElementById('st').value;
+  const note = document.getElementById('sr').value;
+  if (!date||!niveau){alert('Date et niveau requis.');return;}
+  userEntries.push({date,niveau,note:note||(temp?temp+'°C':'')});
+  userEntries.sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById('sd').value='';
+  document.getElementById('sn').value='';
+  document.getElementById('st').value='';
+  document.getElementById('sr').value='';
+  render();
+  const all = allReleves();
+  const calc = calcConso(all);
+  const entry = calc.find(r=>r.date===date&&r.niveau===niveau);
+  const msg = `✅ Relevé ajouté !\nDate : ${date}\nNiveau : ${niveau} L (${Math.round(niveau/CUVE*100)}%)\n${entry&&entry.conso>0?'Conso depuis dernier : '+entry.conso+'L\nL/jour : '+entry.lPerJour:''}`;
+  alert(msg);
+}
+
+// ─── GOOGLE SHEET ────────────────────────────────────────────
+function parseCSV(text) {
+  return text.split(/\r?\n/).map(line => {
+    const r=[]; let cur='',inQ=false;
+    for(let ch of line){
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){r.push(cur.trim());cur='';}
+      else{cur+=ch;}
+    }
+    r.push(cur.trim()); return r;
+  });
+}
+
+function normDate(s) {
+  if(!s)return null;
+  s=s.replace(/['"]/g,'').trim();
+  let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m)return`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);
+  return null;
+}
+
+function connectSheet() {
+  const url = document.getElementById('sheetUrl').value.trim();
+  if(!url){alert("Collez l'URL CSV de votre Google Sheet.");return;}
+  const btn = document.querySelector('.cbtn');
+  btn.textContent='⏳...'; btn.disabled=true;
+  const proxy='https://corsproxy.io/?'+encodeURIComponent(url);
+  fetch(proxy)
+    .then(r=>r.json())
+    .then(data=>{
+      const rows=parseCSV(data.contents||'').filter(r=>r.some(c=>c.trim()));
+      if(rows.length<2)throw new Error('Fichier vide ou non lisible.');
+      const headers=rows[0].map(h=>h.toLowerCase());
+      const iDate=headers.findIndex(h=>h.includes('date'));
+      const iNiv=headers.findIndex(h=>h.includes('niveau')||h.includes('litre')||h.includes('cuve'));
+      const iNote=headers.findIndex(h=>h.includes('remarque')||h.includes('note'));
+      const parsed=[];
+      for(let i=1;i<rows.length;i++){
+        const r=rows[i];
+        const d=normDate(r[iDate>=0?iDate:0]);
+        const n=parseFloat(String(r[iNiv>=0?iNiv:1]).replace(',','.'));
+        if(!d||!n||isNaN(n))continue;
+        parsed.push({date:d,niveau:n,note:iNote>=0?r[iNote]||'':''});
+      }
+      if(parsed.length===0)throw new Error('Aucune donnée valide trouvée.');
+      parsed.sort((a,b)=>a.date.localeCompare(b.date));
+      sheetReleves=parsed;
+      document.getElementById('sdot').className='sdot live';
+      document.getElementById('smode').textContent='✅ Connecté Google Sheets · '+parsed.length+' relevés';
+      render();
+      btn.textContent='✅ Chargé'; 
+      setTimeout(()=>{btn.textContent='🔄 Charger Sheet';btn.disabled=false;},3000);
+    })
+    .catch(e=>{
+      btn.textContent='🔄 Charger Sheet';btn.disabled=false;
+      console.error(e);
+      alert('❌ Impossible de charger le Sheet.\n'+e.message+'\n\nLes données intégrées restent actives.');
+    });
+}
+
+// ─── INIT ────────────────────────────────────────────────────
+document.getElementById('sd').value=new Date().toISOString().split('T')[0];
+render();
+setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
+// Auto-connect après 1s
+setTimeout(()=>connectSheet(),1000);
+</script>
+</body>
+</html>
