@@ -263,7 +263,7 @@ body {
 
 .modal-content aside hr {
   border: 0;
-  border-top: 2px solid #d43535;
+  border-top: 1px solid #333;
   margin: 10px 0;
 }
 
@@ -376,6 +376,132 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ================================
+   NAVIGATION FLÈCHES MODAL
+================================= */
+#prev-photo, #next-photo {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  font-size: 2em;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 10;
+  transition: background 0.2s;
+}
+#prev-photo { left: 10px; }
+#next-photo { right: 310px; }
+#prev-photo:hover, #next-photo:hover { background: rgba(255,255,255,0.2); }
+
+/* ================================
+   BARRE FIXE EN HAUT
+================================= */
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: #111;
+  border-bottom: 1px solid #c0392b;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+#btn-home {
+  color: #c0392b;
+  text-decoration: none;
+  font-size: 0.85em;
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#btn-home:hover {
+  background: #c0392b;
+  color: #fff;
+}
+
+#topbar #selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+#topbar label {
+  color: #aaa;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+#topbar #album-select {
+  flex: 1;
+  max-width: 400px;
+  background: #1a1a1a;
+  color: #eee;
+  border: 1px solid #333;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+#topbar-count {
+  font-size: 0.75em;
+  letter-spacing: 0.2em;
+  color: #888;
+  margin-left: auto;
+}
+
+/* Décaler le contenu pour la barre fixe */
+#sidebar { top: 52px; height: calc(100vh - 52px); }
+#main-content { padding-top: 70px; }
+
+/* ================================
+   ZOOM AMÉLIORÉ AU SURVOL
+================================= */
+.photo-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.photo-card:hover {
+  transform: scale(2.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  border-color: #c0392b !important;
+  z-index: 2;
+}
+.photo-card:hover img {
+  transform: scale(1.01) !important;
+}
+
+/* Infobulle titre au survol */
+.photo-card::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  color: #fff;
+  font-size: 0.75em;
+  padding: 20px 8px 6px 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+.photo-card:hover::after {
+  opacity: 1;
 }
 #photo-notes {
   font-size: 1.1em;

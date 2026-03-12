@@ -94,10 +94,19 @@ const citations = [
   { texte: "La photographie est un art de l'observation.", auteur: "Elliott Erwitt" },
   { texte: "L'appareil photo est une machine qui apprend aux gens à voir sans appareil photo.", auteur: "Dorothea Lange" },
   { texte: "Photographier c'est mettre sur la même ligne de mire la tête, l'œil et le cœur.", auteur: "Henri Cartier-Bresson" },
+  { texte: "Une bonne photographie consiste à savoir capturer la profondeur des sentiments, pas la profondeur du champ.", auteur: " Peter Adams" },
+  { texte: "Je ne fais pas confiance aux mots. Je fais confiance aux images.", auteur: " Gilles Peress" },
+  { texte: "La photographie fige un instant dans le temps, altère la vie en l'immobilisant.", auteur: "Dorothea Lange " },
+  { texte: "Et si le goût de la vie diminue, les photos pâlissent parce que photographier, c’est savourer la vie au 1/125 de seconde", auteur: " Marc Riboud" },
+  { texte: "La meilleure chose à propos d'une image est qu'elle ne change jamais, même lorsque les personnes qui y figurent changent.", auteur: " Andy Warhol" },
+  { texte: "Ce que j'aime dans les photographies, c'est qu'elles capturent un moment qui est parti pour toujours, impossible à reproduire.", auteur: "Karl Lagerfeld " },
+  { texte: "Vous ne prenez pas une photographie, vous la créez.", auteur: "Ansel Adams " },
+  { texte: "Voir en couleur est un plaisir pour l'œil mais voir en noir et blanc est un plaisir pour l'âme.", auteur: "Andri Cauldwell " },
 ];
 
 // État global
 let currentAlbumPhotos = []; // [{url_m, url_l, title, isFlickr}]
+let currentPhotoIndex = 0;
 let currentAlbumId = null;
 let photoOfDayUrl = null;
 
@@ -113,6 +122,8 @@ const photoTitle = document.getElementById("photo-title");
 const photoNotes = document.getElementById("photo-notes");
 const exifList = document.getElementById("exif");
 const closeModal = document.getElementById("close");
+const countEl = document.getElementById("count-photos");
+
 
 // ============================
 // INIT
@@ -278,9 +289,12 @@ async function displayFlickrAlbum(albumId) {
       .map(p => ({ url_m: p.url_m, url_l: p.url_l || p.url_m, title: p.title, isFlickr: true }));
 
     galleryDiv.innerHTML = "";
+if (countEl) countEl.textContent = currentAlbumPhotos.length;//bonne place ici
     currentAlbumPhotos.forEach((photo, index) => {
       const card = document.createElement("div");
       card.className = "photo-card";
+    // j'ai supprimer 
+      card.dataset.title = photo.title;
 
       const img = document.createElement("img");
       img.src = photo.url_m;
@@ -303,6 +317,7 @@ async function displayFlickrAlbum(albumId) {
 // ============================
 function displayLocalAlbum(albumName) {
   galleryDiv.innerHTML = "";
+  
   currentAlbumId = "local_" + albumName;
   currentAlbumPhotos = localAlbums[albumName].map(name => ({
     url_m: `${basePath}${albumName}/${name}`,
@@ -310,6 +325,7 @@ function displayLocalAlbum(albumName) {
     title: name,
     isFlickr: false
   }));
+if (countEl) countEl.textContent = currentAlbumPhotos.length; //ici le conteur
 
   currentAlbumPhotos.forEach((photo, index) => {
     const card = document.createElement("div");
@@ -324,12 +340,15 @@ function displayLocalAlbum(albumName) {
 
     card.addEventListener("click", () => openModalFromUrl(photo.url_l, photo.title, false, index));
   });
+   if (countEl) countEl.textContent = currentAlbumPhotos.length;// ici compteur
+
 }
 
 // ============================
 // MODAL
 // ============================
 function openModalFromUrl(photoUrl, title, isFlickr, index) {
+  if (index !== undefined) currentPhotoIndex = index;
   modal.classList.remove("hidden");
   modalImg.src = photoUrl;
   photoTitle.textContent = title || photoUrl.split("/").pop();
@@ -502,6 +521,38 @@ function readSignedRational(view, offset, le) {
 
 closeModal.addEventListener("click", () => modal.classList.add("hidden"));
 modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
+
+// Navigation flèches
+const prevBtn = document.getElementById("prev-photo");
+const nextBtn = document.getElementById("next-photo");
+
+if (prevBtn) {
+  prevBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (currentAlbumPhotos.length === 0) return;
+    currentPhotoIndex = (currentPhotoIndex - 1 + currentAlbumPhotos.length) % currentAlbumPhotos.length;
+    const p = currentAlbumPhotos[currentPhotoIndex];
+    openModalFromUrl(p.url_l || p.url_m, p.title, p.isFlickr, currentPhotoIndex);
+  });
+}
+
+if (nextBtn) {
+  nextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (currentAlbumPhotos.length === 0) return;
+    currentPhotoIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length;
+    const p = currentAlbumPhotos[currentPhotoIndex];
+    openModalFromUrl(p.url_l || p.url_m, p.title, p.isFlickr, currentPhotoIndex);
+  });
+}
+
+// Navigation clavier
+document.addEventListener("keydown", (e) => {
+  if (modal.classList.contains("hidden")) return;
+  if (e.key === "ArrowLeft" && prevBtn) prevBtn.click();
+  if (e.key === "ArrowRight" && nextBtn) nextBtn.click();
+  if (e.key === "Escape") modal.classList.add("hidden");
+});
 
 // ============================
 // LANCEMENT

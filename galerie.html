@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie Photo — Jean-Claude Simon</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- BARRE FIXE EN HAUT -->
+<div id="topbar">
+  <a href="index.html" id="btn-home">← Accueil</a>
+  <div id="selector">
+    <label for="album-select">Album : </label>
+    <select id="album-select"></select>
+<div id="topbar-count"><span id="count-photos">-</span> photos</div>
+  </div>
+</div>
+
+<!-- PANNEAU LATÉRAL GAUCHE -->
+<aside id="sidebar">
+  <img src="photographe/20251028_104957.jpg" alt="Photographe" id="photo-photographe">
+  <h1>Jean-Claude Simon</h1>
+  <span class="label-photographe">Photographe</span>
+  <hr class="sidebar-divider">
+
+  <div class="sidebar-block">
+    <h3>📍 Activité du moment</h3>
+    <p>En cette période je suis axé principalement sur la prise de vues d'oiseaux: j'ai posé des nichoirs et mangeoires à plusieurs endroits dans le jardin pour pouvoir piéger ces petits volatiles.</p>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>📷 Appareils</h3>
+    <ul>
+      <li>Nikon D7500</li>
+      <li>Nikon Z6</li>
+      <li>Nikon D300S</li>
+      <li>Panasonic Lumix</li>
+      <li>Canon PowerShot SX30</li>
+    </ul>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>🔭 Objectifs</h3>
+    <ul>
+      <li>Nikkor 70-200mm f/2.8</li>
+      <li>Nikkor Z 50mm f/1.8S</li>
+      <li>Sigma 70-200mm f/2.8</li>
+      <li>Sigma 10-20mm f/3.5-5.6</li>
+      <li>Nikkor 16-85mm f/3.5-5.6</li>
+    </ul>
+  </div>
+
+  <div class="sidebar-block">
+    <h3>🎒 Autre matériel</h3>
+    <ul>
+      <li>Flash SB 910</li>
+    </ul>
+  </div>
+</aside>
+
+<!-- CONTENU PRINCIPAL -->
+<div id="main-content">
+  <!-- Mini-albums vedette -->
+  <div id="mini-albums"></div>
+
+  <!-- Photo du jour -->
+  <div id="photo-of-day-section">
+    <div id="photo-of-day-container">
+      <img id="photo-of-day" alt="Photo du jour">
+      <div id="citation-box">
+        <div id="citation-text"></div>
+        <div id="citation-auteur"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Galerie principale -->
+  <main id="gallery"></main>
+</div>
+<!-- Modal pour clic photo -->
+<div id="modal" class="hidden">
+  <div class="modal-content">
+    <img id="modal-img">
+    <aside>
+      <h2 id="photo-title"></h2>
+      <p id="photo-notes"></p>
+      <hr>
+      <ul id="exif"></ul>
+    </aside>
+    <span id="close">×</span>
+    <button id="prev-photo">&#8592;</button>
+    <button id="next-photo">&#8594;</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

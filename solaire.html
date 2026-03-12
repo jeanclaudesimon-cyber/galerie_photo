@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>☀️ Suivi Solaire — Saint-Léger</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sun:#FFB800;--sun2:#FF7A00;--green:#00E5A0;--blue:#00AAFF;--red:#FF4444;
+  --bg:#0A1628;--glass:rgba(255,255,255,0.05);--border:rgba(255,184,0,0.18);
+  --text:#fff;--text2:rgba(255,255,255,0.6);--text3:rgba(255,255,255,0.45);
+  --card-bg:rgba(255,255,255,0.05);--card-border:rgba(255,184,0,0.18);
+  --tick:rgba(255,255,255,0.38);--grid-c:rgba(255,255,255,0.05);
+}
+.light{
+  --bg:#F5F7FA;--glass:rgba(255,255,255,0.98);--border:rgba(180,120,0,0.25);
+  --text:#0D1B2A;--text2:#3A4A5C;--text3:#6B7A8D;
+  --card-bg:#FFFFFF;--card-border:rgba(180,120,0,0.2);
+  --tick:rgba(13,27,42,0.55);--grid-c:rgba(0,0,0,0.07);
+  --sun:#B86A00;--sun2:#8C3D00;
+  --green:#006B3A;--red:#C0001A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+body:not(.light)::before{content:'';position:fixed;top:-40%;left:-20%;width:80vw;height:80vw;background:radial-gradient(circle,rgba(255,184,0,0.07) 0%,transparent 65%);pointer-events:none;animation:pulse 8s ease-in-out infinite;}
+body:not(.light)::after{content:'';position:fixed;bottom:-30%;right:-20%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(0,170,255,0.06) 0%,transparent 65%);pointer-events:none;animation:pulse 10s ease-in-out 2s infinite reverse;}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADER */
+header{padding:1.1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem;position:relative;z-index:10;background:var(--glass);backdrop-filter:blur(10px);}
+.logo{display:flex;align-items:center;gap:.85rem;}
+.sun-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--sun),var(--sun2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 18px rgba(255,184,0,0.4);animation:spin-slow 20s linear infinite;flex-shrink:0;}
+.logo-text h1{font-size:1.15rem;font-weight:800;background:linear-gradient(90deg,var(--sun),var(--text));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;}
+.logo-text p{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.update-info{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);text-align:right;line-height:1.4;}
+.btn-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;}
+.btn-icon:hover{border-color:var(--sun);color:var(--sun);}
+
+/* YEAR TABS */
+.year-row{padding:.7rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;z-index:9;}
+.year-tabs{display:flex;flex-wrap:wrap;gap:.3rem;}
+.year-tab{padding:.32rem .8rem;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-family:'Space Mono',monospace;font-size:.68rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.year-tab.active{background:linear-gradient(135deg,var(--sun),var(--sun2));border-color:transparent;color:#000;font-weight:700;box-shadow:0 0 12px rgba(255,184,0,0.35);}
+.year-tab:hover:not(.active){border-color:var(--sun);color:var(--sun);}
+.year-tab.future{border-style:dashed;opacity:.4;}
+.year-tab.future:hover{opacity:.7;}
+.vs-info{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);}
+
+/* MAIN */
+main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn .35s ease;}
+
+/* INFO BAND */
+.info-band{display:flex;gap:.4rem;flex-wrap:wrap;background:var(--card-bg);border:1px solid var(--card-border);border-radius:11px;padding:.65rem 1rem;margin-bottom:.9rem;align-items:center;}
+.chip{display:flex;align-items:center;gap:.3rem;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);padding:.18rem .48rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);}
+.chip strong{color:var(--sun);}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:.65rem;margin-bottom:.9rem;}
+.kpi{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.9rem 1rem;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,184,0,0.09);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sun),var(--sun2));}
+.kpi-label{font-size:.58rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.28rem;}
+.kpi-value{font-size:1.45rem;font-weight:800;line-height:1.1;}
+.kpi-unit{font-size:.68rem;font-weight:400;color:var(--text2);margin-left:2px;}
+.kpi-sub{font-size:.58rem;font-family:'Space Mono',monospace;margin-top:.25rem;}
+.kpi-sub.up{color:var(--green);}.kpi-sub.down{color:var(--red);}.kpi-sub.neutral{color:var(--text3);}
+.kpi-icon{position:absolute;right:.8rem;top:.8rem;font-size:1.2rem;opacity:.11;}
+.prog-track{height:4px;background:rgba(255,255,255,0.09);border-radius:999px;overflow:hidden;margin-top:.35rem;}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sun),var(--green));transition:width .8s ease;}
+.prog-lbl{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.52rem;color:var(--text3);margin-top:2px;}
+
+/* LAYOUT */
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:.85rem;margin-bottom:.85rem;}
+.g11{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.85rem;}
+.g111{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem;margin-bottom:.85rem;}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.95rem 1.05rem;}
+.ct{font-size:.62rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;}
+.ct-l{display:flex;align-items:center;gap:.32rem;}
+.badge{font-size:.52rem;padding:1px 6px;border-radius:999px;background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.22);color:var(--sun);}
+canvas{max-height:210px;}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:.9rem;flex-wrap:wrap;}
+.donut-wrap canvas{max-height:135px;max-width:135px;}
+.leg{display:flex;flex-direction:column;gap:.38rem;}
+.leg-item{display:flex;align-items:center;gap:.38rem;font-size:.65rem;color:var(--text2);}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* WEEK SELECTOR */
+.week-nav{display:flex;align-items:center;gap:.4rem;}
+.week-sel{font-family:'Space Mono',monospace;font-size:.58rem;background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:2px 5px;cursor:pointer;}
+
+/* ROI ITEMS — texte plus lisible */
+.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
+.roi-item{padding:.55rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);}
+.roi-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.18rem;font-weight:600;}
+.roi-val{font-size:1.05rem;font-weight:700;}
+.roi-bar-wrap{margin-top:.75rem;}
+.roi-bar-lbl{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text2);margin-bottom:3px;font-weight:600;}
+.roi-bar-track{height:7px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden;}
+.roi-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--blue));transition:width 1s ease;}
+.roi-note{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);margin-top:4px;font-weight:600;}
+
+/* SUNSHINE */
+.sun-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:.5rem;}
+.sun-cell{text-align:center;padding:.28rem .05rem;border-radius:5px;}
+.sun-m{font-size:.52rem;color:var(--text2);font-family:'Space Mono',monospace;font-weight:700;}
+.sun-v{font-size:.6rem;font-weight:700;margin-top:1px;}
+.sun-b{height:3px;border-radius:999px;margin-top:2px;}
+
+/* RECORDS — texte plus lisible */
+.rec-item{padding:.5rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);margin-bottom:.45rem;}
+.rec-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.15rem;font-weight:600;}
+.rec-val{font-size:1rem;font-weight:700;}
+
+/* FUTURE */
+.future-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 2rem;text-align:center;gap:.65rem;}
+.future-box .icon{font-size:2.2rem;opacity:.28;}
+.future-box h3{font-size:.95rem;color:var(--text2);}
+.future-box p{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);max-width:280px;line-height:1.6;}
+
+/* NO DATA */
+.no-data-note{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);text-align:center;padding:2rem 1rem;opacity:.7;}
+
+/* MOIS EN COURS */
+.mois-encours{background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.3);border-radius:12px;padding:.85rem 1.1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+.mois-encours-title{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.05em;font-weight:700;white-space:nowrap;}
+.mois-encours-main{flex:1;min-width:200px;}
+.mois-encours-vals{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.mois-encours-vals strong{color:#fff;}
+.mois-encours-track{height:10px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden;position:relative;}
+.mois-encours-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#FF4444,#FF7A00);transition:width 1s ease;position:relative;}
+.mois-encours-fill::after{content:'';position:absolute;top:0;right:0;bottom:0;width:3px;background:rgba(255,255,255,0.6);border-radius:999px;}
+.mois-encours-sub{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:4px;}
+.mois-encours-kpi{display:flex;gap:.8rem;flex-wrap:wrap;}
+.mois-kpi{text-align:center;}
+.mois-kpi-val{font-size:1.1rem;font-weight:800;color:#fff;}
+.mois-kpi-lbl{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text3);}
+
+/* PDF PRINT */
+#pdf-print{display:none;}
+@media print{
+  body *{display:none!important;}
+  #pdf-print{display:block!important;}
+  #pdf-print *{display:revert!important;}
+  @page{margin:1.5cm;size:A4;}
+}
+/* Print table styles */
+.pdf-page{page-break-after:always;padding:0;font-family:Arial,sans-serif;color:#000;}
+.pdf-page:last-child{page-break-after:avoid;}
+.pdf-header{border-bottom:3px solid #FFB800;padding-bottom:.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;}
+.pdf-header h1{font-size:16px;font-weight:800;color:#0A1628;margin:0;}
+.pdf-header p{font-size:9px;color:#666;margin:2px 0 0;}
+.pdf-header .pdf-date{font-size:9px;color:#999;text-align:right;}
+.pdf-section-title{font-size:11px;font-weight:700;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem;padding-left:.4rem;border-left:3px solid #FFB800;}
+.pdf-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem;}
+.pdf-kpi{background:#F8F9FA;border:1px solid #E0E0E0;border-radius:6px;padding:.5rem .7rem;}
+.pdf-kpi-lbl{font-size:8px;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+.pdf-kpi-val{font-size:14px;font-weight:800;color:#0A1628;}
+.pdf-kpi-unit{font-size:9px;font-weight:400;color:#888;}
+.pdf-kpi-sub{font-size:8px;color:#888;margin-top:1px;}
+.pdf-table{width:100%;border-collapse:collapse;font-size:9px;margin-bottom:1rem;}
+.pdf-table th{background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:center;font-size:8.5px;font-weight:700;}
+.pdf-table th:first-child{text-align:left;}
+.pdf-table td{padding:.3rem .5rem;border-bottom:1px solid #F0F0F0;text-align:center;color:#333;}
+.pdf-table td:first-child{text-align:left;font-weight:600;color:#0A1628;}
+.pdf-table tr:nth-child(even) td{background:#F8F9FA;}
+.pdf-table tr.total-row td{background:#FFF8E7!important;font-weight:700;color:#0A1628;border-top:2px solid #FFB800;}
+.pdf-table .sun-col{color:#FF7A00;font-weight:700;}
+.pdf-table .green-col{color:#00995A;font-weight:700;}
+.pdf-table .blue-col{color:#0066CC;font-weight:600;}
+.pdf-table .red-col{color:#CC0000;font-weight:600;}
+.pdf-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin-bottom:1rem;}
+.pdf-info-item{background:#F8F9FA;border:1px solid #E8E8E8;border-radius:4px;padding:.35rem .6rem;display:flex;justify-content:space-between;align-items:center;}
+.pdf-info-lbl{font-size:8.5px;color:#666;}
+.pdf-info-val{font-size:9px;font-weight:700;color:#0A1628;}
+.pdf-footer{font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.5rem;}
+.pdf-roi-bar{height:8px;background:#E8E8E8;border-radius:999px;overflow:hidden;margin:.3rem 0;}
+.pdf-roi-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#00C878,#0088FF);}
+
+footer{text-align:center;padding:.9rem;font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text3);border-top:1px solid var(--border);position:relative;z-index:8;}
+
+@media(max-width:900px){.g21,.g111{grid-template-columns:1fr;}.g11{grid-template-columns:1fr;}}
+@media(max-width:768px){main,header,.year-row{padding:.85rem 1rem;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:420px){.logo-text p{display:none;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* ===== MODE JOUR ===== */
+body.light header{background:#fff;border-bottom:2px solid #F59E0B;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+body.light .logo-text h1{color:#0D1B2A;}
+body.light .logo-text p{color:#4A5568;}
+body.light .update-info{color:#4A5568;background:#F1F5F9;border-radius:6px;padding:.2rem .5rem;}
+body.light .btn-icon{background:#F1F5F9;color:#2D3748;border:1px solid #CBD5E0;}
+body.light .btn-icon:hover{background:#E2E8F0;}
+body.light .year-row{background:#F1F5F9;border-bottom:1px solid #E2E8F0;}
+body.light .year-tab{background:#E2E8F0;color:#4A5568;border:1px solid #CBD5E0;font-weight:600;}
+body.light .year-tab:hover{background:#CBD5E0;color:#2D3748;}
+body.light .year-tab.active{background:#F59E0B;color:#fff;border-color:#D97706;}
+body.light .year-tab.future{background:#EDF2F7;color:#A0AEC0;}
+body.light .vs-info{color:#4A5568;}
+body.light main{background:#F5F7FA;}
+body.light .card{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
+body.light .ct{border-bottom:1px solid #F1F5F9;}
+body.light .ct-l{color:#2D3748;font-weight:700;}
+body.light .ct-l span{color:#B86A00;}
+body.light .badge{background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;}
+body.light .info-band{background:#EDF2F7;border:1px solid #E2E8F0;}
+body.light .chip{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
+body.light .chip strong{color:#0D1B2A;}
+body.light .kpi{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+body.light .kpi-icon{color:#B86A00;}
+body.light .kpi-label{color:#4A5568;}
+body.light .kpi-value{color:#0D1B2A;}
+body.light .kpi-unit{color:#4A5568;}
+body.light .kpi-sub.up{color:#006B3A;}
+body.light .kpi-sub.down{color:#C0001A;}
+body.light .kpi-sub.neutral{color:#4A5568;}
+body.light .prog-track{background:#E2E8F0;}
+body.light .prog-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
+body.light .prog-lbl{color:#4A5568;}
+body.light .mois-encours{background:#FFFBEB;border:2px solid #F59E0B;}
+body.light .mois-encours-title{color:#92400E;font-weight:800;}
+body.light .mois-encours-vals span{color:#2D3748;}
+body.light .mois-encours-vals strong{color:#0D1B2A;}
+body.light .mois-encours-track{background:#E2E8F0;}
+body.light .mois-encours-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
+body.light .mois-encours-sub{color:#4A5568;}
+body.light .mois-kpi{background:#FEF9EE;border:1px solid #FDE68A;}
+body.light .mois-kpi-val{color:#92400E;}
+body.light .mois-kpi-lbl{color:#6B7A8D;}
+body.light .roi-lbl{color:#4A5568;}
+body.light .roi-val{color:#0D1B2A;}
+body.light .roi-bar-lbl{color:#2D3748;font-weight:600;}
+body.light .roi-bar-track{background:#E2E8F0;}
+body.light .roi-bar-fill{background:linear-gradient(90deg,#00A86B,#0066CC);}
+body.light .roi-note{color:#4A5568;}
+body.light .rec-item{border-bottom:1px solid #F1F5F9;}
+body.light .rec-lbl{color:#4A5568;}
+body.light .rec-val{color:#0D1B2A;}
+body.light .sun-m{color:#4A5568!important;font-weight:600;}
+body.light .week-sel{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
+body.light .leg-item{color:#2D3748;}
+body.light footer{color:#4A5568;border-top:1px solid #E2E8F0;background:#fff;}
+body.light .future-box h3{color:#0D1B2A;}
+body.light .future-box p{color:#4A5568;}
+</style>
+</head>
+<body>
+
+<a href="index.html" style="
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #1a1a1a;
+  color: #f39c12;
+  border: 1px solid #f39c12;
+  padding: 6px 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85em;
+  letter-spacing: 0.15em;
+  z-index: 9999;
+">← Accueil</a>
+
+<header>
+  <div class="logo">
+    <div class="sun-icon">☀️</div>
+    <div class="logo-text">
+      <h1>Suivi Solaire — Saint-Léger</h1>
+      <p>SunPower Maxeon 3 · 10×420Wc · 4,2kWc · Plein Sud · 33° · Gaume 6747, BE</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="update-info" id="update-info">Chargement...</div>
+    <button class="btn-icon no-print" onclick="toggleTheme()" title="Mode clair/sombre" id="theme-btn">🌙</button>
+    <button class="btn-icon no-print" onclick="exportPDF()" title="Exporter PDF">📄</button>
+    <button class="btn-icon no-print" onclick="refreshData()" title="Actualiser">🔄</button>
+  </div>
+</header>
+
+<div class="year-row no-print">
+  <div class="year-tabs" id="year-tabs"></div>
+  <div class="vs-info" id="vs-info"></div>
+</div>
+
+<main id="main">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;gap:1rem;">
+    <div style="width:180px;height:3px;background:linear-gradient(90deg,var(--sun),var(--sun2),var(--sun));background-size:200%;animation:pulse 1.5s infinite;border-radius:999px;"></div>
+    <p style="font-family:'Space Mono',monospace;font-size:.72rem;color:var(--text3);">Chargement des données Google Sheets...</p>
+  </div>
+</main>
+
+<div id="pdf-print"></div>
+<footer>☀️ Suivi Solaire · SunPower Maxeon 3 · Saint-Léger 6747, Belgique · Installation Août 2023 · Données temps réel Google Sheets</footer>
+
+<script>
+// ===== CONFIG =====
+const URLS = {
+  releve:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=656070211&single=true&output=csv',
+  bilan:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1636316695&single=true&output=csv',
+  diagnostic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1696505362&single=true&output=csv',
+};
+const INSTALL_COST = 10374.23;
+const KWH_PRICE_REAL = 0.67; // tarif réel tout compris (énergie+transport+taxes)
+const KWH_PRICE_CONTRACT = 0.12;
+const PUISSANCE = 4.2;
+const OBJECTIF = 4800;
+const SUNSHINE = [49,42,104,132,123,185,206,221,213,163,96,55]; // Source: IRM Saint-Léger, période 1991-2020
+const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const MONTHS_F = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const YEARS_CFG = [
+  {key:2023,label:'2023',future:false},{key:2024,label:'2024',future:false},
+  {key:2025,label:'2025',future:false},{key:2026,label:'2026',future:false},
+  {key:2027,label:'2027',future:true},{key:2028,label:'2028',future:true},
+  {key:2029,label:'2029',future:true},{key:2030,label:'2030',future:true},
+];
+const PREV_MAP = {2023:null,2024:2023,2025:2024,2026:2025,2027:2026,2028:2027,2029:2028,2030:2029};
+
+let curYear = 2026;
+let charts = {};
+let darkMode = true;
+let pData = {}; // processed data per year
+
+// ===== CSV =====
+function parseCSV(txt) {
+  return txt.trim().split('\n').map(l => {
+    const cols=[];let cur='',inQ=false;
+    for(const c of l){if(c==='"'){inQ=!inQ;continue;}if(c===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=c;}
+    cols.push(cur.trim());return cols;
+  });
+}
+function num(v){
+  if(!v||v===''||v==='\u2014'||v==='N/A')return null;
+  const s=String(v).trim();
+  if(s.indexOf('#')>=0||s==='')return null;
+  // Handle French decimal comma: "15,1" -> "15.1", "3917,9" -> "3917.9"
+  let clean=s.replace(/ /g,'');
+  clean=clean.replace(',','.');
+  // Remove any non-numeric chars except dot and minus
+  clean=clean.replace(/[^0-9.-]/g,'');
+  const n=parseFloat(clean);
+  return isNaN(n)?null:n;
+}
+
+// ===== FETCH =====
+const PROXY = 'https://corsproxy.io/?';
+function proxify(url){ return PROXY + encodeURIComponent(url); }
+
+async function fetchAll() {
+  showLoading();
+  loadStatic(); // base toujours présente (incl. décembre)
+  try {
+    const [r1,r2,r3] = await Promise.all([
+      fetch(proxify(URLS.releve)).then(r=>r.text()),
+      fetch(proxify(URLS.bilan)).then(r=>r.text()),
+      fetch(proxify(URLS.diagnostic)).then(r=>r.text()),
+    ]);
+    processAll(parseCSV(r1), parseCSV(r2), parseCSV(r3));
+    document.getElementById('update-info').innerHTML=`Actualisé<br>${new Date().toLocaleString('fr-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`;
+  } catch(e) {
+    console.warn('Fetch failed, using static data', e);
+    document.getElementById('update-info').innerHTML=`Données statiques<br>(hors ligne)`;
+    loadStatic();
+  }
+  buildTabs(); renderYear();
+}
+
+function loadStatic() {
+  pData = {
+    2023:{total:1224.5,note:'5 mois',monthly:[null,null,null,null,null,null,null,341.6,480.4,259.6,84.4,58.5],autoconso:[null,null,null,null,null,null,null,180,260,145,48,33],injection:[null,null,null,null,null,null,null,162,220,115,36,26],dailyByMonth:{}},
+    2024:{total:3628.9,monthly:[143.6,113.9,296.4,372,434.7,468.2,495.5,532.2,358.3,253.3,92.3,68.5],autoconso:[79,63,163,205,239,257,272,292,197,139,51,38],injection:[65,51,133,167,196,211,224,240,161,114,41,31],dailyByMonth:{}},
+    2025:{total:4526,monthly:[96.7,208.4,475.7,521.8,604.5,602.6,550,587.7,354.6,227.6,169.9,126.5],autoconso:[53,115,262,287,332,331,303,323,195,125,93,70],injection:[44,93,214,235,273,272,248,265,160,103,77,57],dailyByMonth:{}},
+    2026:{total:268.8,note:'Janv–Fév + Mars en cours',monthly:[30.7,142,96,null,null,null,null,null,null,null,null,null],autoconso:[17,78,53,null,null,null,null,null,null,null,null,null],injection:[14,64,43,null,null,null,null,null,null,null,null,null],
+      dailyByMonth:{2:[
+        {day:1,prod:15.1,ac:15.1,inj:0,consoRes:0,consoReel:0},
+        {day:2,prod:20.4,ac:9.9,inj:10.5,consoRes:0,consoReel:9.9},
+        {day:3,prod:20.1,ac:9.4,inj:10.7,consoRes:0,consoReel:9.4},
+        {day:4,prod:20.5,ac:9.8,inj:10.7,consoRes:0,consoReel:9.8},
+        {day:5,prod:19.9,ac:7.8,inj:12.1,consoRes:0,consoReel:7.8},
+      ]}},
+  };
+}
+
+function processAll(relRows, bilanRows, diagRows) {
+  // Keep static data as base, live data overrides
+  const byYear = {};
+
+  // Find data start - look for first row where col A is a date AND col D has a number (production)
+  // CSV has multi-line headers (lines 0-12), data starts at line 13
+  let startIdx = 0;
+  for(let i=0;i<relRows.length;i++){
+    const r=relRows[i];
+    if(!r[0]||r[0].trim()==='')continue;
+    // Must look like DD/MM/YYYY
+    if(r[0].match(/^\d{2}\/\d{2}\/\d{4}$/)){startIdx=i;break;}
+  }
+
+  for(const row of relRows.slice(startIdx)){
+    if(!row[0]||row[0].trim()==='')continue;
+    // Must be a date row
+    if(!row[0].match(/^\d{2}\/\d{2}\/\d{4}$/))continue;
+    // Parse DD/MM/YYYY
+    const p=row[0].split('/');
+    const dt=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
+    if(isNaN(dt.getTime()))continue;
+    const y=dt.getFullYear(),m=dt.getMonth(),d=dt.getDate();
+    if(y<2022||y>2030)continue;
+    // Col D (index 3) = Production Solaire - MUST have a value
+    const prod=num(row[3]);
+    if(prod===null||prod<=0)continue; // skip empty/zero rows (pre-filled dates)
+    const inj=num(row[6]);    // col G = Injection Réseau
+    const consoRes=num(row[7]); // col H = Conso Réseau Totale
+    const consoReel=num(row[8]); // col I = Conso Réelle D+H
+    const ac=num(row[9]);     // col J = Autoconsommation
+    // Estimate if missing
+    const acFinal=ac!==null?ac:(inj!==null?Math.max(0,Math.round((prod-inj)*10)/10):Math.round(prod*0.55*10)/10);
+    const injFinal=inj!==null?inj:Math.max(0,Math.round((prod-acFinal)*10)/10);
+    if(!byYear[y])byYear[y]={monthly:Array(12).fill(null),injection:Array(12).fill(null),autoconso:Array(12).fill(null),dailyByMonth:{}};
+    byYear[y].monthly[m]=Math.round(((byYear[y].monthly[m]||0)+prod)*10)/10;
+    byYear[y].injection[m]=Math.round(((byYear[y].injection[m]||0)+injFinal)*10)/10;
+    byYear[y].autoconso[m]=Math.round(((byYear[y].autoconso[m]||0)+acFinal)*10)/10;
+    if(!byYear[y].dailyByMonth[m])byYear[y].dailyByMonth[m]=[];
+    byYear[y].dailyByMonth[m].push({day:d,prod:prod,ac:acFinal,inj:injFinal,consoRes:consoRes||0,consoReel:consoReel||0});
+  }
+
+  // Parse diagnostic for historical monthly
+  const mn=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
+  let histIdx=-1;
+  for(let i=0;i<diagRows.length;i++){
+    if(diagRows[i][0]&&diagRows[i][0].includes('Historique')){histIdx=i+2;break;}
+    if(diagRows[i][1]==='2023'||diagRows[i][1]==='2024'){histIdx=i;break;}
+  }
+  if(histIdx>0){
+    for(let i=histIdx;i<Math.min(histIdx+13,diagRows.length);i++){
+      const row=diagRows[i];
+      const mn2=(row[0]||'').toLowerCase().trim();
+      if(!mn2)continue;
+      const mn2n=mn2.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const mi=mn.findIndex(x=>{const xn=x.normalize('NFD').replace(/[\u0300-\u036f]/g,'');return mn2.startsWith(x)||mn2n.startsWith(xn);});
+      if(mi<0)continue;
+      // Try columns 1,2,3,4 for years 2023,2024,2025,2026
+    [[2023,1],[2024,2],[2025,3],[2026,4]].forEach(([y,ci])=>{
+        const v=num(row[ci]);
+        if(v!==null&&v>0&&v<1000){
+          if(!byYear[y])byYear[y]={monthly:Array(12).fill(null),injection:Array(12).fill(null),autoconso:Array(12).fill(null),dailyByMonth:{}};
+          // Diagnostic always fills - daily data (from relRows) takes priority later
+          byYear[y].monthly[mi]=Math.round(v*10)/10;
+        }
+      });
+    }
+  }
+
+  // Merge live data into pData (static is already there as base)
+  for(const[ys,yd] of Object.entries(byYear)){
+    const y=parseInt(ys);
+    if(!pData[y]) pData[y]=yd;
+    else {
+      // Override monthly with live data where available
+      for(let m=0;m<12;m++){
+        if(yd.monthly[m])pData[y].monthly[m]=yd.monthly[m];
+        if(yd.autoconso[m])pData[y].autoconso[m]=yd.autoconso[m];
+        if(yd.injection[m])pData[y].injection[m]=yd.injection[m];
+      }
+      if(Object.keys(yd.dailyByMonth).length>0)pData[y].dailyByMonth=yd.dailyByMonth;
+      pData[y].total=Math.round(pData[y].monthly.filter(x=>x).reduce((a,b)=>a+b,0)*10)/10;
+    }
+  }
+  if(pData[2023])pData[2023].note='5 mois (Août–Déc)';
+  if(pData[2026]){const f=pData[2026].monthly.filter(x=>x).length;if(f<12)pData[2026].note=`${f} mois enregistré${f>1?'s':''}`;}
+}
+
+// ===== ROI =====
+function computeROI(){
+  let totalSaved=0;
+  for(const yd of Object.values(pData)){
+    if(!yd.monthly)continue;
+    const prod=yd.monthly.filter(x=>x).reduce((a,b)=>a+b,0);
+    totalSaved+=prod*KWH_PRICE_REAL;
+  }
+  const pct=Math.min(100,Math.round(totalSaved/INSTALL_COST*100));
+  const avgAnnual=totalSaved/Math.max(1,Object.keys(pData).length);
+  const yearsLeft=Math.max(0,Math.round((INSTALL_COST-totalSaved)/avgAnnual*10)/10);
+  return{totalSaved:Math.round(totalSaved),pct,yearsLeft};
+}
+
+// ===== UI HELPERS =====
+function showLoading(){
+  killCharts();
+  document.getElementById('main').innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;gap:1rem;"><div style="width:180px;height:3px;background:linear-gradient(90deg,var(--sun),var(--sun2),var(--sun));background-size:200%;animation:pulse 1.5s infinite;border-radius:999px;"></div><p style="font-family:'Space Mono',monospace;font-size:.72rem;color:var(--text3);">Chargement des données...</p></div>`;
+}
+function killCharts(){Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});charts={};}
+
+function buildTabs(){
+  const c=document.getElementById('year-tabs');c.innerHTML='';
+  YEARS_CFG.forEach(y=>{
+    const b=document.createElement('button');
+    b.className='year-tab'+(y.future?' future':'')+(y.key===curYear?' active':'');
+    b.textContent=y.label;
+    if(!pData[y.key]&&!y.future)b.style.opacity='.35';
+    b.onclick=()=>{curYear=y.key;buildTabs();renderYear();};
+    c.appendChild(b);
+  });
+  const pk=PREV_MAP[curYear];
+  document.getElementById('vs-info').textContent=pk&&pData[pk]?`Comparé à ${pk}`:'';
+}
+
+// ===== RENDER YEAR =====
+function renderYear(){
+  killCharts();
+  const d=pData[curYear];
+  const pk=PREV_MAP[curYear];
+  const prev=pk?pData[pk]:null;
+  const prevLbl=pk?String(pk):null;
+
+  if(!d){
+    document.getElementById('main').innerHTML=`<div class="card"><div class="future-box"><div class="icon">🔮</div><h3>Données à venir pour ${curYear}</h3><p>Commence à saisir tes relevés dans Google Sheets — le tableau de bord se met à jour automatiquement !</p></div></div>`;
+    return;
+  }
+
+  const roi=computeROI();
+  const valM=d.monthly.filter(x=>x);
+  const maxM=valM.length?Math.max(...valM):0;
+  const maxMIdx=d.monthly.indexOf(maxM);
+  const totalAC=d.autoconso?d.autoconso.filter(x=>x).reduce((a,b)=>a+b,0):Math.round(d.total*.55);
+  const totalInj=d.injection?d.injection.filter(x=>x).reduce((a,b)=>a+b,0):Math.round(d.total*.45);
+  const rend=Math.round(d.total/PUISSANCE);
+  const diff=prev?Math.round((d.total-prev.total)/prev.total*100):null;
+  const savings=Math.round(d.total*KWH_PRICE_REAL);
+  const prog=Math.min(100,Math.round(d.total/OBJECTIF*100));
+
+  // Best week from daily data
+  let bestWeek={lbl:'—',val:0};
+  if(d.dailyByMonth){
+    for(const[mi,days]of Object.entries(d.dailyByMonth)){
+      const ws=[0,0,0,0,0];
+      days.forEach(({day,prod})=>{ws[Math.min(Math.floor((day-1)/7),4)]+=prod;});
+      ws.forEach((v,i)=>{if(v>bestWeek.val)bestWeek={lbl:`S${i+1} ${MONTHS[parseInt(mi)]}`,val:Math.round(v*10)/10};});
+    }
+  }
+
+  // Current month progress bar
+  const now = new Date();
+  const curMonthIdx = now.getMonth();
+  const curDayOfMonth = now.getDate();
+  const daysInMonth = new Date(now.getFullYear(), curMonthIdx+1, 0).getDate();
+  let moisEncoursHTML = '';
+  if(curYear === now.getFullYear() && d.dailyByMonth && d.dailyByMonth[curMonthIdx] && d.dailyByMonth[curMonthIdx].length > 0) {
+    const mDays = d.dailyByMonth[curMonthIdx].sort((a,b)=>a.day-b.day);
+    const cumul = Math.round(mDays.reduce((a,b)=>a+b.prod,0)*10)/10;
+    const histVals = [2024,2025].map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[curMonthIdx]:null).filter(x=>x);
+    const moyHist = histVals.length ? Math.round(histVals.reduce((a,b)=>a+b,0)/histVals.length) : null;
+    const pctVsMoy = moyHist ? Math.min(120,Math.round(cumul/moyHist*100)) : null;
+    const joursRestants = daysInMonth - curDayOfMonth;
+    const moyJour = Math.round(cumul/mDays.length*10)/10;
+    moisEncoursHTML = `
+    <div class="mois-encours">
+      <div class="mois-encours-title">🔴 ${MONTHS_F[curMonthIdx]} en cours</div>
+      <div class="mois-encours-main">
+        <div class="mois-encours-vals">
+          <span>Cumul : <strong>${cumul} kWh</strong> (${mDays.length} jour${mDays.length>1?'s':''})</span>
+          ${moyHist?`<span>Moy. historique : <strong>${moyHist} kWh</strong></span>`:''}
+        </div>
+        ${pctVsMoy!==null?`
+        <div class="mois-encours-track"><div class="mois-encours-fill" style="width:${Math.min(100,pctVsMoy)}%"></div></div>
+        <div class="mois-encours-sub">${pctVsMoy}% de la moyenne historique · ${joursRestants} jour${joursRestants>1?'s':''} restant${joursRestants>1?'s':''}</div>`:''}
+      </div>
+      <div class="mois-encours-kpi">
+        <div class="mois-kpi"><div class="mois-kpi-val">${moyJour}</div><div class="mois-kpi-lbl">kWh/jour</div></div>
+        ${pctVsMoy!==null?`<div class="mois-kpi"><div class="mois-kpi-val" style="color:${pctVsMoy>=100?'var(--green)':'var(--red)'}">${pctVsMoy}%</div><div class="mois-kpi-lbl">vs moy.</div></div>`:''}
+        <div class="mois-kpi"><div class="mois-kpi-val">${joursRestants}</div><div class="mois-kpi-lbl">jours rest.</div></div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('main').innerHTML=`
+    ${moisEncoursHTML}
+    <div class="info-band">
+      <div class="chip">⚡ <strong>${PUISSANCE} kWc</strong></div>
+      <div class="chip">📅 <strong>Août 2023</strong></div>
+      <div class="chip">🧭 <strong>Plein Sud 33°</strong></div>
+      <div class="chip">📍 <strong>Saint-Léger · BE</strong></div>
+      <div class="chip">🏆 Record <strong>587,7 kWh — Août 2025</strong></div>
+      <div class="chip">💰 Économies cumulées <strong>${roi.totalSaved} €</strong></div>
+      <div class="chip">ROI <strong>${roi.pct}%</strong></div>
+    </div>
+
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <div class="g21">
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>📊</span>Production mensuelle (kWh)</div>${prev?`<span class="badge">vs ${prevLbl}</span>`:''}</div>
+        <canvas id="cMonthly"></canvas>
+      </div>
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>🔄</span>Répartition énergie</div></div>
+        <div class="donut-wrap"><canvas id="cDonut"></canvas><div class="leg" id="donut-leg"></div></div>
+      </div>
+    </div>
+
+    <div class="g11">
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>🔁</span>${prev&&prevLbl?`${curYear} vs ${prevLbl}`:'Évolution mensuelle'}</div></div>
+        <canvas id="cCompare"></canvas>
+      </div>
+      <div class="card">
+        <div class="ct">
+          <div class="ct-l"><span>💉</span>Injection vs Autoconso</div>
+        </div>
+        <canvas id="cAutoconso"></canvas>
+      </div>
+    </div>
+
+    <div class="g11">
+      <div class="card">
+        <div class="ct">
+          <div class="ct-l"><span>📅</span>Semaines — 
+            <select class="week-sel" id="sel-month" onchange="renderWeekCharts()">
+              ${MONTHS.map((m,i)=>`<option value="${i}"${i===(new Date().getMonth())?'selected':''}>${m}</option>`).join('')}
+            </select>
+          </div>
+          <select class="week-sel" id="sel-week" onchange="renderDayChart()">
+            <option value="all">Vue globale</option>
+            <option value="0">S1 (1–7)</option>
+            <option value="1">S2 (8–14)</option>
+            <option value="2">S3 (15–21)</option>
+            <option value="3">S4 (22–28)</option>
+            <option value="4">S5 (29+)</option>
+          </select>
+        </div>
+        <canvas id="cWeek"></canvas>
+      </div>
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>📈</span>Courbe depuis installation</div></div>
+        <canvas id="cHistory"></canvas>
+      </div>
+    </div>
+
+    <div class="g111">
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>💰</span>Retour sur investissement</div></div>
+        <div class="roi-grid">
+          <div class="roi-item"><div class="roi-lbl">Installation</div><div class="roi-val" style="color:var(--red)">${INSTALL_COST.toLocaleString('fr')} €</div></div>
+          <div class="roi-item"><div class="roi-lbl">Économies totales</div><div class="roi-val" style="color:var(--green)">${roi.totalSaved} €</div></div>
+          <div class="roi-item"><div class="roi-lbl">Reste à récupérer</div><div class="roi-val">${Math.max(0,Math.round(INSTALL_COST-roi.totalSaved)).toLocaleString('fr')} €</div></div>
+          <div class="roi-item"><div class="roi-lbl">Tarif réel/kWh</div><div class="roi-val">${KWH_PRICE_REAL} €</div></div>
+        </div>
+        <div class="roi-bar-wrap">
+          <div class="roi-bar-lbl"><span>Progression amortissement</span><span>${roi.pct}%</span></div>
+          <div class="roi-bar-track"><div class="roi-bar-fill" style="width:${roi.pct}%"></div></div>
+          <div class="roi-note">Amortissement estimé dans ~${roi.yearsLeft} ans · Économie ~${Math.round(d.total*KWH_PRICE_REAL)} €/an</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>☀️</span>Ensoleillement Saint-Léger</div></div>
+        <div class="sun-grid" id="sun-grid"></div>
+        <p style="font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text2);margin-top:.5rem;font-weight:600;">Heures d'ensoleillement · 49.6°N · Plein Sud · 33°</p>
+      </div>
+
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>🏆</span>Records & Comparaisons</div></div>
+        <div class="rec-item"><div class="rec-lbl">Meilleur mois ${curYear}</div><div class="rec-val" style="color:var(--sun)">${maxM} kWh <span style="font-size:.7rem;color:var(--text2)">${MONTHS[maxMIdx]}</span></div></div>
+        <div class="rec-item"><div class="rec-lbl">Meilleure semaine</div><div class="rec-val" style="color:var(--sun)">${bestWeek.val>0?bestWeek.val+' kWh — '+bestWeek.lbl:'Données insuffisantes'}</div></div>
+        <div class="rec-item"><div class="rec-lbl">Rendement vs moy. belge (~950)</div><div class="rec-val" style="color:${rend>=950?'var(--green)':'var(--text)'}">${rend} kWh/kWc ${rend>=950?'✅':'📊'}</div></div>
+        <div class="rec-item"><div class="rec-lbl">Économies ${curYear}</div><div class="rec-val" style="color:var(--green)">${savings} €</div></div>
+      </div>
+    </div>`;
+
+  renderKPIs(d,prev,prevLbl,diff,totalAC,totalInj,rend,prog,savings);
+  renderCharts(d,prev,prevLbl,totalAC,totalInj);
+  renderSunshine();
+  renderWeekCharts();
+}
+
+// ===== KPIs =====
+function renderKPIs(d,prev,prevLbl,diff,totalAC,totalInj,rend,prog,savings){
+  const valM=d.monthly.filter(x=>x);
+  document.getElementById('kpi-grid').innerHTML=`
+    <div class="kpi"><div class="kpi-icon">⚡</div><div class="kpi-label">Production totale</div>
+      <div class="kpi-value">${(d.total/1000).toFixed(2)}<span class="kpi-unit">MWh</span></div>
+      ${d.note?`<div style="font-family:'Space Mono',monospace;font-size:.55rem;color:var(--sun);margin-top:1px;">${d.note}</div>`:''}
+      ${diff!==null?`<div class="kpi-sub ${diff>=0?'up':'down'}">${diff>=0?'▲':'▼'} ${Math.abs(diff)}% vs ${prevLbl}</div>`:'<div class="kpi-sub neutral">Depuis Août 2023</div>'}
+    </div>
+    <div class="kpi"><div class="kpi-icon">🎯</div><div class="kpi-label">Objectif annuel</div>
+      <div class="kpi-value">${prog}<span class="kpi-unit">%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${prog}%"></div></div>
+      <div class="prog-lbl"><span>${d.total} kWh</span><span>/ ${OBJECTIF} kWh</span></div>
+    </div>
+    <div class="kpi"><div class="kpi-icon">🔄</div><div class="kpi-label">Autoconsommation</div>
+      <div class="kpi-value">${totalAC}<span class="kpi-unit">kWh</span></div>
+      <div class="kpi-sub neutral">Taux ${Math.round(totalAC/d.total*100)}%</div>
+    </div>
+    <div class="kpi"><div class="kpi-icon">💉</div><div class="kpi-label">Injection réseau</div>
+      <div class="kpi-value">${totalInj}<span class="kpi-unit">kWh</span></div>
+      <div class="kpi-sub neutral">${Math.round(totalInj/d.total*100)}% de la prod</div>
+    </div>
+    <div class="kpi"><div class="kpi-icon">💰</div><div class="kpi-label">Économies ${curYear}</div>
+      <div class="kpi-value">${savings}<span class="kpi-unit">€</span></div>
+      <div class="kpi-sub up">▲ à ${KWH_PRICE_REAL}€/kWh</div>
+    </div>
+    <div class="kpi"><div class="kpi-icon">📈</div><div class="kpi-label">Rendement spéc.</div>
+      <div class="kpi-value">${rend}<span class="kpi-unit">kWh/kWc</span></div>
+      <div class="kpi-sub ${rend>=950?'up':'neutral'}">${rend>=950?'▲ Excellent':'Moy. belge ~950'}</div>
+    </div>`;
+}
+
+// ===== CHARTS =====
+function baseOpts(unit){
+  const isDark=!document.body.classList.contains('light');
+  const tc=isDark?'rgba(255,255,255,0.38)':'rgba(0,0,0,0.4)';
+  const gc=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
+  return{responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:isDark?'rgba(10,22,40,0.95)':'rgba(255,255,255,0.95)',borderColor:'rgba(255,184,0,0.25)',borderWidth:1,titleColor:'#FFB800',bodyColor:isDark?'rgba(255,255,255,0.8)':'rgba(0,0,0,0.75)',callbacks:{label:ctx=>` ${ctx.raw??'—'} ${unit}`}}},
+    scales:{x:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}},y:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}}}};
+}
+
+function renderCharts(d,prev,prevLbl,totalAC,totalInj){
+  const isDark=!document.body.classList.contains('light');
+  const maxV=Math.max(...d.monthly.filter(x=>x));
+  // Monthly bars
+  const sets=[];
+  if(prev&&prev.monthly)sets.push({label:prevLbl,data:prev.monthly.map(v=>v===null?0:v),backgroundColor:isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)',borderColor:isDark?'rgba(255,255,255,0.14)':'rgba(0,0,0,0.2)',borderWidth:1,borderRadius:3,borderSkipped:false,type:'bar'});
+  sets.push({label:String(curYear),data:d.monthly.map(v=>v===null?0:v),backgroundColor:d.monthly.map(v=>!v?'rgba(255,184,0,0.07)':`rgba(255,${Math.round(184-(v/maxV)*60)},0,${0.45+(v/maxV)*0.55})`),borderRadius:6,borderSkipped:false});
+  charts.monthly=new Chart(document.getElementById('cMonthly').getContext('2d'),{type:'bar',data:{labels:MONTHS,datasets:sets},options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,legend:{display:!!prev,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false}}}});
+
+  // Donut
+  charts.donut=new Chart(document.getElementById('cDonut').getContext('2d'),{type:'doughnut',data:{labels:['Autoconsommation','Injection réseau'],datasets:[{data:[totalAC,totalInj],backgroundColor:['rgba(0,229,160,0.85)','rgba(0,170,255,0.85)'],borderWidth:0,hoverOffset:5}]},options:{cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw} kWh`}}}}});
+  document.getElementById('donut-leg').innerHTML=`
+    <div class="leg-item"><div class="leg-dot" style="background:#00E5A0"></div>Autoconso <strong>${totalAC} kWh</strong></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#00AAFF"></div>Injection <strong>${totalInj} kWh</strong></div>
+    <div class="leg-item"><div class="leg-dot" style="background:rgba(128,128,128,.3)"></div>Taux <strong>${Math.round(totalAC/d.total*100)}%</strong></div>`;
+
+  // Compare line
+  const cs=[];
+  if(prev&&prev.monthly)cs.push({label:prevLbl,data:prev.monthly.map(v=>v===null?0:v),borderColor:isDark?'rgba(255,184,0,.32)':'rgba(180,100,0,.6)',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],pointRadius:2,tension:.4});
+  cs.push({label:String(curYear),data:d.monthly.map(v=>v===null?0:v),borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,.07)',borderWidth:2.5,pointRadius:3,tension:.4,fill:true});
+  charts.compare=new Chart(document.getElementById('cCompare').getContext('2d'),{type:'line',data:{labels:MONTHS,datasets:cs},options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,legend:{display:cs.length>1,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:16}},tooltip:{mode:'index',intersect:false}}}});
+
+  // Stacked
+  charts.autoconso=new Chart(document.getElementById('cAutoconso').getContext('2d'),{type:'bar',data:{labels:MONTHS,datasets:[{label:'Autoconsommation',data:d.autoconso.map(v=>v===null?0:v),backgroundColor:'rgba(0,229,160,0.72)',borderRadius:0,borderSkipped:false,stack:'s'},{label:'Injection',data:d.injection.map(v=>v===null?0:v),backgroundColor:'rgba(0,170,255,0.72)',borderRadius:5,borderSkipped:false,stack:'s'}]},options:{...baseOpts('kWh'),plugins:{legend:{display:true,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false}},scales:{x:{stacked:true,ticks:{color:'rgba(255,255,255,0.38)',font:{family:'Space Mono',size:9}},grid:{color:'rgba(255,255,255,0.05)'}},y:{stacked:true,ticks:{color:'rgba(255,255,255,0.38)',font:{family:'Space Mono',size:9}},grid:{color:'rgba(255,255,255,0.05)'}}}}});
+
+  // History
+  const hLbl=[],hVal=[];
+  Object.keys(pData).map(Number).sort().forEach(y=>{
+    const yd=pData[y];
+    MONTHS.forEach((m,i)=>{if(yd.monthly[i]){hLbl.push(`${m} ${y}`);hVal.push(Math.round(yd.monthly[i]*10)/10);}});
+  });
+  charts.history=new Chart(document.getElementById('cHistory').getContext('2d'),{type:'line',data:{labels:hLbl,datasets:[{label:'Production (kWh)',data:hVal,borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,0.06)',borderWidth:2,pointRadius:1.5,tension:.4,fill:true}]},options:{...baseOpts('kWh'),scales:{x:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:7},maxRotation:45},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}},y:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:8}},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}}}}});
+}
+
+// ===== WEEK CHARTS =====
+function renderWeekCharts(){
+  const selM=document.getElementById('sel-month');
+  const selW=document.getElementById('sel-week');
+  if(!selM)return;
+  const mIdx=parseInt(selM.value);
+  const wVal=selW?selW.value:'all';
+
+  if(charts.week){try{charts.week.destroy();}catch(e){}}
+
+  const d=pData[curYear];
+  const days=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
+
+  if(wVal==='all'){
+    // Weekly totals view
+    const ws=[[],[],[],[],[]];
+    if(days&&days.length>0){
+      days.forEach(({day,prod})=>{ws[Math.min(Math.floor((day-1)/7),4)].push(prod);});
+    } else if(d&&d.monthly[mIdx]){
+      const avg=d.monthly[mIdx]/4.3;
+      ws[0]=[avg];ws[1]=[avg*1.1];ws[2]=[avg*.95];ws[3]=[avg*1.05];ws[4]=[avg*.4];
+    }
+    const vals=ws.map(w=>Math.round(w.reduce((a,b)=>a+b,0)*10)/10);
+    const maxV=Math.max(...vals.filter(x=>x>0))||1;
+    charts.week=new Chart(document.getElementById('cWeek').getContext('2d'),{
+      type:'bar',
+      data:{labels:['S1 (1–7)','S2 (8–14)','S3 (15–21)','S4 (22–28)','S5 (29+)'],datasets:[{label:'Production (kWh)',data:vals,backgroundColor:vals.map(v=>v===Math.max(...vals)?'rgba(255,122,0,0.9)':'rgba(255,184,0,0.62)'),borderRadius:8,borderSkipped:false}]},
+      options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,tooltip:{callbacks:{label:ctx=>` ${ctx.raw} kWh`}}}}
+    });
+  } else {
+    renderDayChart();
+  }
+}
+
+function renderDayChart(){
+  const selM=document.getElementById('sel-month');
+  const selW=document.getElementById('sel-week');
+  if(!selM||!selW)return;
+  const mIdx=parseInt(selM.value);
+  const wIdx=parseInt(selW.value);
+  if(isNaN(wIdx))return renderWeekCharts();
+
+  if(charts.week){try{charts.week.destroy();}catch(e){}}
+
+  const d=pData[curYear];
+  const allDays=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
+  const dMin=wIdx*7+1, dMax=wIdx===4?31:(wIdx+1)*7;
+
+  const isDark=!document.body.classList.contains('light');
+  const tc=isDark?'rgba(255,255,255,0.38)':'rgba(0,0,0,0.4)';
+  const gc=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
+
+  if(!allDays||allDays.length===0){
+    document.getElementById('cWeek').getContext('2d').clearRect(0,0,500,220);
+    const p=document.createElement('p');p.className='no-data-note';p.textContent=`Pas de données journalières pour ${MONTHS_F[mIdx]} ${curYear}`;
+    const canvas=document.getElementById('cWeek');canvas.style.display='none';
+    if(!canvas.nextSibling||canvas.nextSibling.className!=='no-data-note')canvas.parentNode.insertBefore(p,canvas.nextSibling);
+    return;
+  } else {
+    const canvas=document.getElementById('cWeek');canvas.style.display='block';
+    const nd=canvas.nextSibling;if(nd&&nd.className==='no-data-note')nd.remove();
+  }
+
+  const weekDays=allDays.filter(({day})=>day>=dMin&&day<=dMax).sort((a,b)=>a.day-b.day);
+  const lbls=weekDays.map(({day})=>`${String(day).padStart(2,'0')}/${String(mIdx+1).padStart(2,'0')}`);
+
+  charts.week=new Chart(document.getElementById('cWeek').getContext('2d'),{
+    type:'bar',
+    data:{labels:lbls,datasets:[
+      {label:'Production',data:weekDays.map(x=>Math.round(x.prod*10)/10),backgroundColor:'rgba(255,184,0,0.75)',borderRadius:5,borderSkipped:false,stack:'no'},
+      {label:'Autoconso',data:weekDays.map(x=>Math.round(x.ac*10)/10),backgroundColor:'rgba(0,229,160,0.7)',borderRadius:0,borderSkipped:false,stack:'conso'},
+      {label:'Conso Réseau',data:weekDays.map(x=>Math.round(x.consoRes*10)/10),backgroundColor:'rgba(0,170,255,0.7)',borderRadius:0,borderSkipped:false,stack:'conso'},
+      {label:'Conso Réelle',data:weekDays.map(x=>Math.round(x.consoReel*10)/10),backgroundColor:'rgba(168,85,247,0.6)',type:'line',borderColor:'rgba(168,85,247,0.9)',borderWidth:2,pointRadius:4,tension:.3,fill:false},
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:true,labels:{color:tc,font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw??'—'} kWh`}}},
+      scales:{x:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}},y:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}}}}
+  });
+}
+
+// ===== SUNSHINE =====
+function renderSunshine(){
+  const g=document.getElementById('sun-grid');if(!g)return;
+  const maxS=Math.max(...SUNSHINE);
+  g.innerHTML=MONTHS.map((m,i)=>{
+    const p=SUNSHINE[i]/maxS;
+    const bg=`rgba(255,${Math.round(184-p*60)},0,${.12+p*.4})`;
+    return`<div class="sun-cell" style="background:${bg}">
+      <div class="sun-m" style="color:var(--text2)">${m}</div>
+      <div class="sun-v" style="color:rgba(255,${Math.round(184-p*60)},0,${.7+p*.3})">${SUNSHINE[i]}h</div>
+      <div class="sun-b" style="background:rgba(255,184,0,${.28+p*.72});width:100%"></div>
+    </div>`;
+  }).join('');
+}
+
+// ===== THEME =====
+function toggleTheme(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('theme-btn').textContent=darkMode?'🌙':'☀️';
+  renderYear();
+}
+
+// ===== PDF =====
+function exportPDF(){
+  buildPDFContent();
+  setTimeout(()=>{window.print();}, 200);
+}
+
+function buildPDFContent(){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-BE',{day:'2-digit',month:'long',year:'numeric'});
+  const MOIS_F = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const roi = computeROI();
+  const d = pData[curYear];
+  if(!d){document.getElementById('pdf-print').innerHTML='<p>Pas de données.</p>';return;}
+
+  const totalAC = d.autoconso?Math.round(d.autoconso.filter(x=>x).reduce((a,b)=>a+b,0)*10)/10:Math.round(d.total*.55);
+  const totalInj = d.injection?Math.round(d.injection.filter(x=>x).reduce((a,b)=>a+b,0)*10)/10:Math.round(d.total*.45);
+  const rend = Math.round(d.total/PUISSANCE);
+  const savings = Math.round(d.total*KWH_PRICE_REAL);
+  const prog = Math.min(100,Math.round(d.total/OBJECTIF*100));
+  const prevKey = PREV_MAP[curYear];
+  const prev = prevKey?pData[prevKey]:null;
+  const diff = prev?Math.round((d.total-prev.total)/prev.total*100):null;
+
+  // ========== PAGE 1 : RÉSUMÉ ANNÉE ==========
+  // KPI summary text
+  const kpiRows = [
+    ['Production totale', d.total.toFixed(1)+' kWh', prev?`${diff>=0?'+':''}${diff}% vs ${prevKey}`:''],
+    ['Autoconsommation', totalAC.toFixed(1)+' kWh', Math.round(totalAC/d.total*100)+'% de la prod.'],
+    ['Injection réseau', totalInj.toFixed(1)+' kWh', Math.round(totalInj/d.total*100)+'% de la prod.'],
+    ['Économies réalisées', savings+' €', '@ '+KWH_PRICE_REAL+' €/kWh'],
+    ['Rendement spécifique', rend+' kWh/kWc', 'Moy. belge ~950 kWh/kWc'],
+    ['Objectif annuel', prog+'%', d.total.toFixed(1)+' / '+OBJECTIF+' kWh'],
+    ['ROI cumulé', roi.pct+'%', roi.totalSaved+' € / '+INSTALL_COST+' €'],
+  ];
+
+  let kpiHTML = '';
+  kpiRows.forEach(([lbl,val,sub])=>{
+    kpiHTML+=`<tr><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:9.5px;color:#333;">${lbl}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:10px;font-weight:700;color:#0A1628;text-align:right;">${val}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:8.5px;color:#666;text-align:right;">${sub}</td></tr>`;
+  });
+
+  // Monthly table
+  let monthRows = '';
+  let totProd=0,totAC=0,totInj=0;
+  for(let m=0;m<12;m++){
+    const p=d.monthly[m]?Math.round(d.monthly[m]*10)/10:null;
+    const ac=d.autoconso&&d.autoconso[m]?Math.round(d.autoconso[m]*10)/10:null;
+    const inj=d.injection&&d.injection[m]?Math.round(d.injection[m]*10)/10:null;
+    const taux=p&&ac?Math.round(ac/p*100):null;
+    const rendM=p?Math.round(p/SUNSHINE[m]*10)/10:null;
+    if(p){totProd+=p;if(ac)totAC+=ac;if(inj)totInj+=inj;}
+    const bg = m%2===0?'#FFFFFF':'#F8F9FA';
+    monthRows+=`<tr style="background:${bg};">
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;">${MOIS_F[m]}</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#CC5500;font-weight:700;font-size:9px;">${p?p.toFixed(1):'—'}</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#007A45;font-weight:700;font-size:9px;">${ac?ac.toFixed(1):'—'}</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#0055AA;font-weight:600;font-size:9px;">${inj?inj.toFixed(1):'—'}</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${taux?taux+'%':'—'}</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${SUNSHINE[m]}h</td>
+      <td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${rendM?rendM:'—'}</td>
+    </tr>`;
+  }
+  monthRows+=`<tr style="background:#FFF3CD;font-weight:700;border-top:2px solid #CC8800;">
+    <td style="padding:.35rem .5rem;font-size:9.5px;font-weight:800;">TOTAL / MOY.</td>
+    <td style="padding:.35rem .5rem;text-align:right;color:#CC5500;font-size:9.5px;">${totProd.toFixed(1)}</td>
+    <td style="padding:.35rem .5rem;text-align:right;color:#007A45;font-size:9.5px;">${totAC.toFixed(1)}</td>
+    <td style="padding:.35rem .5rem;text-align:right;color:#0055AA;font-size:9.5px;">${totInj.toFixed(1)}</td>
+    <td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${totProd?Math.round(totAC/totProd*100)+'%':'—'}</td>
+    <td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${SUNSHINE.reduce((a,b)=>a+b,0)}h</td>
+    <td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${Math.round(totProd/SUNSHINE.reduce((a,b)=>a+b,0)*10)/10}</td>
+  </tr>`;
+
+  // ========== PAGE 2 : COMPARAISON HISTORIQUE ==========
+  const availYears = [2023,2024,2025,2026].filter(y=>pData[y]);
+  let histRows = '';
+  let histTotals = {};
+  availYears.forEach(y=>{histTotals[y]=0;});
+  for(let m=0;m<12;m++){
+    const vals = availYears.map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[m]:null);
+    const maxVal = Math.max(...vals.filter(x=>x));
+    const bg = m%2===0?'#FFFFFF':'#F8F9FA';
+    let row=`<td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;background:${bg};">${MOIS_F[m]}</td>`;
+    availYears.forEach((y,i)=>{
+      const v=vals[i];
+      if(v)histTotals[y]+=v;
+      const isBest = v && v===maxVal && vals.filter(x=>x).length>1;
+      row+=`<td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;font-weight:${isBest?'800':'500'};color:${isBest?'#007A45':'#333'};background:${bg};">${v?v.toFixed(1):'—'}</td>`;
+    });
+    histRows+=`<tr>${row}</tr>`;
+  }
+  // 2026 progress line
+  let prog2026 = '';
+  if(pData[2026]){
+    const d26=pData[2026];
+    const moisSaisis=d26.monthly.filter(x=>x).length;
+    const proj=moisSaisis?Math.round(d26.total/moisSaisis*12):0;
+    prog2026=`<tr style="background:#E8F4FD;border-top:2px solid #0055AA;">
+      <td style="padding:.35rem .5rem;font-size:9px;font-weight:800;color:#0055AA;">2026 (projection)</td>
+      <td colspan="${availYears.length}" style="padding:.35rem .5rem;font-size:9px;color:#0055AA;">
+        ${d26.total.toFixed(1)} kWh saisis sur ${moisSaisis} mois → projection annuelle : <strong>${proj} kWh</strong>
+        (${Math.round(proj/OBJECTIF*100)}% de l'objectif ${OBJECTIF} kWh)
+      </td>
+    </tr>`;
+  }
+  let totalRow=`<td style="padding:.35rem .5rem;font-size:9.5px;font-weight:800;background:#FFF3CD;">TOTAL ANNUEL</td>`;
+  availYears.forEach(y=>{
+    const isBest=histTotals[y]===Math.max(...availYears.map(y2=>histTotals[y2]));
+    totalRow+=`<td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;font-weight:${isBest?'800':'700'};color:${isBest?'#007A45':'#333'};background:#FFF3CD;">${histTotals[y].toFixed(1)}${isBest?' 🏆':''}</td>`;
+  });
+  histRows+=`<tr>${totalRow}</tr>${prog2026}`;
+
+  // ========== PAGE 3 : MOIS EN COURS ==========
+  const curMonthIdx = now.getMonth();
+  const curYearNow = now.getFullYear();
+  const daysInMonth = new Date(curYearNow, curMonthIdx+1, 0).getDate();
+  let dailyHTML = '<p style="font-size:9px;color:#888;text-align:center;padding:1rem;">Pas de données journalières disponibles.</p>';
+
+  if(pData[curYearNow]&&pData[curYearNow].dailyByMonth&&pData[curYearNow].dailyByMonth[curMonthIdx]){
+    const days = pData[curYearNow].dailyByMonth[curMonthIdx].sort((a,b)=>a.day-b.day);
+    const cumul = Math.round(days.reduce((a,b)=>a+b.prod,0)*10)/10;
+    const histVals=[2024,2025].map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[curMonthIdx]:null).filter(x=>x);
+    const moyHist = histVals.length?Math.round(histVals.reduce((a,b)=>a+b,0)/histVals.length):null;
+    const pctVsMoy = moyHist?Math.round(cumul/moyHist*100):null;
+    const joursRestants = daysInMonth - now.getDate();
+    const moyJour = Math.round(cumul/days.length*10)/10;
+
+    // Summary line
+    const summaryLine = `${MOIS_F[curMonthIdx]} ${curYearNow} : ${cumul} kWh cumulés (${days.length} jour${days.length>1?'s':''} saisis)${moyHist?' · Moy. historique : '+moyHist+' kWh':''}${pctVsMoy?' · '+pctVsMoy+'% de la moyenne':''} · ${moyJour} kWh/jour · ${joursRestants} jours restants`;
+
+    let dayRows = '';
+    let runTotal = 0;
+    days.forEach(({day,prod,ac,inj,consoReel})=>{
+      runTotal = Math.round((runTotal+prod)*10)/10;
+      const dateJ = new Date(curYearNow,curMonthIdx,day);
+      const jourSem = dateJ.toLocaleDateString('fr-BE',{weekday:'short'});
+      const bg = day%2===0?'#F8F9FA':'#FFFFFF';
+      dayRows+=`<tr style="background:${bg};">
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;font-size:8.5px;font-weight:600;">${jourSem} ${day}</td>
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#CC5500;font-weight:700;font-size:8.5px;">${prod.toFixed(1)}</td>
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#007A45;font-weight:700;font-size:8.5px;">${ac?ac.toFixed(1):'—'}</td>
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#0055AA;font-size:8.5px;">${inj?inj.toFixed(1):'—'}</td>
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;">${consoReel?consoReel.toFixed(1):'—'}</td>
+        <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;color:#555;">${runTotal.toFixed(1)}</td>
+      </tr>`;
+    });
+    // Total row
+    const totAC=Math.round(days.reduce((a,b)=>a+(b.ac||0),0)*10)/10;
+    const totInj=Math.round(days.reduce((a,b)=>a+(b.inj||0),0)*10)/10;
+    const totCR=Math.round(days.reduce((a,b)=>a+(b.consoReel||0),0)*10)/10;
+    dayRows+=`<tr style="background:#FFF3CD;font-weight:800;border-top:2px solid #CC8800;">
+      <td style="padding:.3rem .5rem;font-size:9px;">CUMUL</td>
+      <td style="padding:.3rem .5rem;text-align:right;color:#CC5500;font-size:9px;">${cumul.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;color:#007A45;font-size:9px;">${totAC.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;color:#0055AA;font-size:9px;">${totInj.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${totCR.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${cumul.toFixed(1)}</td>
+    </tr>`;
+
+    dailyHTML = `
+      <p style="font-size:9px;color:#333;margin-bottom:.6rem;padding:.4rem .6rem;background:#EEF6FF;border-left:3px solid #0055AA;border-radius:3px;">${summaryLine}</p>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#0A1628;color:#fff;">
+          <th style="padding:.3rem .5rem;text-align:left;font-size:8.5px;">Jour</th>
+          <th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Prod. (kWh)</th>
+          <th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Autoconso.</th>
+          <th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Injection</th>
+          <th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Conso. réelle</th>
+          <th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Cumul</th>
+        </tr></thead>
+        <tbody>${dayRows}</tbody>
+      </table>`;
+  }
+
+  // ========== ASSEMBLE PDF ==========
+  const headerStyle = 'border-bottom:3px solid #CC8800;padding-bottom:.5rem;margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:flex-end;';
+  const titleStyle = 'font-size:15px;font-weight:800;color:#0A1628;margin:0;';
+  const subtitleStyle = 'font-size:8.5px;color:#666;margin:2px 0 0;';
+  const sectionStyle = 'font-size:10px;font-weight:800;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem;padding-left:.4rem;border-left:3px solid #CC8800;';
+  const thStyle = 'background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:right;font-size:8.5px;font-weight:700;';
+  const thStyleL = 'background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:left;font-size:8.5px;font-weight:700;';
+
+  document.getElementById('pdf-print').innerHTML = `
+  <!-- PAGE 1 -->
+  <div class="pdf-page">
+    <div style="${headerStyle}">
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Saint-Léger · ${curYear}</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · 10×420Wc · 4,2 kWc · Plein Sud 33° · Gaume 6747, BE · Installation Août 2023</p>
+      </div>
+      <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
+    </div>
+
+    <div style="${sectionStyle}">Résumé ${curYear}</div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:1rem;border:1px solid #E0E0E0;">
+      <thead><tr>
+        <th style="${thStyleL}">Indicateur</th>
+        <th style="${thStyle}">Valeur</th>
+        <th style="${thStyle}">Détail</th>
+      </tr></thead>
+      <tbody>${kpiHTML}</tbody>
+    </table>
+
+    <div style="${sectionStyle}">Production mensuelle ${curYear}</div>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
+      <thead><tr>
+        <th style="${thStyleL}">Mois</th>
+        <th style="${thStyle}">Prod. (kWh)</th>
+        <th style="${thStyle}">Autoconso. (kWh)</th>
+        <th style="${thStyle}">Injection (kWh)</th>
+        <th style="${thStyle}">Taux autoconso.</th>
+        <th style="${thStyle}">Ensoleil. (h)</th>
+        <th style="${thStyle}">kWh/h soleil</th>
+      </tr></thead>
+      <tbody>${monthRows}</tbody>
+    </table>
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      Source données : Google Sheets (temps réel) · Ensoleillement : IRM Saint-Léger 1991-2020 · Page 1/3
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="pdf-page">
+    <div style="${headerStyle}">
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Comparaison historique</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Depuis Août 2023</p>
+      </div>
+      <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
+    </div>
+
+    <div style="${sectionStyle}">Production mensuelle par année (kWh)</div>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
+      <thead><tr>
+        <th style="${thStyleL}">Mois</th>
+        ${availYears.map(y=>`<th style="${thStyle}">${y}</th>`).join('')}
+      </tr></thead>
+      <tbody>${histRows}</tbody>
+    </table>
+
+    <div style="${sectionStyle}">Installation & ROI</div>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
+      <thead><tr>
+        <th style="${thStyleL}">Paramètre</th>
+        <th style="${thStyle}">Valeur</th>
+      </tr></thead>
+      <tbody>
+        ${[
+          ['Coût installation', INSTALL_COST.toFixed(2)+' €'],
+          ['Économies cumulées', roi.totalSaved+' €'],
+          ['ROI atteint', roi.pct+'%'],
+          ['Années restantes (estimation)', roi.yearsLeft+' ans'],
+          ['Tarif kWh réel appliqué', KWH_PRICE_REAL+' €/kWh'],
+        ].map(([l,v],i)=>`<tr style="background:${i%2?'#F8F9FA':'#FFF'};"><td style="padding:.3rem .5rem;font-size:9px;border-bottom:1px solid #EEE;">${l}</td><td style="padding:.3rem .5rem;font-size:9.5px;font-weight:700;text-align:right;border-bottom:1px solid #EEE;">${v}</td></tr>`).join('')}
+      </tbody>
+    </table>
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      🏆 = Meilleure valeur de l'historique · Page 2/3
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="pdf-page">
+    <div style="${headerStyle}">
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Relevé journalier ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Données saisies à 22h</p>
+      </div>
+      <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
+    </div>
+
+    <div style="${sectionStyle}">Relevé journalier — ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</div>
+    ${dailyHTML}
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      Prod. = Production solaire · Autoconso. = PV - Injection · Conso. réelle = Autoconso. + Conso. nuit · Page 3/3
+    </div>
+  </div>`;
+}
+
+
+function refreshData(){fetchAll();}
+
+// ===== INIT =====
+fetchAll();
+</script>
+</body>
+</html>

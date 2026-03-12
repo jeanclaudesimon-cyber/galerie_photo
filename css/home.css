@@ -1,0 +1,377 @@
+/* ================================
+   SIMOUN'S HOME — CSS
+================================= */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap');
+
+:root {
+  --noir: #080808;
+  --rouge: #c0392b;
+  --rouge-clair: #e74c3c;
+  --blanc: #f0ece4;
+  --gris: #888;
+  --gris-clair: #bbb;
+  --or: #c9a84c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--blanc);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* CANVAS PARTICULES */
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ================================
+   HERO
+================================= */
+#hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  padding: 60px 80px;
+}
+
+#hero-left {
+  position: relative;
+  flex-shrink: 0;
+}
+
+#hero-photo {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid rgba(255,255,255,0.15);
+  filter: grayscale(20%);
+  animation: fadeInLeft 1.2s ease forwards;
+  opacity: 0;
+}
+
+#hero-ring {
+  position: absolute;
+  top: -15px; left: -15px;
+  width: 310px; height: 310px;
+  border-radius: 50%;
+  border: 1px solid var(--rouge);
+  animation: fadeInLeft 1.4s ease forwards, rotate 20s linear infinite;
+  opacity: 0;
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+
+#hero-right {
+  max-width: 560px;
+  animation: fadeInRight 1.2s ease forwards;
+  opacity: 0;
+}
+
+#hero-label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 100;
+  font-size: 0.75em;
+  letter-spacing: 0.4em;
+  color: var(--rouge);
+  margin-bottom: 16px;
+}
+
+#hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 4.5em;
+  line-height: 1;
+  color: var(--blanc);
+  margin-bottom: 8px;
+}
+
+#hero-name span {
+  font-style: italic;
+  color: var(--gris-clair);
+}
+
+#hero-line {
+  width: 60px;
+  height: 1px;
+  background: var(--rouge);
+  margin: 24px 0;
+}
+
+#hero-desc {
+  font-size: 0.95em;
+  line-height: 1.9;
+  color: var(--gris-clair);
+  letter-spacing: 0.05em;
+  margin-bottom: 36px;
+}
+
+/* ICÔNES */
+#hero-icons {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.icon-photo {
+  width: 36px;
+  height: 36px;
+  opacity: 0.4;
+  transition: opacity 0.3s, transform 0.3s;
+  cursor: default;
+}
+
+.icon-photo:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* ================================
+   STATS
+================================= */
+#stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 40px 80px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 60px;
+  animation: fadeInUp 1.5s ease forwards;
+  opacity: 0;
+}
+
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3em;
+  font-weight: 300;
+  color: var(--blanc);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.7em;
+  letter-spacing: 0.25em;
+  color: var(--gris);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 50px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* ================================
+   TUILES
+================================= */
+#tiles {
+  position: relative;
+  z-index: 1;
+  padding: 80px;
+}
+
+#tiles-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 2em;
+  letter-spacing: 0.1em;
+  color: var(--gris-clair);
+  text-align: center;
+  margin-bottom: 60px;
+  font-style: italic;
+}
+
+#tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.tile {
+  position: relative;
+  text-decoration: none;
+  color: var(--blanc);
+  overflow: hidden;
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px;
+  transition: transform 0.4s ease;
+  animation: fadeInUp 1.6s ease forwards;
+  opacity: 0;
+}
+
+.tile:hover { transform: scale(1.02); z-index: 2; }
+
+.tile-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: background 0.4s;
+}
+
+.tile:hover .tile-bg {
+  background: rgba(255,255,255,0.07);
+}
+
+#tile-galerie .tile-bg { border-top: 2px solid var(--rouge); }
+#tile-dessins .tile-bg { border-top: 2px solid var(--or); }
+#tile-camera .tile-bg { border-top: 2px solid #444; }
+#tile-solaire .tile-bg { border-top: 2px solid #f39c12; }
+
+.tile-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tile-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.tile h3 {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 400;
+  font-size: 1.2em;
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+
+.tile p {
+  font-size: 0.8em;
+  color: var(--gris);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
+.tile-cta {
+  font-size: 0.75em;
+  letter-spacing: 0.3em;
+  color: var(--rouge);
+  text-transform: uppercase;
+}
+
+#tile-dessins .tile-cta { color: var(--or); }
+#tile-solaire .tile-cta { color: #f39c12; }
+.tile-soon { color: #555 !important; }
+
+.tile-disabled { pointer-events: none; opacity: 0.4; }
+
+/* ================================
+   FOOTER
+================================= */
+#footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 40px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.75em;
+  letter-spacing: 0.2em;
+  color: var(--gris);
+}
+
+/* ================================
+   ANIMATIONS
+================================= */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ================================
+   RESPONSIVE
+================================= */
+@media (max-width: 768px) {
+  #hero {
+    flex-direction: column;
+    padding: 40px 24px;
+    gap: 40px;
+    text-align: center;
+  }
+  #hero-name { font-size: 3em; }
+  #hero-line { margin: 16px auto; }
+  #hero-icons { justify-content: center; }
+  #stats { flex-wrap: wrap; padding: 30px 20px; gap: 20px; }
+  .stat-item { padding: 0 20px; }
+  .stat-divider { display: none; }
+  #tiles { padding: 40px 16px; }
+  #tiles-grid { grid-template-columns: 1fr; }
+  .tile { height: 200px; }
+}
+
+/* Logo photographe */
+#hero-logo {
+  position: absolute;
+  bottom: -20px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: invert(1) brightness(0.7);
+  opacity: 0.5;
+  animation: fadeInLeft 1.6s ease forwards;
+}
+/* Logo photographe  */
+#hero-logo2 {
+  position: absolute;
+  top: -60px;
+  left: -140px;
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: invert(1);brightness (1.9);
+  opacity: 0.7;
+animation: fadeInLeft 4s ease forwards;
+}
+/* Label blanc plus gros */
+#hero-label {
+  color: #f0ece4 !important;
+  font-size: 0.9em !important;
+  letter-spacing: 0.35em !important;
+}

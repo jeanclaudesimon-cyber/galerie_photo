@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Aquarelles — Jean-Claude Simon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dessins.css">
+</head>
+<body>
+
+<!-- BARRE FIXE EN HAUT -->
+<div id="topbar-dessins">
+  <a href="index.html" id="btn-home-dessins">← Accueil</a>
+  <div id="topbar-title">
+    <svg viewBox="0 0 40 40" width="24" height="24">
+      <path d="M6 34 L12 20 L28 4 L36 12 L20 28 Z" fill="none" stroke="#c9a84c" stroke-width="2"/>
+      <line x1="12" y1="20" x2="28" y2="4" stroke="#c9a84c" stroke-width="1.5"/>
+      <path d="M6 34 L2 38 L10 36 Z" fill="#c9a84c"/>
+    </svg>
+    <span>Mes Aquarelles</span>
+  </div>
+  <div id="topbar-count"><span id="count-photos">—</span> œuvres</div>
+</div>
+
+<!-- DÉCORATIONS -->
+<div id="deco-left">
+  <!-- Crayon -->
+  <svg viewBox="0 0 40 200" class="deco-svg">
+    <rect x="15" y="10" width="10" height="140" rx="2" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+    <polygon points="15,150 25,150 20,175" fill="rgba(201,168,76,0.3)"/>
+    <rect x="15" y="8" width="10" height="8" rx="1" fill="rgba(201,168,76,0.2)"/>
+    <line x1="15" y1="30" x2="25" y2="30" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+  </svg>
+  <!-- Pinceau -->
+  <svg viewBox="0 0 40 200" class="deco-svg" style="margin-top:40px">
+    <line x1="20" y1="10" x2="20" y2="155" stroke="rgba(201,168,76,0.3)" stroke-width="2"/>
+    <ellipse cx="20" cy="165" rx="6" ry="12" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+    <ellipse cx="20" cy="170" rx="3" ry="4" fill="rgba(201,168,76,0.2)"/>
+    <rect x="16" y="8" width="8" height="12" rx="2" fill="rgba(201,168,76,0.2)"/>
+  </svg>
+  <!-- Palette -->
+  <svg viewBox="0 0 80 80" class="deco-svg" style="margin-top:30px; width:60px; height:60px">
+    <ellipse cx="40" cy="45" rx="32" ry="26" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+    <circle cx="25" cy="35" r="4" fill="rgba(192,57,43,0.3)"/>
+    <circle cx="38" cy="28" r="4" fill="rgba(39,174,96,0.3)"/>
+    <circle cx="52" cy="33" r="4" fill="rgba(41,128,185,0.3)"/>
+    <circle cx="55" cy="46" r="4" fill="rgba(243,156,18,0.3)"/>
+    <circle cx="44" cy="55" r="5" fill="rgba(255,255,255,0.1)"/>
+  </svg>
+</div>
+
+<!-- GALERIE PRINCIPALE -->
+<main id="dessins-gallery"></main>
+
+<!-- MODAL DESSIN -->
+<div id="modal-dessins" class="hidden">
+  <div id="modal-inner">
+
+    <!-- Photo -->
+    <div id="modal-image-zone">
+      <img id="modal-dessin-img" src="" alt="">
+      <button id="prev-dessin">&#8592;</button>
+      <button id="next-dessin">&#8594;</button>
+    </div>
+
+    <!-- Ligne séparatrice -->
+    <div id="modal-separator"></div>
+
+    <!-- Infos -->
+    <div id="modal-info-zone">
+      <h2 id="dessin-title"></h2>
+      <div id="dessin-separator-line"></div>
+      <div id="dessin-technique-label">TECHNIQUE</div>
+      <p id="dessin-technique">—</p>
+      <div id="dessin-separator-line2"></div>
+      <div id="dessin-desc-label">DESCRIPTION</div>
+      <p id="dessin-description">—</p>
+      <div id="dessin-exif-zone">
+        <div id="dessin-exif-label">EXIF</div>
+        <ul id="dessin-exif"></ul>
+      </div>
+    </div>
+
+    <span id="close-dessins">×</span>
+  </div>
+</div>
+
+<script src="js/dessins.js"></script>
+</body>
+</html>
