@@ -160,6 +160,7 @@ tbody td{padding:9px 12px;font-size:13px}
     </div>
     <div class="hdr-r">
       <div class="upd" id="upd">—</div>
+      <a href="index.html" style="background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;transition:.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">← Accueil</a>
       <button class="rbtn" onclick="connectSheet()">↻ Actualiser</button>
     </div>
   </div>
@@ -650,9 +651,9 @@ function connectSheet() {
   btn.textContent='⏳...'; btn.disabled=true;
   const proxy='https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url='+encodeURIComponent(url);
   fetch(proxy)
-    .then(r=>r.json())
-    .then(data=>{
-      const rows=parseCSV(data.contents||'').filter(r=>r.some(c=>c.trim()));
+    .then(r=>r.text())
+    .then(csv=>{
+      const rows=parseCSV(csv||'').filter(r=>r.some(c=>c.trim()));
       if(rows.length<2)throw new Error('Fichier vide ou non lisible.');
       const headers=rows[0].map(h=>h.toLowerCase());
       const iDate=headers.findIndex(h=>h.includes('date'));
