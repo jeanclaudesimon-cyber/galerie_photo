@@ -648,7 +648,7 @@ function connectSheet() {
   if(!url){alert("Collez l'URL CSV de votre Google Sheet.");return;}
   const btn = document.querySelector('.cbtn');
   btn.textContent='⏳...'; btn.disabled=true;
-  const proxy='https://corsproxy.io/?'+encodeURIComponent(url);
+  const proxy='https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url='+encodeURIComponent(url);
   fetch(proxy)
     .then(r=>r.json())
     .then(data=>{
@@ -659,7 +659,7 @@ function connectSheet() {
       const iNiv=headers.findIndex(h=>h.includes('niveau')||h.includes('litre')||h.includes('cuve'));
       const iNote=headers.findIndex(h=>h.includes('remarque')||h.includes('note'));
       const parsed=[];
-      for(let i=1;i<rows.length;i++){
+      for(let i=2;i<rows.length;i++){
         const r=rows[i];
         const d=normDate(r[iDate>=0?iDate:0]);
         const n=parseFloat(String(r[iNiv>=0?iNiv:1]).replace(',','.'));
