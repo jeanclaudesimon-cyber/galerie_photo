@@ -347,7 +347,7 @@ function num(v){
 }
 
 // ===== FETCH =====
-const PROXY = 'https://corsproxy.io/?';
+const PROXY = 'https://api.allorigins.win/raw?url=';
 function proxify(url){ return PROXY + encodeURIComponent(url); }
 
 async function fetchAll() {
