@@ -169,7 +169,7 @@ tbody td{padding:9px 12px;font-size:13px}
 <div class="sbar">
   <div class="sbar-in">
     <label>🔗 Google Sheet :</label>
-    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhmfctjtNFEHJ5lSPclusMqoeo6qhlJAZggbm0elnSyjVcQIp07pmTG86ezcDrRg/pub?gid=681570621&single=true&output=csv" />
+    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhmfctjtNFEHJ5lSPclusMqoeo6qhlJAZggbm0elnSyjVcQIp07pmTG86ezcDrRg/pub?gid=1374663605&single=true&output=csv" />
     <button class="cbtn" onclick="connectSheet()">🔄 Charger Sheet</button>
   </div>
 </div>
@@ -649,7 +649,7 @@ function connectSheet() {
   if(!url){alert("Collez l'URL CSV de votre Google Sheet.");return;}
   const btn = document.querySelector('.cbtn');
   btn.textContent='⏳...'; btn.disabled=true;
-  const proxy='https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url='+encodeURIComponent(url);
+  const proxy='https://script.google.com/macros/s/AKfycbz2Kgv3nv9ypVlIEWgeFemiR2nRnb0Q_9bG6pepzJZEN1STGClANT-pGxMplxTCjkzAcQ/exec?url='+encodeURIComponent(url);
   fetch(proxy)
     .then(r=>r.text())
     .then(csv=>{
