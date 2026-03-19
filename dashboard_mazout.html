@@ -316,8 +316,8 @@ tbody td{padding:9px 12px;font-size:13px}
 // ─── DONNÉES RÉELLES INTÉGRÉES ────────────────────────────────
 const CUVE = 2500;
 const PRIX_TTC = 0.883;
-const SEUIL_AL = 400;
-const SEUIL_WN = 800;
+const SEUIL_AL = 500;
+const SEUIL_WN = 660;
 
 const REAL_RELEVES = [
   {date:"2021-01-19",niveau:1820,note:"Début relevés"},
@@ -401,7 +401,15 @@ function render() {
 
   // Gauge
   const pct = Math.round(latest.niveau/CUVE*100);
-  document.getElementById('tfl').style.height = Math.min(pct,100)+'%';
+  const tfl = document.getElementById('tfl');
+  tfl.style.height = Math.min(pct,100)+'%';
+  if(latest.niveau <= SEUIL_AL){
+    tfl.style.background='linear-gradient(180deg,#E85555,#D95F5F)';
+  } else if(latest.niveau <= SEUIL_WN){
+    tfl.style.background='linear-gradient(180deg,#F5A623,#E8621A)';
+  } else {
+    tfl.style.background='linear-gradient(180deg,#5CB87A,#3a9a5c)';
+  }
   document.getElementById('tpct').textContent = pct+'%';
   document.getElementById('cL').textContent = latest.niveau;
   
@@ -529,7 +537,7 @@ function renderCharts(rel) {
         pointBackgroundColor: rel.map(r=>r.note&&r.note.includes('Livraison')?'#5CB87A':'#E8621A'),
         pointRadius: rel.map(r=>r.note&&r.note.includes('Livraison')?6:3),
       },{
-        label:'Seuil alerte (400L)',
+        label:'Seuil alerte (500L)',
         data: rel.map(()=>SEUIL_AL),
         borderColor:'rgba(217,95,95,0.5)', borderDash:[5,5], borderWidth:1,
         pointRadius:0, fill:false,
