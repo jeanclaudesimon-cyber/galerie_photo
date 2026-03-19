@@ -4,7 +4,6 @@
 const FLICKR_API_KEY = "37a243d5b14bf833201965702402868c";
 const FLICKR_USER_ID = "21237428@N08";
 
-// Albums Flickr (id: nom)
 const flickrAlbums = {
   "72157603637269892": "Oiseaux et insectes",
   "72157603622203535": "Oiseaux",
@@ -71,7 +70,14 @@ const flickrAlbums = {
   "72177720332442695": "Arbres (Local)"
 };
 
-// Albums locaux (conservés)
+// ============================
+// VIDEOS YOUTUBE PAR TITRE
+// ============================
+const youtubeVideos = {
+  "La force du vent": "CtJkAdIQmWg",
+  // Ajoutez d'autres : "Titre exact Flickr": "ID_YouTube",
+};
+
 const localAlbums = {
   "paysage": ["_DSC6772.jpg", "_DSC6776.jpg"],
   "oiseaux-local": ["_DSC6570.jpg","_DSC6605.jpg","DSC_1220.jpg"],
@@ -84,7 +90,6 @@ const localAlbums = {
 
 const basePath = "albums/";
 
-// Citations photo
 const citations = [
   { texte: "La photographie, c'est la vérité. Et le cinéma, c'est vingt-quatre fois la vérité par seconde.", auteur: "Jean-Luc Godard" },
   { texte: "Une bonne photographie, c'est une photographie à laquelle il n'y a rien à ajouter et rien à retirer.", auteur: "Ansel Adams" },
@@ -94,25 +99,21 @@ const citations = [
   { texte: "La photographie est un art de l'observation.", auteur: "Elliott Erwitt" },
   { texte: "L'appareil photo est une machine qui apprend aux gens à voir sans appareil photo.", auteur: "Dorothea Lange" },
   { texte: "Photographier c'est mettre sur la même ligne de mire la tête, l'œil et le cœur.", auteur: "Henri Cartier-Bresson" },
-  { texte: "Une bonne photographie consiste à savoir capturer la profondeur des sentiments, pas la profondeur du champ.", auteur: " Peter Adams" },
-  { texte: "Je ne fais pas confiance aux mots. Je fais confiance aux images.", auteur: " Gilles Peress" },
-  { texte: "La photographie fige un instant dans le temps, altère la vie en l'immobilisant.", auteur: "Dorothea Lange " },
-  { texte: "Et si le goût de la vie diminue, les photos pâlissent parce que photographier, c’est savourer la vie au 1/125 de seconde", auteur: " Marc Riboud" },
-  { texte: "La meilleure chose à propos d'une image est qu'elle ne change jamais, même lorsque les personnes qui y figurent changent.", auteur: " Andy Warhol" },
-  { texte: "Ce que j'aime dans les photographies, c'est qu'elles capturent un moment qui est parti pour toujours, impossible à reproduire.", auteur: "Karl Lagerfeld " },
-  { texte: "Vous ne prenez pas une photographie, vous la créez.", auteur: "Ansel Adams " },
-  { texte: "Voir en couleur est un plaisir pour l'œil mais voir en noir et blanc est un plaisir pour l'âme.", auteur: "Andri Cauldwell " },
+  { texte: "Une bonne photographie consiste à savoir capturer la profondeur des sentiments, pas la profondeur du champ.", auteur: "Peter Adams" },
+  { texte: "Je ne fais pas confiance aux mots. Je fais confiance aux images.", auteur: "Gilles Peress" },
+  { texte: "La photographie fige un instant dans le temps, altère la vie en l'immobilisant.", auteur: "Dorothea Lange" },
+  { texte: "Et si le goût de la vie diminue, les photos pâlissent parce que photographier, c'est savourer la vie au 1/125 de seconde", auteur: "Marc Riboud" },
+  { texte: "La meilleure chose à propos d'une image est qu'elle ne change jamais, même lorsque les personnes qui y figurent changent.", auteur: "Andy Warhol" },
+  { texte: "Ce que j'aime dans les photographies, c'est qu'elles capturent un moment qui est parti pour toujours, impossible à reproduire.", auteur: "Karl Lagerfeld" },
+  { texte: "Vous ne prenez pas une photographie, vous la créez.", auteur: "Ansel Adams" },
+  { texte: "Voir en couleur est un plaisir pour l'œil mais voir en noir et blanc est un plaisir pour l'âme.", auteur: "Andri Cauldwell" },
 ];
 
-// État global
-let currentAlbumPhotos = []; // [{url_m, url_l, title, isFlickr}]
+let currentAlbumPhotos = [];
 let currentPhotoIndex = 0;
 let currentAlbumId = null;
 let photoOfDayUrl = null;
 
-// ============================
-// DOM
-// ============================
 const albumSelect = document.getElementById("album-select");
 const miniAlbumsDiv = document.getElementById("mini-albums");
 const galleryDiv = document.getElementById("gallery");
@@ -124,33 +125,19 @@ const exifList = document.getElementById("exif");
 const closeModal = document.getElementById("close");
 const countEl = document.getElementById("count-photos");
 
-
-// ============================
-// INIT
-// ============================
 async function init() {
   buildAlbumSelect();
   await loadPhotoOfDay();
-
-  // Affiche le premier album Flickr par défaut
   const firstId = Object.keys(flickrAlbums)[0];
   albumSelect.value = "flickr_" + firstId;
   displayFlickrAlbum(firstId);
-
   albumSelect.addEventListener("change", onAlbumChange);
 }
 
-// ============================
-// CONSTRUCTION SELECTEUR ALPHABETIQUE
-// ============================
 function buildAlbumSelect() {
-  // Groupe Flickr
   const groupFlickr = document.createElement("optgroup");
   groupFlickr.label = "📷 Albums Flickr";
-
-  const flickrEntries = Object.entries(flickrAlbums)
-    .sort((a, b) => a[1].localeCompare(b[1], 'fr'));
-
+  const flickrEntries = Object.entries(flickrAlbums).sort((a, b) => a[1].localeCompare(b[1], 'fr'));
   flickrEntries.forEach(([id, name]) => {
     const opt = document.createElement("option");
     opt.value = "flickr_" + id;
@@ -159,13 +146,9 @@ function buildAlbumSelect() {
   });
   albumSelect.appendChild(groupFlickr);
 
-  // Groupe local
   const groupLocal = document.createElement("optgroup");
   groupLocal.label = "💾 Albums locaux";
-
-  const localEntries = Object.entries(localAlbums)
-    .sort((a, b) => a[0].localeCompare(b[0], 'fr'));
-
+  const localEntries = Object.entries(localAlbums).sort((a, b) => a[0].localeCompare(b[0], 'fr'));
   localEntries.forEach(([name]) => {
     const opt = document.createElement("option");
     opt.value = "local_" + name;
@@ -174,28 +157,21 @@ function buildAlbumSelect() {
   });
   albumSelect.appendChild(groupLocal);
 
-  // Mini-albums vedette (3 premiers Flickr)
   const vedette = flickrEntries.slice(0, 3);
   vedette.forEach(([id, name]) => {
     const mini = document.createElement("div");
     mini.className = "mini-album";
     mini.title = name;
-
     const img = document.createElement("img");
     img.src = `https://farm1.staticflickr.com/placeholder.jpg`;
     img.alt = name;
-
-    // Charge la vraie miniature
     fetchFlickrCover(id).then(url => { if(url) img.src = url; });
-
     const label = document.createElement("span");
     label.className = "mini-album-label";
     label.textContent = name;
-
     mini.appendChild(img);
     mini.appendChild(label);
     miniAlbumsDiv.appendChild(mini);
-
     mini.addEventListener("click", () => {
       albumSelect.value = "flickr_" + id;
       displayFlickrAlbum(id);
@@ -203,9 +179,6 @@ function buildAlbumSelect() {
   });
 }
 
-// ============================
-// CHANGEMENT D'ALBUM
-// ============================
 function onAlbumChange(e) {
   const val = e.target.value;
   if (val.startsWith("flickr_")) {
@@ -215,20 +188,13 @@ function onAlbumChange(e) {
   }
 }
 
-// ============================
-// PHOTO DU JOUR
-// ============================
 async function loadPhotoOfDay() {
   const photoDay = document.getElementById("photo-of-day");
   const citationEl = document.getElementById("citation-text");
   const citationAuteur = document.getElementById("citation-auteur");
-
-  // Citation aléatoire
   const cit = citations[Math.floor(Math.random() * citations.length)];
   if (citationEl) citationEl.textContent = `"${cit.texte}"`;
   if (citationAuteur) citationAuteur.textContent = `— ${cit.auteur}`;
-
-  // Photo aléatoire depuis un album Flickr aléatoire
   try {
     const ids = Object.keys(flickrAlbums);
     const randomId = ids[Math.floor(Math.random() * ids.length)];
@@ -255,9 +221,6 @@ async function loadPhotoOfDay() {
   }
 }
 
-// ============================
-// FLICKR : RÉCUPÉRER COVER
-// ============================
 async function fetchFlickrCover(albumId) {
   try {
     const url = `https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${FLICKR_API_KEY}&photoset_id=${albumId}&user_id=${FLICKR_USER_ID}&format=json&nojsoncallback=1&extras=url_m&per_page=1`;
@@ -270,18 +233,13 @@ async function fetchFlickrCover(albumId) {
   return null;
 }
 
-// ============================
-// FLICKR : AFFICHER ALBUM
-// ============================
 async function displayFlickrAlbum(albumId) {
   galleryDiv.innerHTML = '<p style="color:#888;padding:20px;">Chargement des photos...</p>';
   currentAlbumId = "flickr_" + albumId;
-
   try {
     const url = `https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${FLICKR_API_KEY}&photoset_id=${albumId}&user_id=${FLICKR_USER_ID}&format=json&nojsoncallback=1&extras=url_m,url_l,title&per_page=500`;
     const res = await fetch(url);
     const data = await res.json();
-
     if (data.stat !== "ok") throw new Error("Flickr error");
 
     currentAlbumPhotos = data.photoset.photo
@@ -289,22 +247,38 @@ async function displayFlickrAlbum(albumId) {
       .map(p => ({ url_m: p.url_m, url_l: p.url_l || p.url_m, title: p.title, isFlickr: true }));
 
     galleryDiv.innerHTML = "";
-if (countEl) countEl.textContent = currentAlbumPhotos.length;//bonne place ici
+    if (countEl) countEl.textContent = currentAlbumPhotos.length;
+
     currentAlbumPhotos.forEach((photo, index) => {
       const card = document.createElement("div");
       card.className = "photo-card";
-    // j'ai supprimer 
       card.dataset.title = photo.title;
 
-      const img = document.createElement("img");
-      img.src = photo.url_m;
-      img.alt = photo.title;
-      img.loading = "lazy";
+      // Vérifier si c'est une vidéo YouTube
+      const ytId = youtubeVideos[photo.title];
+      if (ytId) {
+        card.classList.add("video-card");
+        card.style.cssText = "position:relative;padding-bottom:56.25%;height:0;overflow:hidden;grid-column:span 2;margin-bottom:28px;";
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${ytId}`;
+        iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;";
+        iframe.allowFullscreen = true;
+        iframe.loading = "lazy";
+        card.appendChild(iframe);
+        const label = document.createElement("div");
+        label.style.cssText = "position:absolute;bottom:-22px;left:0;font-size:12px;color:#888;";
+        label.textContent = "🎬 " + photo.title;
+        card.appendChild(label);
+      } else {
+        const img = document.createElement("img");
+        img.src = photo.url_m;
+        img.alt = photo.title;
+        img.loading = "lazy";
+        card.appendChild(img);
+        card.addEventListener("click", () => openModalFromUrl(photo.url_l, photo.title, true, index));
+      }
 
-      card.appendChild(img);
       galleryDiv.appendChild(card);
-
-      card.addEventListener("click", () => openModalFromUrl(photo.url_l, photo.title, true, index));
     });
 
   } catch(e) {
@@ -312,12 +286,8 @@ if (countEl) countEl.textContent = currentAlbumPhotos.length;//bonne place ici
   }
 }
 
-// ============================
-// LOCAL : AFFICHER ALBUM
-// ============================
 function displayLocalAlbum(albumName) {
   galleryDiv.innerHTML = "";
-  
   currentAlbumId = "local_" + albumName;
   currentAlbumPhotos = localAlbums[albumName].map(name => ({
     url_m: `${basePath}${albumName}/${name}`,
@@ -325,28 +295,19 @@ function displayLocalAlbum(albumName) {
     title: name,
     isFlickr: false
   }));
-if (countEl) countEl.textContent = currentAlbumPhotos.length; //ici le conteur
-
+  if (countEl) countEl.textContent = currentAlbumPhotos.length;
   currentAlbumPhotos.forEach((photo, index) => {
     const card = document.createElement("div");
     card.className = "photo-card";
-
     const img = document.createElement("img");
     img.src = photo.url_m;
     img.alt = photo.title;
-
     card.appendChild(img);
     galleryDiv.appendChild(card);
-
     card.addEventListener("click", () => openModalFromUrl(photo.url_l, photo.title, false, index));
   });
-   if (countEl) countEl.textContent = currentAlbumPhotos.length;// ici compteur
-
 }
 
-// ============================
-// MODAL
-// ============================
 function openModalFromUrl(photoUrl, title, isFlickr, index) {
   if (index !== undefined) currentPhotoIndex = index;
   modal.classList.remove("hidden");
@@ -368,7 +329,6 @@ function openModalFromUrl(photoUrl, title, isFlickr, index) {
     photoNotes.style.fontStyle = "normal";
     photoNotes.textContent = current;
     photoNotes.focus();
-
     photoNotes.onblur = function() {
       const newNote = photoNotes.textContent.trim();
       photoNotes.contentEditable = "false";
@@ -386,7 +346,6 @@ function openModalFromUrl(photoUrl, title, isFlickr, index) {
     };
   };
 
-  // EXIF uniquement pour photos locales
   if (!isFlickr) {
     exifList.innerHTML = "<li>Lecture des EXIF...</li>";
     fetch(photoUrl)
@@ -441,9 +400,6 @@ function openModalFromUrl(photoUrl, title, isFlickr, index) {
   }
 }
 
-// ============================
-// PARSER EXIF
-// ============================
 function parseExif(view) {
   const result = {};
   try {
@@ -522,7 +478,6 @@ function readSignedRational(view, offset, le) {
 closeModal.addEventListener("click", () => modal.classList.add("hidden"));
 modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
 
-// Navigation flèches
 const prevBtn = document.getElementById("prev-photo");
 const nextBtn = document.getElementById("next-photo");
 
@@ -546,7 +501,6 @@ if (nextBtn) {
   });
 }
 
-// Navigation clavier
 document.addEventListener("keydown", (e) => {
   if (modal.classList.contains("hidden")) return;
   if (e.key === "ArrowLeft" && prevBtn) prevBtn.click();
@@ -554,7 +508,4 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") modal.classList.add("hidden");
 });
 
-// ============================
-// LANCEMENT
-// ============================
 init();
