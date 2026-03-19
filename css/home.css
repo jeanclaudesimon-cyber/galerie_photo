@@ -14,9 +14,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--noir);
   color: var(--blanc);
@@ -25,7 +23,6 @@ body {
   overflow-x: hidden;
 }
 
-/* CANVAS PARTICULES */
 #particles {
   position: fixed;
   top: 0; left: 0;
@@ -86,9 +83,9 @@ body {
 #hero-label {
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 100;
-  font-size: 0.75em;
-  letter-spacing: 0.4em;
-  color: var(--rouge);
+  font-size: 0.9em !important;
+  letter-spacing: 0.35em !important;
+  color: #f0ece4 !important;
   margin-bottom: 16px;
 }
 
@@ -121,7 +118,6 @@ body {
   margin-bottom: 36px;
 }
 
-/* ICÔNES */
 #hero-icons {
   display: flex;
   gap: 24px;
@@ -240,9 +236,7 @@ body {
   transition: background 0.4s;
 }
 
-.tile:hover .tile-bg {
-  background: rgba(255,255,255,0.07);
-}
+.tile:hover .tile-bg { background: rgba(255,255,255,0.07); }
 
 #tile-galerie .tile-bg { border-top: 2px solid var(--rouge); }
 #tile-dessins .tile-bg { border-top: 2px solid var(--or); }
@@ -287,7 +281,6 @@ body {
 #tile-dessins .tile-cta { color: var(--or); }
 #tile-solaire .tile-cta { color: #f39c12; }
 .tile-soon { color: #555 !important; }
-
 .tile-disabled { pointer-events: none; opacity: 0.4; }
 
 /* ================================
@@ -324,27 +317,6 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-/* ================================
-   RESPONSIVE
-================================= */
-@media (max-width: 768px) {
-  #hero {
-    flex-direction: column;
-    padding: 40px 24px;
-    gap: 40px;
-    text-align: center;
-  }
-  #hero-name { font-size: 3em; }
-  #hero-line { margin: 16px auto; }
-  #hero-icons { justify-content: center; }
-  #stats { flex-wrap: wrap; padding: 30px 20px; gap: 20px; }
-  .stat-item { padding: 0 20px; }
-  .stat-divider { display: none; }
-  #tiles { padding: 40px 16px; }
-  #tiles-grid { grid-template-columns: 1fr; }
-  .tile { height: 200px; }
-}
-
 /* Logo photographe */
 #hero-logo {
   position: absolute;
@@ -357,7 +329,7 @@ body {
   opacity: 0.5;
   animation: fadeInLeft 1.6s ease forwards;
 }
-/* Logo photographe  */
+
 #hero-logo2 {
   position: absolute;
   top: -60px;
@@ -365,13 +337,70 @@ body {
   width: 200px;
   height: 200px;
   object-fit: contain;
-  filter: invert(1);brightness (1.9);
+  filter: invert(1) brightness(1.9);
   opacity: 0.7;
-animation: fadeInLeft 4s ease forwards;
+  animation: fadeInLeft 4s ease forwards;
 }
-/* Label blanc plus gros */
-#hero-label {
-  color: #f0ece4 !important;
-  font-size: 0.9em !important;
-  letter-spacing: 0.35em !important;
+
+/* ================================
+   RESPONSIVE MOBILE
+================================= */
+@media (max-width: 768px) {
+  #hero {
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 24px;
+    text-align: center;
+    min-height: auto;
+  }
+
+  #hero-left {
+    display: flex;
+    justify-content: center;
+  }
+
+  #hero-photo {
+    width: 140px;
+    height: 140px;
+  }
+
+  #hero-ring {
+    top: -8px; left: -8px;
+    width: 156px; height: 156px;
+  }
+
+  #hero-logo {
+    width: 70px; height: 70px;
+    bottom: -10px; right: -20px;
+  }
+
+  #hero-logo2 {
+    width: 110px; height: 110px;
+    top: -30px; left: -70px;
+  }
+
+  #hero-name { font-size: 2.4em; }
+  #hero-desc { font-size: 0.85em; }
+  #hero-line { margin: 12px auto; }
+  #hero-icons { justify-content: center; gap: 16px; }
+  .icon-photo { width: 28px; height: 28px; }
+
+  #stats { flex-wrap: wrap; padding: 24px 16px; gap: 16px; }
+  .stat-item { padding: 0 16px; }
+  .stat-divider { display: none; }
+  .stat-number { font-size: 2em; }
+
+  #tiles { padding: 30px 12px; }
+  #tiles-title { font-size: 1.4em; margin-bottom: 30px; }
+  #tiles-grid { grid-template-columns: 1fr; }
+  .tile { height: 180px; padding: 20px; }
+  .tile-icon { width: 32px; height: 32px; margin-bottom: 10px; }
+  .tile h3 { font-size: 1em; }
+}
+
+@media (max-width: 480px) {
+  #hero-photo { width: 110px; height: 110px; }
+  #hero-ring { top: -6px; left: -6px; width: 122px; height: 122px; }
+  #hero-name { font-size: 2em; }
+  #hero-logo2 { display: none; }
 }
