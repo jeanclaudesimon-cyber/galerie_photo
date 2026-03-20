@@ -290,7 +290,7 @@ tbody td{padding:9px 12px;font-size:13px}
   <div class="stitle">📋 Tous les Relevés</div>
   <div class="tbl-card">
     <table>
-      <thead><tr><th>Date</th><th>Niveau (L)</th><th>% Cuve</th><th>Conso (L)</th><th>L/jour</th><th>Remarque</th><th>Type</th></tr></thead>
+      <thead><tr><th>Date</th><th>Niveau (L)</th><th>% Cuve</th><th>Conso (L)</th><th>L/jour</th><th>🌡️ Temp.</th><th>Remarque</th><th>Type</th></tr></thead>
       <tbody id="tRel"></tbody>
     </table>
   </div>
@@ -489,6 +489,7 @@ function renderRelTable(rel) {
       <td>${pct}%</td>
       <td>${r.conso>0?r.conso+' L':'—'}</td>
       <td>${r.lPerJour>0?r.lPerJour+' L/j':'—'}</td>
+      <td style="font-size:11px;color:#7ab8f5">${r.temp||'—'}</td>
       <td style="font-size:11px;color:var(--muted)">${r.note||''}</td>
       <td>${isLiv?'<span class="tbg tbg-liv">🚛 Livraison</span>':'<span class="tbg tbg-rel">Relevé</span>'}</td>
     </tr>`;
@@ -667,13 +668,14 @@ function connectSheet() {
       const iDate=headers.findIndex(h=>h.includes('date'));
       const iNiv=headers.findIndex(h=>h.includes('niveau')||h.includes('litre')||h.includes('cuve'));
       const iNote=headers.findIndex(h=>h.includes('remarque')||h.includes('note'));
+      const iTemp=headers.findIndex(h=>h.includes('temp'));
       const parsed=[];
       for(let i=2;i<rows.length;i++){
         const r=rows[i];
         const d=normDate(r[iDate>=0?iDate:0]);
         const n=parseFloat(String(r[iNiv>=0?iNiv:1]).replace(',','.'));
         if(!d||!n||isNaN(n))continue;
-        parsed.push({date:d,niveau:n,note:iNote>=0?r[iNote]||'':''});
+        parsed.push({date:d,niveau:n,note:iNote>=0?r[iNote]||'':'',temp:iTemp>=0?r[iTemp]||'':''});
       }
       if(parsed.length===0)throw new Error('Aucune donnée valide trouvée.');
       parsed.sort((a,b)=>a.date.localeCompare(b.date));
