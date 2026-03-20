@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blues du Pirate 5 — Accords</title>
+<script src="https://www.youtube.com/iframe_api"></script>
+<style>
+:root {
+  --dk: #0d0d0d;
+  --card: #1a1a1a;
+  --card2: #242424;
+  --txt: #f0f0f0;
+  --muted: #888;
+  --accent: #e8621a;
+  --grn: #5cb87a;
+  --bdr: rgba(255,255,255,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', sans-serif; background:var(--dk); color:var(--txt); min-height:100vh; }
+
+header {
+  background:linear-gradient(135deg,#1a0a00,#2a1400);
+  border-bottom:2px solid var(--accent);
+  padding:14px 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+}
+header h1 { font-size:18px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); }
+header span { font-size:12px; color:var(--muted); }
+
+.container { max-width:900px; margin:0 auto; padding:2rem; }
+
+/* INFO BAR */
+.info-bar {
+  display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.info-badge {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:8px; padding:8px 16px; font-size:13px;
+}
+.info-badge span { color:var(--accent); font-weight:700; font-size:16px; }
+
+/* YOUTUBE */
+.yt-wrap {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:12px; overflow:hidden; margin-bottom:1.5rem;
+}
+.yt-embed { position:relative; padding-bottom:30%; height:0; }
+.yt-embed iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+
+/* CONTROLS */
+.controls {
+  display:flex; gap:12px; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.btn {
+  padding:10px 24px; border-radius:8px; border:none;
+  font-size:14px; font-weight:700; cursor:pointer; transition:.2s;
+}
+.btn-play { background:var(--accent); color:#fff; font-size:16px; }
+.btn-play:hover { background:#f58340; transform:translateY(-1px); }
+.btn-stop { background:var(--card2); color:var(--txt); border:1px solid var(--bdr); }
+.btn-stop:hover { background:#333; }
+.btn-reset { background:var(--card2); color:var(--muted); border:1px solid var(--bdr); font-size:12px; }
+
+.timer-display {
+  font-family:monospace; font-size:22px; color:var(--accent);
+  background:var(--card); border:1px solid var(--bdr);
+  padding:8px 16px; border-radius:8px; min-width:80px; text-align:center;
+}
+
+.beat-display {
+  font-size:13px; color:var(--muted);
+  background:var(--card); border:1px solid var(--bdr);
+  padding:8px 16px; border-radius:8px;
+}
+
+/* PROGRESS */
+.progress-wrap {
+  background:var(--card2); border-radius:4px; height:6px;
+  margin-bottom:1.5rem; overflow:hidden;
+}
+.progress-bar {
+  height:100%; background:var(--accent);
+  width:0%; transition:width 0.1s linear;
+  border-radius:4px;
+}
+
+/* CHORDS DISPLAY */
+.section-title {
+  font-size:11px; text-transform:uppercase; letter-spacing:2px;
+  color:var(--muted); margin-bottom:8px;
+}
+
+.chords-grid {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:1.5rem;
+}
+
+.chord-block {
+  background:var(--card2); border:2px solid var(--bdr);
+  border-radius:10px; padding:12px 8px;
+  text-align:center; transition:.3s;
+  min-width:60px; position:relative;
+  cursor:default;
+}
+.chord-block.anacruze {
+  border-style:dashed; opacity:0.4;
+}
+.chord-block.active {
+  background:rgba(232,98,26,0.2);
+  border-color:var(--accent);
+  transform:scale(1.08);
+  box-shadow:0 0 20px rgba(232,98,26,0.4);
+}
+.chord-block.passed {
+  opacity:0.35;
+}
+.chord-name {
+  font-size:22px; font-weight:700; color:var(--txt); line-height:1;
+}
+.chord-block.active .chord-name { color:var(--accent); font-size:26px; }
+.chord-cases {
+  font-size:10px; color:var(--muted); margin-top:4px;
+}
+.chord-block.active .chord-cases { color:var(--accent); }
+.anacruze-label {
+  font-size:9px; color:var(--muted); font-style:italic;
+}
+
+/* CURRENT CHORD BIG */
+.current-big {
+  background:var(--card); border:2px solid var(--accent);
+  border-radius:14px; padding:1.5rem; margin-bottom:1.5rem;
+  text-align:center; display:flex; align-items:center; justify-content:space-between;
+}
+.current-chord-name {
+  font-size:64px; font-weight:900; color:var(--accent); line-height:1;
+}
+.current-info { text-align:right; }
+.current-next { font-size:13px; color:var(--muted); }
+.current-next span { color:var(--txt); font-weight:700; font-size:16px; }
+.current-cases-left {
+  font-size:28px; font-weight:700; color:var(--grn);
+}
+
+/* BEAT DOTS */
+.beat-dots {
+  display:flex; gap:6px; margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.beat-dot {
+  width:14px; height:14px; border-radius:50%;
+  background:var(--card2); border:1px solid var(--bdr);
+  transition:.1s;
+}
+.beat-dot.active { background:var(--accent); box-shadow:0 0 8px rgba(232,98,26,0.6); }
+.beat-dot.beat1 { background:var(--card2); border-color:#f58340; width:18px; height:18px; }
+.beat-dot.beat1.active { background:#f58340; }
+
+/* LOOP INFO */
+.loop-info {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:8px; padding:10px 16px; font-size:12px;
+  color:var(--muted); margin-bottom:1rem;
+}
+.loop-info span { color:var(--grn); font-weight:700; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎸 Blues du Pirate 5</h1>
+  <span>Backing Track — Guitare Basse</span>
+</header>
+
+<div class="container">
+
+  <!-- INFO -->
+  <div class="info-bar">
+    <div class="info-badge">Tempo : <span>173</span> BPM</div>
+    <div class="info-badge">Mesure : <span>6/8</span></div>
+    <div class="info-badge">Cases/temps : <span>6</span> cases = 1 mesure</div>
+    <div class="info-badge">Répétitions : <span>4×</span></div>
+  </div>
+
+  <!-- YOUTUBE PLAYER -->
+  <div class="yt-wrap">
+    <div class="yt-embed">
+      <div id="ytPlayer"></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn btn-play" onclick="togglePlay()" id="btnPlay">▶ Play</button>
+    <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
+    <button class="btn btn-reset" onclick="resetPlay()">↺ Reset</button>
+    <div class="timer-display" id="timerDisplay">0:00</div>
+    <div class="beat-display" id="beatDisplay">Case 0 / Mesure 0</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- ACCORD EN COURS (grand) -->
+  <div class="current-big">
+    <div class="current-chord-name" id="currentChordName">—</div>
+    <div class="current-info">
+      <div class="current-next">Suivant : <span id="nextChordName">—</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">Cases restantes</div>
+      <div class="current-cases-left" id="casesLeft">—</div>
+    </div>
+  </div>
+
+  <!-- DOTS BATTEMENT -->
+  <div class="section-title">Battements (cases)</div>
+  <div class="beat-dots" id="beatDots"></div>
+
+  <!-- GRILLE ACCORDS -->
+  <div class="section-title">Grille des accords</div>
+  <div class="chords-grid" id="chordsGrid"></div>
+
+  <!-- LOOP INFO -->
+  <div class="loop-info" id="loopInfo">
+    Répétition : <span id="loopCount">1</span> / 4
+  </div>
+
+</div>
+
+<script>
+// ─── STRUCTURE DU MORCEAU ────────────────────────────────────
+// cases = nombre de cases (en 6/8, une mesure = 6 cases)
+// BPM 173 en 6/8 → une noire = 60/173s → une croche = 30/173s
+// Une "case" = une croche
+
+const BPM = 173;
+const CASE_DURATION = (60 / BPM) / 2; // durée d'une croche en secondes (= une case)
+const LOOPS = 4;
+
+const STRUCTURE = [
+  { name: null,  cases: 3,  anacruze: true  }, // anacrouse 3 cases silence
+  { name: 'F',   cases: 3,  anacruze: false },
+  { name: 'Fm',  cases: 3,  anacruze: false },
+  { name: 'Fm',  cases: 6,  anacruze: false },
+  { name: 'Cm',  cases: 6,  anacruze: false },
+  { name: 'Cm',  cases: 6,  anacruze: false },
+  { name: 'Bb',  cases: 6,  anacruze: false },
+  { name: 'Bb',  cases: 1,  anacruze: false },
+  { name: 'Bbm', cases: 5,  anacruze: false },
+  { name: 'Fm',  cases: 6,  anacruze: false },
+];
+
+// Calcul des positions de début de chaque accord (en cases depuis le début)
+let casePositions = [];
+let totalCases = 0;
+STRUCTURE.forEach((s, i) => {
+  casePositions.push(totalCases);
+  totalCases += s.cases;
+});
+const totalCasesPerLoop = totalCases;
+const totalCasesAll = totalCasesPerLoop * LOOPS;
+
+// ─── ÉTAT ────────────────────────────────────────────────────
+let isPlaying = false;
+let startTime = null;
+let animFrame = null;
+let currentBlockIndex = -1;
+
+// ─── BUILD UI ────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('chordsGrid');
+  grid.innerHTML = '';
+  STRUCTURE.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'chord-block' + (s.anacruze ? ' anacruze' : '');
+    div.id = 'block_' + i;
+    // Largeur proportionnelle aux cases
+    div.style.flex = s.cases;
+    div.style.minWidth = (s.cases * 14) + 'px';
+    div.innerHTML = `
+      <div class="chord-name">${s.anacruze ? '〜' : (s.name || '—')}</div>
+      <div class="chord-cases">${s.cases} case${s.cases>1?'s':''}</div>
+      ${s.anacruze ? '<div class="anacruze-label">anacrouse</div>' : ''}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function buildBeatDots() {
+  const dots = document.getElementById('beatDots');
+  dots.innerHTML = '';
+  // Afficher les cases d'une mesure (6 cases)
+  for (let i = 0; i < 6; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'beat-dot' + (i === 0 ? ' beat1' : '');
+    dot.id = 'dot_' + i;
+    dots.appendChild(dot);
+  }
+}
+
+// ─── PLAY / STOP ─────────────────────────────────────────────
+function togglePlay() {
+  if (isPlaying) {
+    pausePlay();
+  } else {
+    startPlay();
+  }
+}
+
+const DECOMPTE_SEC = 1.6; // durée du décompte en secondes
+
+function startPlay() {
+  isPlaying = true;
+  if (!startTime) {
+    // Démarrer YouTube immédiatement
+    if (ytPlayer && ytPlayer.playVideo) {
+      ytPlayer.seekTo(0);
+      ytPlayer.playVideo();
+    }
+    // Démarrer les accords après le décompte
+    setTimeout(() => {
+      startTime = performance.now();
+      tick();
+    }, DECOMPTE_SEC * 1000);
+    document.getElementById('btnPlay').textContent = '⏸ Pause';
+    return;
+  } else {
+    // Reprise
+    if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+    document.getElementById('btnPlay').textContent = '⏸ Pause';
+    tick();
+  }
+}
+
+function pausePlay() {
+  isPlaying = false;
+  document.getElementById('btnPlay').textContent = '▶ Play';
+  cancelAnimationFrame(animFrame);
+  if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+}
+
+function stopPlay() {
+  isPlaying = false;
+  startTime = null;
+  currentBlockIndex = -1;
+  document.getElementById('btnPlay').textContent = '▶ Play';
+  cancelAnimationFrame(animFrame);
+  if (ytPlayer && ytPlayer.stopVideo) { ytPlayer.stopVideo(); ytPlayer.seekTo(0); }
+  resetUI();
+}
+
+function resetPlay() {
+  stopPlay();
+}
+
+function resetUI() {
+  document.getElementById('currentChordName').textContent = '—';
+  document.getElementById('nextChordName').textContent = '—';
+  document.getElementById('casesLeft').textContent = '—';
+  document.getElementById('timerDisplay').textContent = '0:00';
+  document.getElementById('beatDisplay').textContent = 'Case 0 / Mesure 0';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('loopCount').textContent = '1';
+  // Reset blocks
+  STRUCTURE.forEach((s, i) => {
+    const el = document.getElementById('block_' + i);
+    if (el) el.className = 'chord-block' + (s.anacruze ? ' anacruze' : '');
+  });
+  // Reset dots
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('dot_' + i);
+    if (dot) dot.classList.remove('active');
+  }
+}
+
+// ─── TICK ─────────────────────────────────────────────────────
+function tick() {
+  if (!isPlaying) return;
+
+  const elapsed = (performance.now() - startTime) / 1000; // secondes
+  const totalCase = Math.floor(elapsed / CASE_DURATION);
+  
+  // Vérifier fin
+  if (totalCase >= totalCasesAll) {
+    stopPlay();
+    document.getElementById('currentChordName').textContent = '✅';
+    return;
+  }
+
+  // Loop actuelle
+  const loop = Math.floor(totalCase / totalCasesPerLoop) + 1;
+  const caseInLoop = totalCase % totalCasesPerLoop;
+  const caseInMesure = caseInLoop % 6;
+
+  // Trouver l'accord actuel
+  let blockIdx = 0;
+  for (let i = STRUCTURE.length - 1; i >= 0; i--) {
+    if (caseInLoop >= casePositions[i]) {
+      blockIdx = i;
+      break;
+    }
+  }
+
+  const currentBlock = STRUCTURE[blockIdx];
+  const casesInBlock = caseInLoop - casePositions[blockIdx];
+  const casesLeft = currentBlock.cases - casesInBlock;
+
+  // Prochain accord non-anacruze
+  let nextIdx = blockIdx + 1;
+  while (nextIdx < STRUCTURE.length && STRUCTURE[nextIdx].anacruze) nextIdx++;
+  if (nextIdx >= STRUCTURE.length) nextIdx = 1; // retour début (skip anacruze)
+  const nextBlock = STRUCTURE[nextIdx];
+
+  // Update UI seulement si changement
+  if (blockIdx !== currentBlockIndex) {
+    currentBlockIndex = blockIdx;
+    // Reset tous les blocs
+    STRUCTURE.forEach((s, i) => {
+      const el = document.getElementById('block_' + i);
+      if (!el) return;
+      if (i < blockIdx) el.className = 'chord-block passed' + (s.anacruze ? ' anacruze' : '');
+      else if (i === blockIdx) el.className = 'chord-block active' + (s.anacruze ? ' anacruze' : '');
+      else el.className = 'chord-block' + (s.anacruze ? ' anacruze' : '');
+    });
+    // Scroll to active
+    const activeEl = document.getElementById('block_' + blockIdx);
+    if (activeEl) activeEl.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  }
+
+  // Grand accord
+  document.getElementById('currentChordName').textContent = 
+    currentBlock.anacruze ? '〜' : (currentBlock.name || '—');
+  document.getElementById('nextChordName').textContent = nextBlock.name || '—';
+  document.getElementById('casesLeft').textContent = casesLeft;
+
+  // Timer
+  const mins = Math.floor(elapsed / 60);
+  const secs = Math.floor(elapsed % 60).toString().padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = `${mins}:${secs}`;
+
+  // Beat display
+  document.getElementById('beatDisplay').textContent = 
+    `Case ${caseInMesure + 1}/6 · Mesure ${Math.floor(caseInLoop/6)+1} · Tour ${loop}/${LOOPS}`;
+
+  // Loop counter
+  document.getElementById('loopCount').textContent = loop;
+
+  // Progress
+  const pct = (totalCase / totalCasesAll) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Beat dots
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('dot_' + i);
+    if (dot) {
+      dot.classList.toggle('active', i === caseInMesure);
+    }
+  }
+
+  animFrame = requestAnimationFrame(tick);
+}
+
+// ─── YOUTUBE API ─────────────────────────────────────────────
+let ytPlayer = null;
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('ytPlayer', {
+    height: '100%',
+    width: '100%',
+    videoId: 'zkhSHKqdpz4',
+    playerVars: { 'playsinline': 1, 'rel': 0 },
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerStateChange(event) {
+  // Si la vidéo est mise en pause depuis YouTube, on pause les accords aussi
+  if (event.data === YT.PlayerState.PAUSED && isPlaying) {
+    pausePlay();
+  }
+  if (event.data === YT.PlayerState.ENDED) {
+    stopPlay();
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+buildGrid();
+buildBeatDots();
+</script>
+</body>
+</html>
