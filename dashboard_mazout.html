@@ -664,7 +664,7 @@ function connectSheet() {
     .then(csv=>{
       const rows=parseCSV(csv||'').filter(r=>r.some(c=>c.trim()));
       if(rows.length<2)throw new Error('Fichier vide ou non lisible.');
-      const headers=rows[0].map(h=>h.toLowerCase());
+      const headers=rows[1].map(h=>h.toLowerCase());
       const iDate=headers.findIndex(h=>h.includes('date'));
       const iNiv=headers.findIndex(h=>h.includes('niveau')||h.includes('litre')||h.includes('cuve'));
       const iNote=headers.findIndex(h=>h.includes('remarque')||h.includes('note'));
