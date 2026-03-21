@@ -128,6 +128,7 @@ let scrollInterval = null;
 let ytPlayer = null;
 let ytReady = false;
 let ytPlaying = false;
+let pdfTotalHeight = 0; // calculé après rendu complet de toutes les pages
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('ytPlayerDiv', {
@@ -196,6 +197,7 @@ async function loadPDF(url) {
 async function renderAllPages() {
   const zone = document.getElementById('pdfZone');
   zone.innerHTML = '';
+  pdfTotalHeight = 0;
   const containerWidth = zone.clientWidth - 32;
   for(let i=1; i<=totalPages; i++) {
     const page = await pdfDoc.getPage(i);
@@ -209,8 +211,11 @@ async function renderAllPages() {
     canvas.id = 'page_'+i;
     zone.appendChild(canvas);
     await page.render({canvasContext:canvas.getContext('2d'), viewport:svp}).promise;
+    pdfTotalHeight += svp.height + 16; // accumule hauteur de chaque page + gap
   }
+  pdfTotalHeight -= zone.clientHeight; // hauteur scrollable réelle
   document.getElementById('pageNum').textContent = `Page 1 / ${totalPages}`;
+  document.getElementById('smode').textContent = `✅ ${totalPages} page(s) — ${Math.round(pdfTotalHeight)}px scrollable`;
 }
 
 function changeZoom(delta) {
@@ -250,31 +255,23 @@ function toggleAutoScroll() {
     btn.style.color = 'var(--accent)';
     badge.classList.add('on');
     const zone = document.getElementById('pdfZone');
-    // Remettre en haut
+    // Utiliser la hauteur calculée lors du rendu
     zone.scrollTop = 0;
-    setTimeout(() => {
-      // Calculer hauteur réelle en additionnant tous les canvas
-      const canvases = zone.querySelectorAll('.pdf-page');
-      let totalContentHeight = 0;
-      canvases.forEach(c => { totalContentHeight += c.height + 16; }); // +16 = gap
-      const totalHeight = totalContentHeight - zone.clientHeight;
-
-      if(totalHeight <= 50 || canvases.length === 0) {
-        document.getElementById('smode').textContent = '⚠️ PDF pas encore chargé — réessayez après chargement complet';
-        autoScroll = false;
-        btn.textContent = '↕ Défilement : OFF';
-        btn.style.color = '';
-        badge.classList.remove('on');
-        return;
-      }
-      const totalMs = (currentSong.totalMeasures * 4 / currentSong.bpm) * 60000;
-      const scrollPerMs = totalHeight / totalMs;
-      document.getElementById('smode').textContent = `↕ Défilement auto — ${Math.round(totalMs/1000)}s pour ${Math.round(totalHeight)}px (${canvases.length} pages)`;
-      scrollInterval = setInterval(() => {
-        zone.scrollTop += scrollPerMs * 100;
-        if(zone.scrollTop >= totalHeight - 10) toggleAutoScroll();
-      }, 100);
-    }, 500);
+    if(pdfTotalHeight <= 50) {
+      document.getElementById('smode').textContent = '⚠️ PDF pas encore chargé — attendez puis réessayez';
+      autoScroll = false;
+      btn.textContent = '↕ Défilement : OFF';
+      btn.style.color = '';
+      badge.classList.remove('on');
+      return;
+    }
+    const totalMs = (currentSong.totalMeasures * 4 / currentSong.bpm) * 60000;
+    const scrollPerMs = pdfTotalHeight / totalMs;
+    document.getElementById('smode').textContent = `↕ Défilement auto — ${Math.round(totalMs/1000)}s pour ${Math.round(pdfTotalHeight)}px (${totalPages} pages)`;
+    scrollInterval = setInterval(() => {
+      zone.scrollTop += scrollPerMs * 100;
+      if(zone.scrollTop >= pdfTotalHeight - 10) toggleAutoScroll();
+    }, 100);
   } else {
     btn.textContent = '↕ Défilement : OFF';
     btn.style.color = '';
