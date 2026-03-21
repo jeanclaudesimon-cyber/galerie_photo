@@ -250,13 +250,16 @@ function toggleAutoScroll() {
     btn.style.color = 'var(--accent)';
     badge.classList.add('on');
     const zone = document.getElementById('pdfZone');
-    // Remettre en haut avant de démarrer
+    // Remettre en haut
     zone.scrollTop = 0;
-    // Attendre que le scroll soit à 0 puis calculer
+    // Attendre rendu complet (1.5s) puis démarrer
     setTimeout(() => {
+      // Forcer recalcul layout
+      zone.style.overflow = 'hidden';
+      zone.style.overflow = 'auto';
       const totalHeight = zone.scrollHeight - zone.clientHeight;
-      if(totalHeight <= 0) {
-        document.getElementById('smode').textContent = '⚠️ PDF pas encore chargé — réessayez';
+      if(totalHeight <= 50) {
+        document.getElementById('smode').textContent = '⚠️ PDF pas encore chargé — attendez le chargement complet puis réessayez';
         autoScroll = false;
         btn.textContent = '↕ Défilement : OFF';
         btn.style.color = '';
@@ -265,12 +268,12 @@ function toggleAutoScroll() {
       }
       const totalMs = (currentSong.totalMeasures * 4 / currentSong.bpm) * 60000;
       const scrollPerMs = totalHeight / totalMs;
-      document.getElementById('smode').textContent = `↕ Défilement auto — ${Math.round(totalMs/1000)}s pour ${totalHeight}px`;
+      document.getElementById('smode').textContent = `↕ Défilement auto — ${Math.round(totalMs/1000)}s pour ${Math.round(totalHeight)}px`;
       scrollInterval = setInterval(() => {
         zone.scrollTop += scrollPerMs * 100;
-        if(zone.scrollTop >= totalHeight) toggleAutoScroll();
+        if(zone.scrollTop >= totalHeight - 10) toggleAutoScroll();
       }, 100);
-    }, 200);
+    }, 1500);
   } else {
     btn.textContent = '↕ Défilement : OFF';
     btn.style.color = '';
