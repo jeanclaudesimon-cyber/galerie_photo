@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Théorie — Guitare Basse</title>
+<style>
+:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--blu:#4a9eff;--pur:#9b59b6;--bdr:rgba(255,255,255,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh}
+header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:12px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo h1{font-size:16px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none}
+.abtn:hover{color:#fff}
+
+main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.stitle{font-size:11px;text-transform:uppercase;letter-spacing:3px;color:var(--accent);margin-bottom:1rem;margin-top:2rem;padding-bottom:6px;border-bottom:1px solid rgba(232,98,26,.2)}
+.stitle:first-child{margin-top:0}
+
+/* INTRO */
+.intro{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:1.2rem;margin-bottom:1.5rem;font-size:14px;line-height:1.8;color:#ccc}
+.intro strong{color:var(--accent)}
+
+/* MANCHE */
+.neck-wrap{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:1.2rem;margin-bottom:1.5rem;overflow-x:auto}
+.neck-title{font-size:13px;font-weight:700;margin-bottom:.8rem;color:var(--txt)}
+.neck{display:flex;gap:0;align-items:stretch;background:#8B5E3C;border-radius:4px;overflow:hidden;min-width:600px}
+.fret{display:flex;flex-direction:column;border-right:3px solid #ddd;min-width:52px;position:relative}
+.fret:first-child{border-right:5px solid #eee;min-width:40px;background:#6B3F1A}
+.fret-num{text-align:center;font-size:10px;color:#ccc;padding:3px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.1)}
+.string-row{display:flex;flex-direction:column}
+.note-cell{height:28px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,.15);position:relative}
+.note-cell::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(200,180,150,.4);z-index:0}
+.note-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;z-index:1;position:relative}
+.root{background:var(--accent);color:#fff}
+.third{background:#27ae60;color:#fff}
+.fifth{background:#2980b9;color:#fff}
+.seventh{background:var(--pur);color:#fff}
+.scale-note{background:#555;color:#ddd}
+.penta{background:#e67e22;color:#fff}
+.open-str{background:#333;color:var(--muted);font-size:9px}
+
+/* LÉGENDE */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:.8rem}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-dot{width:14px;height:14px;border-radius:50%}
+
+/* GAMMES */
+.scales-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:1.5rem}
+.scale-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:1.2rem}
+.scale-name{font-size:14px;font-weight:700;margin-bottom:.4rem;color:var(--accent)}
+.scale-sub{font-size:11px;color:var(--muted);margin-bottom:.8rem}
+.scale-notes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
+.snote{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700}
+.formula{font-size:11px;color:var(--muted);font-style:italic}
+.pattern{font-family:monospace;font-size:12px;background:var(--card2);padding:6px 10px;border-radius:6px;margin-top:6px;color:#ccc}
+
+/* INTERVALLES */
+.intervals-table{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+.intervals-table th{padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--bdr)}
+.intervals-table td{padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04)}
+.intervals-table tr:hover td{background:rgba(255,255,255,.03)}
+.int-name{font-weight:700;color:var(--txt)}
+.int-semi{color:var(--accent);font-family:monospace}
+.int-ex{color:var(--muted);font-size:11px}
+
+/* ACCORDS */
+.chords-theory{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.chord-theory-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:1rem}
+.cth-name{font-size:16px;font-weight:900;color:var(--accent);margin-bottom:4px}
+.cth-formula{font-size:11px;color:var(--muted);margin-bottom:.5rem}
+.cth-notes{font-size:12px;color:var(--txt)}
+.cth-role{font-size:10px;color:var(--grn);margin-top:4px}
+
+/* TIPS */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.tip-card{background:var(--card);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1rem}
+.tip-icon{font-size:20px;margin-bottom:6px}
+.tip-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.tip-text{font-size:12px;color:var(--muted);line-height:1.6}
+
+.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:5px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><h1>🎸 Théorie Guitare Basse</h1></div>
+  <div style="display:flex;gap:8px">
+    <a href="partition.html" class="abtn">📄 Partition</a>
+    <a href="accords.html" class="abtn">🎵 Accords</a>
+    <a href="index.html" class="abtn">← Accueil</a>
+  </div>
+</header>
+
+<main>
+
+<div class="intro">
+  La guitare basse est l'<strong>épine dorsale rythmique et harmonique</strong> d'un groupe. Elle fait le lien entre la batterie (rythme) et les harmonies (guitare, clavier). Comprendre quelques bases de théorie permet de jouer avec plus de musicalité et de liberté.
+</div>
+
+<!-- MANCHE -->
+<div class="stitle">🎸 Le Manche — Notes en Ré mineur (positions ouvertes)</div>
+<div class="neck-wrap">
+  <div class="neck-title">Basse 4 cordes — Accord de Mi standard (E A D G) — Frettes 0 à 12</div>
+  <div id="neckContainer"></div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot root" style="background:var(--accent)"></div>Tonique (Dm)</div>
+    <div class="leg-item"><div class="leg-dot third" style="background:#27ae60"></div>Tierce mineure</div>
+    <div class="leg-item"><div class="leg-dot fifth" style="background:#2980b9"></div>Quinte</div>
+    <div class="leg-item"><div class="leg-dot seventh" style="background:var(--pur)"></div>Septième</div>
+    <div class="leg-item"><div class="leg-dot penta" style="background:#e67e22"></div>Pentatonique</div>
+    <div class="leg-item"><div class="leg-dot scale-note" style="background:#555"></div>Gamme mineure</div>
+  </div>
+</div>
+
+<!-- GAMMES -->
+<div class="stitle">🎼 Gammes essentielles pour la basse</div>
+<div class="scales-grid">
+
+  <div class="scale-card">
+    <div class="scale-name">Gamme Majeure</div>
+    <div class="scale-sub">Ton joyeux, lumineux</div>
+    <div class="scale-notes">
+      <span class="snote root" style="background:var(--accent)">1</span>
+      <span class="snote" style="background:#555">2</span>
+      <span class="snote third" style="background:#27ae60">3</span>
+      <span class="snote" style="background:#555">4</span>
+      <span class="snote fifth" style="background:#2980b9">5</span>
+      <span class="snote" style="background:#555">6</span>
+      <span class="snote" style="background:#555">7</span>
+      <span class="snote root" style="background:var(--accent)">8</span>
+    </div>
+    <div class="formula">Formule : T T D T T T D</div>
+    <div class="pattern">Exemple en Do : C D E F G A B C</div>
+    <div class="pattern" style="margin-top:4px">Basse (Do, corde A) : 3-5-7-8-10-12...</div>
+  </div>
+
+  <div class="scale-card">
+    <div class="scale-name">Gamme Mineure Naturelle</div>
+    <div class="scale-sub">Ton mélancolique, blues</div>
+    <div class="scale-notes">
+      <span class="snote root" style="background:var(--accent)">1</span>
+      <span class="snote" style="background:#555">2</span>
+      <span class="snote third" style="background:#27ae60">b3</span>
+      <span class="snote" style="background:#555">4</span>
+      <span class="snote fifth" style="background:#2980b9">5</span>
+      <span class="snote" style="background:#555">b6</span>
+      <span class="snote seventh" style="background:var(--pur)">b7</span>
+      <span class="snote root" style="background:var(--accent)">8</span>
+    </div>
+    <div class="formula">Formule : T D T T D T T</div>
+    <div class="pattern">Exemple en Ré min : D E F G A Bb C D</div>
+    <div class="pattern" style="margin-top:4px">Basse (Ré, corde A) : 5-7-8-10-12-13-15-17</div>
+  </div>
+
+  <div class="scale-card">
+    <div class="scale-name">Pentatonique Mineure ⭐</div>
+    <div class="scale-sub">La plus utilisée en rock/blues</div>
+    <div class="scale-notes">
+      <span class="snote penta" style="background:#e67e22">1</span>
+      <span class="snote penta" style="background:#e67e22">b3</span>
+      <span class="snote penta" style="background:#e67e22">4</span>
+      <span class="snote penta" style="background:#e67e22">5</span>
+      <span class="snote penta" style="background:#e67e22">b7</span>
+      <span class="snote penta" style="background:#e67e22">8</span>
+    </div>
+    <div class="formula">5 notes — très polyvalente !</div>
+    <div class="pattern">En Ré min : D F G A C D</div>
+    <div class="pattern" style="margin-top:4px">Box position (corde A, frette 5) : 5-8 / 5-7 / 5-7 / 5-8</div>
+  </div>
+
+  <div class="scale-card">
+    <div class="scale-name">Blues Scale</div>
+    <div class="scale-sub">Pentatonique + note bleue</div>
+    <div class="scale-notes">
+      <span class="snote penta" style="background:#e67e22">1</span>
+      <span class="snote penta" style="background:#e67e22">b3</span>
+      <span class="snote penta" style="background:#e67e22">4</span>
+      <span class="snote" style="background:#c0392b">b5</span>
+      <span class="snote penta" style="background:#e67e22">5</span>
+      <span class="snote penta" style="background:#e67e22">b7</span>
+    </div>
+    <div class="formula">La "blue note" = b5 (triton)</div>
+    <div class="pattern">En Ré : D F G Ab A C D</div>
+    <div class="pattern" style="margin-top:4px">Note bleue : donne le caractère blues !</div>
+  </div>
+
+  <div class="scale-card">
+    <div class="scale-name">Gamme Dorienne</div>
+    <div class="scale-sub">Mineure avec 6te majeure — jazz/funk</div>
+    <div class="scale-notes">
+      <span class="snote root" style="background:var(--accent)">1</span>
+      <span class="snote" style="background:#555">2</span>
+      <span class="snote third" style="background:#27ae60">b3</span>
+      <span class="snote" style="background:#555">4</span>
+      <span class="snote fifth" style="background:#2980b9">5</span>
+      <span class="snote" style="background:#27ae60">6</span>
+      <span class="snote seventh" style="background:var(--pur)">b7</span>
+    </div>
+    <div class="formula">Mineure nat. avec 6te maj.</div>
+    <div class="pattern">En Ré : D E F G A B C D</div>
+    <div class="pattern" style="margin-top:4px">Utilisée sur Am7, Dm7 — très jazzy !</div>
+  </div>
+
+  <div class="scale-card">
+    <div class="scale-name">Chromatique</div>
+    <div class="scale-sub">Les 12 demi-tons</div>
+    <div class="scale-notes">
+      <span class="snote" style="background:#333;font-size:10px">1</span>
+      <span class="snote" style="background:#333;font-size:10px">b2</span>
+      <span class="snote" style="background:#333;font-size:10px">2</span>
+      <span class="snote" style="background:#333;font-size:10px">b3</span>
+      <span class="snote" style="background:#333;font-size:10px">3</span>
+      <span class="snote" style="background:#333;font-size:10px">4</span>
+      <span class="snote" style="background:#333;font-size:10px">b5</span>
+      <span class="snote" style="background:#333;font-size:10px">5</span>
+      <span class="snote" style="background:#333;font-size:10px">b6</span>
+      <span class="snote" style="background:#333;font-size:10px">6</span>
+      <span class="snote" style="background:#333;font-size:10px">b7</span>
+      <span class="snote" style="background:#333;font-size:10px">7</span>
+    </div>
+    <div class="formula">Utile pour les passages de liaison</div>
+    <div class="pattern">Chaque demi-ton = 1 frette</div>
+  </div>
+
+</div>
+
+<!-- INTERVALLES -->
+<div class="stitle">📐 Les Intervalles</div>
+<div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:1.5rem">
+<table class="intervals-table">
+  <thead><tr><th>Intervalle</th><th>Demi-tons</th><th>Symbole</th><th>Exemple (depuis Do)</th><th>Son</th></tr></thead>
+  <tbody>
+    <tr><td class="int-name">Unisson</td><td class="int-semi">0</td><td>1</td><td class="int-ex">C → C</td><td>Stable</td></tr>
+    <tr><td class="int-name">Seconde mineure</td><td class="int-semi">1</td><td>b2</td><td class="int-ex">C → Db</td><td>Dissonant, tension</td></tr>
+    <tr><td class="int-name">Seconde majeure</td><td class="int-semi">2</td><td>2</td><td class="int-ex">C → D</td><td>Mélodique</td></tr>
+    <tr><td class="int-name">Tierce mineure</td><td class="int-semi">3</td><td>b3</td><td class="int-ex">C → Eb</td><td>Triste, blues ⭐</td></tr>
+    <tr><td class="int-name">Tierce majeure</td><td class="int-semi">4</td><td>3</td><td class="int-ex">C → E</td><td>Joyeux</td></tr>
+    <tr><td class="int-name">Quarte juste</td><td class="int-semi">5</td><td>4</td><td class="int-ex">C → F</td><td>Fort, stable</td></tr>
+    <tr><td class="int-name">Triton (blue note)</td><td class="int-semi">6</td><td>b5</td><td class="int-ex">C → Gb</td><td>Très tendu, diabolique</td></tr>
+    <tr><td class="int-name">Quinte juste</td><td class="int-semi">7</td><td>5</td><td class="int-ex">C → G</td><td>Puissant, power chord ⭐</td></tr>
+    <tr><td class="int-name">Sixte mineure</td><td class="int-semi">8</td><td>b6</td><td class="int-ex">C → Ab</td><td>Mélancolique</td></tr>
+    <tr><td class="int-name">Sixte majeure</td><td class="int-semi">9</td><td>6</td><td class="int-ex">C → A</td><td>Doux, swing</td></tr>
+    <tr><td class="int-name">Septième mineure</td><td class="int-semi">10</td><td>b7</td><td class="int-ex">C → Bb</td><td>Blues, dominant ⭐</td></tr>
+    <tr><td class="int-name">Septième majeure</td><td class="int-semi">11</td><td>7</td><td class="int-ex">C → B</td><td>Jazz, sophistiqué</td></tr>
+    <tr><td class="int-name">Octave</td><td class="int-semi">12</td><td>8</td><td class="int-ex">C → C'</td><td>Très stable</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ACCORDS COURANTS -->
+<div class="stitle">🎵 Accords courants sur la basse (Ré mineur)</div>
+<div class="chords-theory">
+  <div class="chord-theory-card"><div class="cth-name">Dm</div><div class="cth-formula">1 - b3 - 5</div><div class="cth-notes">D - F - A</div><div class="cth-role">Tonique — repos</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Gm</div><div class="cth-formula">1 - b3 - 5</div><div class="cth-notes">G - Bb - D</div><div class="cth-role">Sous-dominante — tension douce</div></div>
+  <div class="chord-theory-card"><div class="cth-name">A7</div><div class="cth-formula">1 - 3 - 5 - b7</div><div class="cth-notes">A - C# - E - G</div><div class="cth-role">Dominante — forte tension → Dm</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Dm7</div><div class="cth-formula">1 - b3 - 5 - b7</div><div class="cth-notes">D - F - A - C</div><div class="cth-role">Tonique étendue — jazz</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Am7</div><div class="cth-formula">1 - b3 - 5 - b7</div><div class="cth-notes">A - C - E - G</div><div class="cth-role">Médiante — couleur douce</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Bb</div><div class="cth-formula">1 - 3 - 5</div><div class="cth-notes">Bb - D - F</div><div class="cth-role">Sous-médiante — bluesy</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Gm7</div><div class="cth-formula">1 - b3 - 5 - b7</div><div class="cth-notes">G - Bb - D - F</div><div class="cth-role">Sous-dominante étendue</div></div>
+  <div class="chord-theory-card"><div class="cth-name">Bbmaj7</div><div class="cth-formula">1 - 3 - 5 - 7</div><div class="cth-notes">Bb - D - F - A</div><div class="cth-role">Couleur jazz/soul</div></div>
+</div>
+
+<!-- TIPS -->
+<div class="stitle">💡 Conseils pour la basse</div>
+<div class="tips-grid">
+  <div class="tip-card"><div class="tip-icon">🎯</div><div class="tip-title">Jouer les fondamentales</div><div class="tip-text">Commencez toujours par jouer la note fondamentale de l'accord sur le 1er temps. C'est la base du rôle de la basse.</div></div>
+  <div class="tip-card"><div class="tip-icon">🔄</div><div class="tip-title">Octaves et quintes</div><div class="tip-text">Les octaves (12 frettes plus haut) et les quintes (7 demi-tons) sont vos meilleurs amis pour créer une ligne de basse solide.</div></div>
+  <div class="tip-card"><div class="tip-icon">👂</div><div class="tip-title">Écouter la grosse caisse</div><div class="tip-text">En répétition, calquez votre jeu sur le kick de la batterie. Basse + grosse caisse = le groove !</div></div>
+  <div class="tip-card"><div class="tip-icon">🎸</div><div class="tip-title">Walking bass</div><div class="tip-text">Pour aller d'un accord à l'autre, utilisez des notes chromatiques pour "marcher" vers la prochaine fondamentale.</div></div>
+  <div class="tip-card"><div class="tip-icon">📍</div><div class="tip-title">Positions fixes</div><div class="tip-text">En mineur naturel, la box pentatonique sur la corde de La (frette 5) couvre les 4 cordes avec 2 notes par corde.</div></div>
+  <div class="tip-card"><div class="tip-icon">🎵</div><div class="tip-title">Moins c'est plus</div><div class="tip-text">La basse soutient, elle ne solote pas (sauf à l'occasion!). Des notes simples bien placées valent mieux que des phrases complexes.</div></div>
+</div>
+
+</main>
+
+<div class="statusbar">
+  <span>🎸 Théorie Guitare Basse — Référence</span>
+  <span id="sclock"></span>
+</div>
+
+<script>
+// Manche interactif
+const NOTES_E = ['E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D'];
+const NOTES_A = ['A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G'];
+const NOTES_D = ['D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C'];
+const NOTES_G = ['G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F'];
+
+const strings = [
+  {name:'G', notes: NOTES_G},
+  {name:'D', notes: NOTES_D},
+  {name:'A', notes: NOTES_A},
+  {name:'E', notes: NOTES_E},
+];
+
+// Dm scale notes
+const DM_ROOT = ['D'];
+const DM_THIRD = ['F'];
+const DM_FIFTH = ['A'];
+const DM_SEVENTH = ['C'];
+const DM_SCALE = ['E','G','Bb','B'];
+const DM_PENTA = ['D','F','G','A','C'];
+
+function getNoteClass(note) {
+  if(DM_ROOT.includes(note)) return 'root';
+  if(DM_THIRD.includes(note)) return 'third';
+  if(DM_FIFTH.includes(note)) return 'fifth';
+  if(DM_SEVENTH.includes(note)) return 'seventh';
+  if(DM_PENTA.includes(note)) return 'penta';
+  if(DM_SCALE.includes(note)) return 'scale-note';
+  return null;
+}
+
+function buildNeck() {
+  const container = document.getElementById('neckContainer');
+  const FRETS = 13; // 0 to 12
+  
+  let html = '<div class="neck">';
+  
+  for(let f=0; f<FRETS; f++) {
+    html += `<div class="fret">`;
+    html += `<div class="fret-num">${f === 0 ? '○' : f}</div>`;
+    strings.forEach(s => {
+      const note = s.notes[f];
+      const cls = getNoteClass(note);
+      html += `<div class="note-cell">`;
+      if(cls) {
+        html += `<div class="note-dot ${cls}">${note}</div>`;
+      } else {
+        // Show fret position markers
+        if([3,5,7,9,12].includes(f) && s.name === 'A') {
+          html += `<div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);z-index:1;position:relative"></div>`;
+        }
+      }
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
+  
+  html += '</div>';
+  
+  // String labels
+  html += '<div style="display:flex;gap:0;min-width:600px;margin-top:4px">';
+  html += '<div style="min-width:40px"></div>';
+  for(let f=1; f<FRETS; f++) {
+    const markers = [3,5,7,9,12];
+    html += `<div style="min-width:52px;text-align:center;font-size:9px;color:${markers.includes(f)?'var(--accent)':'var(--muted)'}">${markers.includes(f)?'◆':''}</div>`;
+  }
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+
+buildNeck();
+setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
+</script>
+</body>
+</html>

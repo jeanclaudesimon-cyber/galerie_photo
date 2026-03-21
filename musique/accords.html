@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accords — Guitare Basse</title>
+<script src="https://www.youtube.com/iframe_api"></script>
+<style>
+:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--blu:#4a9eff;--bdr:rgba(255,255,255,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:12px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo h1{font-size:16px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;border-radius:7px;font-size:13px;cursor:pointer}
+.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer}
+.abtn:hover{color:#fff}
+
+/* YOUTUBE petit */
+#ytWrap{background:#000;border-bottom:1px solid var(--bdr);overflow:hidden;height:0;transition:height .3s}
+#ytWrap.visible{height:180px}
+#ytPlayer{width:100%;height:180px}
+
+/* CONTROLS */
+.ctrl{display:flex;gap:10px;align-items:center;padding:10px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.btn{padding:9px 20px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-play{background:var(--accent);color:#fff;font-size:16px}
+.btn-play:hover{background:#f58340}
+.btn-stop{background:var(--card2);color:var(--txt);border:1px solid var(--bdr)}
+.timer{font-family:monospace;font-size:18px;color:var(--accent);background:var(--card2);padding:6px 14px;border-radius:7px;min-width:70px;text-align:center}
+.minfo{font-size:12px;color:var(--muted);background:var(--card2);padding:6px 14px;border-radius:7px}
+.prog-wrap{flex:1;min-width:120px;background:rgba(255,255,255,.06);border-radius:4px;height:6px;cursor:pointer}
+.prog-bar{height:100%;background:var(--accent);border-radius:4px;width:0%;transition:width .1s linear}
+
+/* ACCORD EN COURS */
+.current-zone{padding:1rem 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:1.5rem}
+.chord-big{font-size:72px;font-weight:900;color:var(--accent);line-height:1;min-width:160px;text-align:center}
+.chord-meta{display:flex;flex-direction:column;gap:6px}
+.next-chord{font-size:13px;color:var(--muted)}
+.next-chord span{color:var(--txt);font-size:20px;font-weight:700}
+.beat-dots{display:flex;gap:8px;margin-top:4px}
+.dot{width:16px;height:16px;border-radius:50%;background:var(--card2);border:1px solid var(--bdr);transition:.1s}
+.dot.on{background:var(--accent);box-shadow:0 0 10px rgba(232,98,26,.6)}
+.dot.b1{border-color:#f58340;width:20px;height:20px}
+
+/* GRILLE MESURES */
+.grid-scroll{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+.grid{display:flex;flex-wrap:wrap;gap:6px}
+.mblock{background:var(--card2);border:1px solid var(--bdr);border-radius:8px;padding:8px 6px;min-width:120px;flex:1;max-width:200px;position:relative;transition:.2s}
+.mblock.active{background:rgba(232,98,26,.2);border-color:var(--accent);transform:scale(1.04);box-shadow:0 0 16px rgba(232,98,26,.3)}
+.mblock.passed{opacity:.3}
+.mnum{font-size:9px;color:var(--muted);margin-bottom:4px}
+.mbeats{display:flex;gap:3px}
+.mbeat{flex:1;text-align:center;padding:4px 2px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(255,255,255,.04);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mbeat.changed{color:var(--accent)}
+.mbeat.cur{background:var(--accent);color:#fff;border-radius:4px}
+
+/* STATUS */
+.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:6px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem}
+.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}
+.live{background:var(--grn)}.stopped{background:var(--muted)}
+
+@media(max-width:600px){.chord-big{font-size:52px;min-width:110px}.mblock{min-width:90px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span style="font-size:22px">🎸</span>
+    <div>
+      <h1>Accords Basse</h1>
+      <span style="font-size:10px;color:var(--muted)">Style Moises</span>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <select class="sel" id="songSelect" onchange="loadSong()">
+      <option value="vargas">Vargas Blues Band — Del Sur</option>
+    </select>
+    <button class="abtn" onclick="toggleYT()">🎬 Vidéo</button>
+    <a href="partition.html" class="abtn">📄 Partition</a>
+    <a href="index.html" class="abtn">← Accueil</a>
+  </div>
+</header>
+
+<div id="ytWrap"><div id="ytPlayer"></div></div>
+
+<div class="ctrl">
+  <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">▶ Play</button>
+  <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
+  <div class="timer" id="timer">0:00</div>
+  <div class="minfo" id="minfo">Mesure — / —</div>
+  <div class="prog-wrap" onclick="seekTo(event)" id="progWrap">
+    <div class="prog-bar" id="progBar"></div>
+  </div>
+</div>
+
+<div class="current-zone">
+  <div class="chord-big" id="chordBig">—</div>
+  <div class="chord-meta">
+    <div class="next-chord">Suivant : <span id="nextChord">—</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Temps</div>
+    <div class="beat-dots" id="beatDots"></div>
+  </div>
+</div>
+
+<div class="grid-scroll">
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="statusbar">
+  <span><span class="sdot stopped" id="sdot"></span><span id="smode">Arrêté</span></span>
+  <span id="sclock"></span>
+</div>
+
+<script>
+// ─── DONNÉES ─────────────────────────────────────────────────
+const SONGS = {
+  vargas: {
+    title: "Vargas Blues Band — Del Sur",
+    bpm: 93,
+    beatsPerMeasure: 4,
+    anacruzeBeats: 2,
+    ytId: "NqvjXZQEhsI",
+    ytDelay: 0,
+    beats: [null, null, "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am7", "Am7", "Am7", "Am7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am", "Am", "A", "A", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am7", "Am7", "Am7", "Am7", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "F", "F", "F", "F", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Am7", "Am7", "Am7", "Am7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "C", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb7", "Bb7", "Bb7", "Bb7", "Dm", "Dm", "Dm", "Am", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm7", "Gm7", "Gm7", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "F", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bbmaj7", "Bbmaj7", "Bbmaj7", "C", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Dm", "Dm", "Dm", "C", "Gm7", "Gm", "Gm", "Gm", "Dm", "Dm", "Am", "Dm/A", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "Bb", "Dm", "Dm", "Dm", "C", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am7", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7"],
+    measures: [{"num": 1, "beats": [null, null], "anacruze": true}, {"num": 2, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 3, "beats": ["Gm", "Gm", "Gm", "Dm"]}, {"num": 4, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 5, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 6, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 7, "beats": ["Gm", "Gm", "Dm", "Dm"]}, {"num": 8, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 9, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 10, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 11, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 12, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 13, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 14, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 15, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 16, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 17, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 18, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 19, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 20, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 21, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 22, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 23, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 24, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 25, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 26, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 27, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 28, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 29, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 30, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 31, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 32, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 33, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 34, "beats": ["Am", "Am", "A", "A"]}, {"num": 35, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 36, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 37, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 38, "beats": ["Dm", "Dm", "Gm", "Gm"]}, {"num": 39, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 40, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 41, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 42, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 43, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 44, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 45, "beats": ["F", "F", "F", "F"]}, {"num": 46, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 47, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 48, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 49, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 50, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 51, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 52, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 53, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 54, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 55, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 56, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 57, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 58, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 59, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 60, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 61, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 62, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 63, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 64, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 65, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 66, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 67, "beats": ["Bb7", "Bb7", "Bb7", "Bb7"]}, {"num": 68, "beats": ["Dm", "Dm", "Dm", "Am"]}, {"num": 69, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 70, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 71, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 72, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 73, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 74, "beats": ["Gm", "Gm7", "Gm7", "Gm7"]}, {"num": 75, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 76, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 77, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 78, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 79, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 80, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 81, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 82, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 83, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 84, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 85, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 86, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 87, "beats": ["Gm7", "Gm7", "Gm7", "F"]}, {"num": 88, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 89, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 90, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 91, "beats": ["Bbmaj7", "Bbmaj7", "Bbmaj7", "C"]}, {"num": 92, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 93, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 94, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 95, "beats": ["Gm7", "Gm", "Gm", "Gm"]}, {"num": 96, "beats": ["Dm", "Dm", "Am", "Dm/A"]}, {"num": 97, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 98, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 99, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 100, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 101, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 102, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 103, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 104, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 105, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 106, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 107, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 108, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 109, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 110, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 111, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 112, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 113, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 114, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 115, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 116, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 117, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 118, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 119, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 120, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 121, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 122, "beats": ["Am", "Am", "Am", "Am7"]}, {"num": 123, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 124, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 125, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 126, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 127, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 128, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 129, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 130, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 131, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}]
+  }
+};
+
+// ─── ÉTAT ────────────────────────────────────────────────────
+let song = null;
+let ytPlayer = null;
+let ytReady = false;
+let isPlaying = false;
+let startTime = null;
+let animFrame = null;
+let currentBeat = -1;
+let currentMeasureIdx = -1;
+const BEAT_DUR = () => 60 / song.bpm;
+
+// ─── YOUTUBE API ─────────────────────────────────────────────
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('ytPlayer', {
+    videoId: '',
+    playerVars: {playsinline:1, rel:0},
+    events: {
+      onReady: () => { ytReady = true; },
+      onStateChange: e => {
+        if(e.data === YT.PlayerState.ENDED) stopPlay();
+      }
+    }
+  });
+}
+
+function toggleYT() {
+  const w = document.getElementById('ytWrap');
+  w.classList.toggle('visible');
+}
+
+// ─── LOAD SONG ───────────────────────────────────────────────
+function loadSong() {
+  const key = document.getElementById('songSelect').value;
+  song = SONGS[key];
+  stopPlay();
+  buildGrid();
+  buildDots();
+  if(ytReady && ytPlayer) ytPlayer.cueVideoById(song.ytId);
+}
+
+// ─── BUILD UI ────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  song.measures.forEach((m, idx) => {
+    const div = document.createElement('div');
+    div.className = 'mblock' + (m.anacruze ? ' anacruze' : '');
+    div.id = 'm_' + idx;
+    const beats = m.beats;
+    // Find changed beats
+    let prev = null;
+    const beatsHtml = beats.map((b, bi) => {
+      const changed = b !== prev && b !== null;
+      prev = b;
+      return `<div class="mbeat${changed?' changed':''}">${b||'〜'}</div>`;
+    }).join('');
+    div.innerHTML = `<div class="mnum">${m.anacruze ? 'Ana.' : 'M'+m.num}</div><div class="mbeats">${beatsHtml}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function buildDots() {
+  const d = document.getElementById('beatDots');
+  d.innerHTML = '';
+  const n = song ? song.beatsPerMeasure : 4;
+  for(let i=0;i<n;i++){
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i===0?' b1':'');
+    dot.id = 'dot_'+i;
+    d.appendChild(dot);
+  }
+}
+
+// ─── PLAY/PAUSE/STOP ─────────────────────────────────────────
+function togglePlay() {
+  if(!song) loadSong();
+  isPlaying ? pausePlay() : startPlay();
+}
+
+function startPlay() {
+  isPlaying = true;
+  document.getElementById('btnPlay').textContent = '⏸ Pause';
+  document.getElementById('sdot').className = 'sdot live';
+  document.getElementById('smode').textContent = 'Lecture en cours';
+  if(!startTime) {
+    startTime = performance.now();
+    if(ytReady && ytPlayer) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
+  } else {
+    if(ytReady && ytPlayer) ytPlayer.playVideo();
+  }
+  tick();
+}
+
+function pausePlay() {
+  isPlaying = false;
+  document.getElementById('btnPlay').textContent = '▶ Play';
+  document.getElementById('smode').textContent = 'Pause';
+  cancelAnimationFrame(animFrame);
+  if(ytReady && ytPlayer) ytPlayer.pauseVideo();
+}
+
+function stopPlay() {
+  isPlaying = false;
+  startTime = null;
+  currentBeat = -1;
+  currentMeasureIdx = -1;
+  document.getElementById('btnPlay').textContent = '▶ Play';
+  document.getElementById('sdot').className = 'sdot stopped';
+  document.getElementById('smode').textContent = 'Arrêté';
+  cancelAnimationFrame(animFrame);
+  if(ytReady && ytPlayer) { ytPlayer.stopVideo(); }
+  resetUI();
+}
+
+function resetUI() {
+  document.getElementById('chordBig').textContent = '—';
+  document.getElementById('nextChord').textContent = '—';
+  document.getElementById('timer').textContent = '0:00';
+  document.getElementById('minfo').textContent = 'Mesure — / —';
+  document.getElementById('progBar').style.width = '0%';
+  for(let i=0;i<4;i++){const d=document.getElementById('dot_'+i);if(d)d.classList.remove('on');}
+  document.querySelectorAll('.mblock').forEach(el=>{
+    el.classList.remove('active','passed');
+  });
+}
+
+function seekTo(e) {
+  if(!song || !startTime) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const totalDur = song.beats.length * BEAT_DUR();
+  startTime = performance.now() - pct * totalDur * 1000;
+  if(ytReady && ytPlayer) ytPlayer.seekTo(pct * totalDur);
+}
+
+// ─── TICK ─────────────────────────────────────────────────────
+function tick() {
+  if(!isPlaying) return;
+  const elapsed = (performance.now() - startTime) / 1000;
+  const totalDur = song.beats.length * BEAT_DUR();
+  
+  if(elapsed >= totalDur) { stopPlay(); return; }
+  
+  const beatIdx = Math.min(Math.floor(elapsed / BEAT_DUR()), song.beats.length-1);
+  const chord = song.beats[beatIdx] || '〜';
+  const beatInMeasure = beatIdx % song.beatsPerMeasure;
+  
+  // Mesure actuelle
+  let measureIdx = 0;
+  let cumBeats = 0;
+  for(let i=0; i<song.measures.length; i++){
+    const mb = song.measures[i].beats.length;
+    if(beatIdx < cumBeats + mb){ measureIdx = i; break; }
+    cumBeats += mb;
+  }
+  
+  // Next chord
+  let nextChord = '—';
+  for(let i=beatIdx+1; i<song.beats.length; i++){
+    if(song.beats[i] && song.beats[i] !== song.beats[beatIdx]){
+      nextChord = song.beats[i]; break;
+    }
+  }
+  
+  // Update UI
+  document.getElementById('chordBig').textContent = chord;
+  document.getElementById('nextChord').textContent = nextChord;
+  
+  const mins = Math.floor(elapsed/60);
+  const secs = Math.floor(elapsed%60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent = `${mins}:${secs}`;
+  document.getElementById('minfo').textContent = `Mesure ${song.measures[measureIdx]?.num||'—'} / 131`;
+  document.getElementById('progBar').style.width = (elapsed/totalDur*100)+'%';
+  
+  // Dots
+  for(let i=0;i<song.beatsPerMeasure;i++){
+    const d=document.getElementById('dot_'+i);
+    if(d) d.classList.toggle('on', i===beatInMeasure);
+  }
+  
+  // Grid
+  if(measureIdx !== currentMeasureIdx) {
+    currentMeasureIdx = measureIdx;
+    document.querySelectorAll('.mblock').forEach((el,i)=>{
+      if(i < measureIdx) el.className = 'mblock passed';
+      else if(i === measureIdx) el.className = 'mblock active';
+      else el.className = 'mblock';
+    });
+    const activeEl = document.getElementById('m_'+measureIdx);
+    if(activeEl) activeEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  
+  currentBeat = beatIdx;
+  animFrame = requestAnimationFrame(tick);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
+loadSong();
+</script>
+</body>
+</html>

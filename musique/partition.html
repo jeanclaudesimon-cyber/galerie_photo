@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partition — Guitare Basse</title>
+<style>
+:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--bdr:rgba(255,255,255,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:12px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo h1{font-size:16px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;border-radius:7px;font-size:13px}
+.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer}
+.abtn:hover{color:#fff}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;align-items:center;padding:8px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.btn{padding:8px 18px;border-radius:7px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-play{background:var(--accent);color:#fff}
+.btn-play:hover{background:#f58340}
+.btn-sm{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;font-size:12px}
+.zoom-info{font-size:12px;color:var(--muted);padding:6px 10px;background:var(--card2);border-radius:6px}
+.page-nav{display:flex;gap:6px;align-items:center;margin-left:auto}
+.pnum{font-size:12px;color:var(--muted)}
+
+/* SPLIT LAYOUT */
+.split{display:flex;flex:1;overflow:hidden}
+
+/* PDF VIEWER */
+.pdf-zone{flex:1;overflow-y:auto;background:#2a2a2a;padding:1rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.pdf-page{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.5);max-width:100%;transition:transform .2s}
+.pdf-loading{color:var(--muted);font-size:14px;padding:2rem;text-align:center}
+
+/* YOUTUBE PANEL */
+.yt-panel{width:280px;background:var(--card);border-left:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;transition:width .3s}
+.yt-panel.collapsed{width:0;overflow:hidden}
+.yt-header{padding:10px 12px;border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
+#ytPlayer{width:100%}
+.yt-info{padding:10px 12px}
+.yt-title{font-size:12px;font-weight:600;margin-bottom:4px}
+.yt-sub{font-size:11px;color:var(--muted)}
+.yt-ctrl{padding:10px 12px;display:flex;gap:8px;border-top:1px solid var(--bdr);margin-top:auto}
+.yt-btn{flex:1;padding:7px;border-radius:6px;border:none;font-size:12px;font-weight:700;cursor:pointer}
+.yt-play{background:var(--accent);color:#fff}
+.yt-stop{background:var(--card2);color:var(--txt);border:1px solid var(--bdr)}
+
+/* AUTO SCROLL INDICATOR */
+.scroll-badge{position:fixed;bottom:20px;right:20px;background:rgba(232,98,26,.9);color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;display:none;z-index:100}
+.scroll-badge.visible{display:block}
+
+/* STATUS */
+.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:5px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem}
+
+@media(max-width:700px){.yt-panel{width:100%;border-left:none;border-top:1px solid var(--bdr);max-height:220px}.split{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>📄 Partition Basse</h1>
+  </div>
+  <div class="hdr-r">
+    <select class="sel" id="songSelect" onchange="loadSong()">
+      <option value="vargas">Vargas Blues Band — Del Sur</option>
+    </select>
+    <a href="accords.html" class="abtn">🎸 Accords</a>
+    <a href="index.html" class="abtn">← Accueil</a>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-play" id="btnPlay" onclick="toggleVideo()">▶ Lancer vidéo</button>
+  <button class="btn btn-sm" onclick="changeZoom(-0.1)">🔍−</button>
+  <span class="zoom-info" id="zoomInfo">100%</span>
+  <button class="btn btn-sm" onclick="changeZoom(0.1)">🔍+</button>
+  <button class="btn btn-sm" id="autoScrollBtn" onclick="toggleAutoScroll()">↕ Défilement auto : OFF</button>
+  <div class="page-nav">
+    <button class="btn btn-sm" onclick="prevPage()">◀</button>
+    <span class="pnum" id="pageNum">Page 1 / 1</span>
+    <button class="btn btn-sm" onclick="nextPage()">▶</button>
+  </div>
+</div>
+
+<div class="split">
+  <!-- PDF -->
+  <div class="pdf-zone" id="pdfZone">
+    <div class="pdf-loading" id="pdfLoading">⏳ Chargement de la partition...</div>
+  </div>
+
+  <!-- YouTube panel -->
+  <div class="yt-panel" id="ytPanel">
+    <div class="yt-header">
+      <span>🎬 Backing Track</span>
+      <button onclick="collapseYT()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
+    </div>
+    <div id="ytPlayer"></div>
+    <div class="yt-info">
+      <div class="yt-title" id="ytTitle">—</div>
+      <div class="yt-sub" id="ytSub">Accords qui défilent</div>
+    </div>
+    <div class="yt-ctrl">
+      <button class="yt-btn yt-play" onclick="ytPlayPause()" id="ytPlayBtn">▶ Play</button>
+      <button class="yt-btn yt-stop" onclick="ytStop()">⏹</button>
+    </div>
+  </div>
+</div>
+
+<div class="scroll-badge" id="scrollBadge">↕ Défilement auto actif</div>
+
+<div class="statusbar">
+  <span id="smode">Prêt</span>
+  <span id="sclock"></span>
+</div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const SONGS = {
+  vargas: {
+    title: "Vargas Blues Band — Del Sur",
+    pdfUrl: "https://jeanclaudesimon-cyber.github.io/galerie_photo/musique/Vargas%20Blues%20Band%20Del%20Sur.pdf",
+    ytId: "NqvjXZQEhsI",
+  }
+};
+
+let currentSong = null;
+let pdfDoc = null;
+let currentPage = 1;
+let totalPages = 1;
+let zoom = 1.0;
+let autoScroll = false;
+let scrollInterval = null;
+let ytPlayer = null;
+let ytReady = false;
+let ytPlaying = false;
+
+// ─── YOUTUBE ─────────────────────────────────────────────────
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('ytPlayer', {
+    height: '157',
+    width: '280',
+    videoId: '',
+    playerVars: {playsinline:1, rel:0},
+    events: {
+      onReady: () => { ytReady = true; },
+      onStateChange: e => {
+        ytPlaying = e.data === YT.PlayerState.PLAYING;
+        document.getElementById('ytPlayBtn').textContent = ytPlaying ? '⏸ Pause' : '▶ Play';
+        if(e.data === YT.PlayerState.ENDED) {
+          ytPlaying = false;
+          if(autoScroll) toggleAutoScroll();
+        }
+      }
+    }
+  });
+}
+
+function toggleVideo() {
+  const panel = document.getElementById('ytPanel');
+  panel.classList.remove('collapsed');
+  if(ytReady && ytPlayer) {
+    ytPlayer.seekTo(0);
+    ytPlayer.playVideo();
+  }
+  document.getElementById('btnPlay').textContent = '⏸ Vidéo en cours';
+}
+
+function ytPlayPause() {
+  if(!ytReady) return;
+  ytPlaying ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
+}
+
+function ytStop() {
+  if(!ytReady) return;
+  ytPlayer.stopVideo();
+  ytPlaying = false;
+}
+
+function collapseYT() {
+  document.getElementById('ytPanel').classList.add('collapsed');
+  ytStop();
+  document.getElementById('btnPlay').textContent = '▶ Lancer vidéo';
+}
+
+// ─── LOAD SONG ───────────────────────────────────────────────
+async function loadSong() {
+  const key = document.getElementById('songSelect').value;
+  currentSong = SONGS[key];
+  document.getElementById('ytTitle').textContent = currentSong.title;
+  document.getElementById('smode').textContent = 'Chargement PDF...';
+  if(ytReady && ytPlayer) ytPlayer.cueVideoById(currentSong.ytId);
+  await loadPDF(currentSong.pdfUrl);
+}
+
+// ─── PDF ─────────────────────────────────────────────────────
+async function loadPDF(url) {
+  try {
+    document.getElementById('pdfLoading').style.display = 'block';
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    totalPages = pdfDoc.numPages;
+    currentPage = 1;
+    document.getElementById('pdfLoading').style.display = 'none';
+    await renderAllPages();
+    document.getElementById('smode').textContent = `${totalPages} page(s) chargée(s)`;
+  } catch(e) {
+    document.getElementById('pdfLoading').textContent = '❌ Impossible de charger le PDF. Vérifiez que le fichier est sur GitHub.';
+    console.error(e);
+  }
+}
+
+async function renderAllPages() {
+  const zone = document.getElementById('pdfZone');
+  zone.innerHTML = '';
+  const containerWidth = zone.clientWidth - 32;
+  
+  for(let i=1; i<=totalPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({scale: 1});
+    const scale = (containerWidth / viewport.width) * zoom;
+    const scaledVP = page.getViewport({scale});
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = scaledVP.width;
+    canvas.height = scaledVP.height;
+    canvas.className = 'pdf-page';
+    canvas.id = 'page_' + i;
+    zone.appendChild(canvas);
+    
+    await page.render({canvasContext: canvas.getContext('2d'), viewport: scaledVP}).promise;
+  }
+  document.getElementById('pageNum').textContent = `Page 1 / ${totalPages}`;
+}
+
+function changeZoom(delta) {
+  zoom = Math.max(0.5, Math.min(2.5, zoom + delta));
+  document.getElementById('zoomInfo').textContent = Math.round(zoom*100)+'%';
+  if(pdfDoc) renderAllPages();
+}
+
+function prevPage() {
+  if(currentPage > 1) {
+    currentPage--;
+    scrollToPage(currentPage);
+  }
+}
+
+function nextPage() {
+  if(currentPage < totalPages) {
+    currentPage++;
+    scrollToPage(currentPage);
+  }
+}
+
+function scrollToPage(n) {
+  const el = document.getElementById('page_'+n);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+  document.getElementById('pageNum').textContent = `Page ${n} / ${totalPages}`;
+}
+
+// ─── AUTO SCROLL ─────────────────────────────────────────────
+function toggleAutoScroll() {
+  autoScroll = !autoScroll;
+  const btn = document.getElementById('autoScrollBtn');
+  const badge = document.getElementById('scrollBadge');
+  if(autoScroll) {
+    btn.textContent = '↕ Défilement auto : ON';
+    btn.style.color = 'var(--accent)';
+    badge.classList.add('visible');
+    // Scroll lent basé sur BPM 93 — vitesse adaptée
+    const zone = document.getElementById('pdfZone');
+    const totalHeight = zone.scrollHeight - zone.clientHeight;
+    // Durée totale estimée en ms (131 mesures × 4 temps / 93 bpm × 60000)
+    const totalMs = (131 * 4 / 93) * 60000;
+    const scrollPerMs = totalHeight / totalMs;
+    
+    scrollInterval = setInterval(() => {
+      zone.scrollTop += scrollPerMs * 100;
+      if(zone.scrollTop >= totalHeight) {
+        toggleAutoScroll();
+      }
+    }, 100);
+  } else {
+    btn.textContent = '↕ Défilement auto : OFF';
+    btn.style.color = '';
+    badge.classList.remove('visible');
+    if(scrollInterval) { clearInterval(scrollInterval); scrollInterval = null; }
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
+loadSong();
+</script>
+</body>
+</html>
