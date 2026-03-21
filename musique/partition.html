@@ -5,117 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Partition — Guitare Basse</title>
 <style>
-:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--bdr:rgba(255,255,255,0.08)}
+:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--blu:#4a9eff;--bdr:rgba(255,255,255,0.08)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
-header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:12px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.logo h1{font-size:16px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:10px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;flex-shrink:0}
+.logo h1{font-size:15px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
 .hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;border-radius:7px;font-size:13px}
-.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer}
+.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:5px 10px;border-radius:7px;font-size:12px}
+.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:5px 12px;border-radius:7px;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap}
 .abtn:hover{color:#fff}
-
-/* TOOLBAR */
-.toolbar{display:flex;gap:10px;align-items:center;padding:8px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
-.btn{padding:8px 18px;border-radius:7px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.toolbar{display:flex;gap:8px;align-items:center;padding:8px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap;flex-shrink:0}
+.btn{padding:7px 16px;border-radius:7px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-play{background:var(--accent);color:#fff}
 .btn-play:hover{background:#f58340}
-.btn-sm{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;font-size:12px}
-.zoom-info{font-size:12px;color:var(--muted);padding:6px 10px;background:var(--card2);border-radius:6px}
+.btn-sm{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:5px 10px;font-size:11px}
+.zoom-info{font-size:11px;color:var(--muted);padding:5px 10px;background:var(--card2);border-radius:6px}
+.scroll-toggle{font-size:11px;padding:5px 12px}
 .page-nav{display:flex;gap:6px;align-items:center;margin-left:auto}
-.pnum{font-size:12px;color:var(--muted)}
+.pnum{font-size:11px;color:var(--muted)}
 
-/* SPLIT LAYOUT */
-.split{display:flex;flex:1;overflow:hidden}
+/* SPLIT */
+.split{display:flex;flex:1;overflow:hidden;min-height:0}
 
-/* PDF VIEWER */
+/* PDF */
 .pdf-zone{flex:1;overflow-y:auto;background:#2a2a2a;padding:1rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
-.pdf-page{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.5);max-width:100%;transition:transform .2s}
+.pdf-page{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.5);max-width:100%}
 .pdf-loading{color:var(--muted);font-size:14px;padding:2rem;text-align:center}
 
-/* YOUTUBE PANEL */
-.yt-panel{width:280px;background:var(--card);border-left:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;transition:width .3s}
-.yt-panel.collapsed{width:0;overflow:hidden}
-.yt-header{padding:10px 12px;border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
-#ytPlayer{width:100%}
-.yt-info{padding:10px 12px}
-.yt-title{font-size:12px;font-weight:600;margin-bottom:4px}
-.yt-sub{font-size:11px;color:var(--muted)}
-.yt-ctrl{padding:10px 12px;display:flex;gap:8px;border-top:1px solid var(--bdr);margin-top:auto}
+/* YT PANEL */
+.yt-panel{width:300px;background:var(--card);border-left:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0}
+.yt-header{padding:8px 12px;border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
+.yt-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
+#ytPlayerDiv{width:100%}
+.yt-info{padding:8px 12px}
+.yt-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.yt-sub{font-size:10px;color:var(--muted)}
+.yt-ctrl{padding:8px 12px;display:flex;gap:8px;border-top:1px solid var(--bdr);margin-top:auto}
 .yt-btn{flex:1;padding:7px;border-radius:6px;border:none;font-size:12px;font-weight:700;cursor:pointer}
 .yt-play{background:var(--accent);color:#fff}
 .yt-stop{background:var(--card2);color:var(--txt);border:1px solid var(--bdr)}
 
-/* AUTO SCROLL INDICATOR */
-.scroll-badge{position:fixed;bottom:20px;right:20px;background:rgba(232,98,26,.9);color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;display:none;z-index:100}
-.scroll-badge.visible{display:block}
+.scroll-badge{position:fixed;bottom:16px;right:16px;background:rgba(232,98,26,.9);color:#fff;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;display:none;z-index:100}
+.scroll-badge.on{display:block}
+.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:4px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem;flex-shrink:0}
 
-/* STATUS */
-.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:5px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem}
-
-@media(max-width:700px){.yt-panel{width:100%;border-left:none;border-top:1px solid var(--bdr);max-height:220px}.split{flex-direction:column}}
+@media(max-width:700px){.yt-panel{width:100%;max-height:200px;border-left:none;border-top:1px solid var(--bdr)}.split{flex-direction:column}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <h1>📄 Partition Basse</h1>
-  </div>
+  <div class="logo"><h1>📄 Partition Basse</h1></div>
   <div class="hdr-r">
     <select class="sel" id="songSelect" onchange="loadSong()">
       <option value="vargas">Vargas Blues Band — Del Sur</option>
     </select>
     <a href="accords.html" class="abtn">🎸 Accords</a>
-    <a href="index.html" class="abtn">← Accueil</a>
+    <a href="theorie.html" class="abtn">🎼 Théorie</a>
+    <a href="../guitare.html" class="abtn">🎸 Hub</a>
+    <a href="../index.html" class="abtn">← Accueil</a>
   </div>
 </header>
 
 <div class="toolbar">
-  <button class="btn btn-play" id="btnPlay" onclick="toggleVideo()">▶ Lancer vidéo</button>
-  <button class="btn btn-sm" onclick="changeZoom(-0.1)">🔍−</button>
+  <button class="btn btn-play" id="btnPlay" onclick="toggleVideo()">▶ Lancer la vidéo</button>
+  <button class="btn btn-sm" onclick="changeZoom(-0.15)">🔍−</button>
   <span class="zoom-info" id="zoomInfo">100%</span>
-  <button class="btn btn-sm" onclick="changeZoom(0.1)">🔍+</button>
-  <button class="btn btn-sm" id="autoScrollBtn" onclick="toggleAutoScroll()">↕ Défilement auto : OFF</button>
+  <button class="btn btn-sm" onclick="changeZoom(0.15)">🔍+</button>
+  <button class="btn btn-sm scroll-toggle" id="scrollBtn" onclick="toggleAutoScroll()">↕ Défilement : OFF</button>
   <div class="page-nav">
     <button class="btn btn-sm" onclick="prevPage()">◀</button>
-    <span class="pnum" id="pageNum">Page 1 / 1</span>
+    <span class="pnum" id="pageNum">Page — / —</span>
     <button class="btn btn-sm" onclick="nextPage()">▶</button>
   </div>
 </div>
 
 <div class="split">
-  <!-- PDF -->
   <div class="pdf-zone" id="pdfZone">
     <div class="pdf-loading" id="pdfLoading">⏳ Chargement de la partition...</div>
   </div>
-
-  <!-- YouTube panel -->
   <div class="yt-panel" id="ytPanel">
     <div class="yt-header">
       <span>🎬 Backing Track</span>
-      <button onclick="collapseYT()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
+      <button class="yt-close" onclick="collapseYT()">×</button>
     </div>
-    <div id="ytPlayer"></div>
+    <div id="ytPlayerDiv"></div>
     <div class="yt-info">
-      <div class="yt-title" id="ytTitle">—</div>
-      <div class="yt-sub" id="ytSub">Accords qui défilent</div>
+      <div class="yt-title" id="ytTitle">Vargas Blues Band — Del Sur</div>
+      <div class="yt-sub">Accords qui défilent</div>
     </div>
     <div class="yt-ctrl">
       <button class="yt-btn yt-play" onclick="ytPlayPause()" id="ytPlayBtn">▶ Play</button>
-      <button class="yt-btn yt-stop" onclick="ytStop()">⏹</button>
+      <button class="yt-btn yt-stop" onclick="ytStop()">⏹ Stop</button>
     </div>
   </div>
 </div>
 
 <div class="scroll-badge" id="scrollBadge">↕ Défilement auto actif</div>
+<div class="statusbar"><span id="smode">Prêt</span><span id="sclock"></span></div>
 
-<div class="statusbar">
-  <span id="smode">Prêt</span>
-  <span id="sclock"></span>
-</div>
-
-<!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -124,14 +112,15 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 const SONGS = {
   vargas: {
     title: "Vargas Blues Band — Del Sur",
-    pdfUrl: "https://jeanclaudesimon-cyber.github.io/galerie_photo/musique/Vargas%20Blues%20Band%20Del%20Sur.pdf",
+    pdfUrl: "https://jeanclaudesimon-cyber.github.io/galerie_photo/musique/Vargas%20Blues%20Band%20%20Del%20Sur.pdf",
     ytId: "NqvjXZQEhsI",
+    bpm: 93,
+    totalMeasures: 131
   }
 };
 
 let currentSong = null;
 let pdfDoc = null;
-let currentPage = 1;
 let totalPages = 1;
 let zoom = 1.0;
 let autoScroll = false;
@@ -140,22 +129,18 @@ let ytPlayer = null;
 let ytReady = false;
 let ytPlaying = false;
 
-// ─── YOUTUBE ─────────────────────────────────────────────────
 function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('ytPlayer', {
-    height: '157',
-    width: '280',
+  ytPlayer = new YT.Player('ytPlayerDiv', {
+    height: '169',
+    width: '300',
     videoId: '',
-    playerVars: {playsinline:1, rel:0},
+    playerVars: {playsinline:1, rel:0, modestbranding:1},
     events: {
-      onReady: () => { ytReady = true; },
+      onReady: () => { ytReady=true; if(currentSong) ytPlayer.cueVideoById(currentSong.ytId); },
       onStateChange: e => {
         ytPlaying = e.data === YT.PlayerState.PLAYING;
         document.getElementById('ytPlayBtn').textContent = ytPlaying ? '⏸ Pause' : '▶ Play';
-        if(e.data === YT.PlayerState.ENDED) {
-          ytPlaying = false;
-          if(autoScroll) toggleAutoScroll();
-        }
+        if(e.data === YT.PlayerState.ENDED && autoScroll) toggleAutoScroll();
       }
     }
   });
@@ -163,11 +148,8 @@ function onYouTubeIframeAPIReady() {
 
 function toggleVideo() {
   const panel = document.getElementById('ytPanel');
-  panel.classList.remove('collapsed');
-  if(ytReady && ytPlayer) {
-    ytPlayer.seekTo(0);
-    ytPlayer.playVideo();
-  }
+  panel.style.display = 'flex';
+  if(ytReady && ytPlayer) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
   document.getElementById('btnPlay').textContent = '⏸ Vidéo en cours';
 }
 
@@ -179,16 +161,14 @@ function ytPlayPause() {
 function ytStop() {
   if(!ytReady) return;
   ytPlayer.stopVideo();
-  ytPlaying = false;
+  document.getElementById('btnPlay').textContent = '▶ Lancer la vidéo';
 }
 
 function collapseYT() {
-  document.getElementById('ytPanel').classList.add('collapsed');
+  document.getElementById('ytPanel').style.display = 'none';
   ytStop();
-  document.getElementById('btnPlay').textContent = '▶ Lancer vidéo';
 }
 
-// ─── LOAD SONG ───────────────────────────────────────────────
 async function loadSong() {
   const key = document.getElementById('songSelect').value;
   currentSong = SONGS[key];
@@ -198,18 +178,17 @@ async function loadSong() {
   await loadPDF(currentSong.pdfUrl);
 }
 
-// ─── PDF ─────────────────────────────────────────────────────
 async function loadPDF(url) {
   try {
     document.getElementById('pdfLoading').style.display = 'block';
     pdfDoc = await pdfjsLib.getDocument(url).promise;
     totalPages = pdfDoc.numPages;
-    currentPage = 1;
     document.getElementById('pdfLoading').style.display = 'none';
     await renderAllPages();
-    document.getElementById('smode').textContent = `${totalPages} page(s) chargée(s)`;
+    document.getElementById('smode').textContent = `✅ ${totalPages} page(s) — ${currentSong.title}`;
   } catch(e) {
-    document.getElementById('pdfLoading').textContent = '❌ Impossible de charger le PDF. Vérifiez que le fichier est sur GitHub.';
+    document.getElementById('pdfLoading').textContent = '❌ PDF introuvable. Vérifiez que le fichier est dans musique/ sur GitHub.';
+    document.getElementById('smode').textContent = 'Erreur chargement PDF';
     console.error(e);
   }
 }
@@ -218,82 +197,74 @@ async function renderAllPages() {
   const zone = document.getElementById('pdfZone');
   zone.innerHTML = '';
   const containerWidth = zone.clientWidth - 32;
-  
   for(let i=1; i<=totalPages; i++) {
     const page = await pdfDoc.getPage(i);
-    const viewport = page.getViewport({scale: 1});
-    const scale = (containerWidth / viewport.width) * zoom;
-    const scaledVP = page.getViewport({scale});
-    
+    const vp = page.getViewport({scale:1});
+    const scale = (containerWidth/vp.width) * zoom;
+    const svp = page.getViewport({scale});
     const canvas = document.createElement('canvas');
-    canvas.width = scaledVP.width;
-    canvas.height = scaledVP.height;
+    canvas.width = svp.width;
+    canvas.height = svp.height;
     canvas.className = 'pdf-page';
-    canvas.id = 'page_' + i;
+    canvas.id = 'page_'+i;
     zone.appendChild(canvas);
-    
-    await page.render({canvasContext: canvas.getContext('2d'), viewport: scaledVP}).promise;
+    await page.render({canvasContext:canvas.getContext('2d'), viewport:svp}).promise;
   }
   document.getElementById('pageNum').textContent = `Page 1 / ${totalPages}`;
 }
 
 function changeZoom(delta) {
-  zoom = Math.max(0.5, Math.min(2.5, zoom + delta));
+  zoom = Math.max(0.5, Math.min(2.5, zoom+delta));
   document.getElementById('zoomInfo').textContent = Math.round(zoom*100)+'%';
   if(pdfDoc) renderAllPages();
 }
 
 function prevPage() {
-  if(currentPage > 1) {
-    currentPage--;
-    scrollToPage(currentPage);
-  }
+  const zone = document.getElementById('pdfZone');
+  const pages = zone.querySelectorAll('.pdf-page');
+  let current = 1;
+  pages.forEach((p,i) => {
+    const rect = p.getBoundingClientRect();
+    if(rect.top < window.innerHeight/2) current = i+1;
+  });
+  if(current > 1) { document.getElementById('page_'+(current-1)).scrollIntoView({behavior:'smooth'}); document.getElementById('pageNum').textContent=`Page ${current-1} / ${totalPages}`; }
 }
 
 function nextPage() {
-  if(currentPage < totalPages) {
-    currentPage++;
-    scrollToPage(currentPage);
-  }
+  const zone = document.getElementById('pdfZone');
+  const pages = zone.querySelectorAll('.pdf-page');
+  let current = 1;
+  pages.forEach((p,i) => {
+    const rect = p.getBoundingClientRect();
+    if(rect.top < window.innerHeight/2) current = i+1;
+  });
+  if(current < totalPages) { document.getElementById('page_'+(current+1)).scrollIntoView({behavior:'smooth'}); document.getElementById('pageNum').textContent=`Page ${current+1} / ${totalPages}`; }
 }
 
-function scrollToPage(n) {
-  const el = document.getElementById('page_'+n);
-  if(el) el.scrollIntoView({behavior:'smooth'});
-  document.getElementById('pageNum').textContent = `Page ${n} / ${totalPages}`;
-}
-
-// ─── AUTO SCROLL ─────────────────────────────────────────────
 function toggleAutoScroll() {
   autoScroll = !autoScroll;
-  const btn = document.getElementById('autoScrollBtn');
+  const btn = document.getElementById('scrollBtn');
   const badge = document.getElementById('scrollBadge');
   if(autoScroll) {
-    btn.textContent = '↕ Défilement auto : ON';
+    btn.textContent = '↕ Défilement : ON';
     btn.style.color = 'var(--accent)';
-    badge.classList.add('visible');
-    // Scroll lent basé sur BPM 93 — vitesse adaptée
+    badge.classList.add('on');
     const zone = document.getElementById('pdfZone');
     const totalHeight = zone.scrollHeight - zone.clientHeight;
-    // Durée totale estimée en ms (131 mesures × 4 temps / 93 bpm × 60000)
-    const totalMs = (131 * 4 / 93) * 60000;
+    const totalMs = (currentSong.totalMeasures * 4 / currentSong.bpm) * 60000;
     const scrollPerMs = totalHeight / totalMs;
-    
     scrollInterval = setInterval(() => {
       zone.scrollTop += scrollPerMs * 100;
-      if(zone.scrollTop >= totalHeight) {
-        toggleAutoScroll();
-      }
+      if(zone.scrollTop >= totalHeight) toggleAutoScroll();
     }, 100);
   } else {
-    btn.textContent = '↕ Défilement auto : OFF';
+    btn.textContent = '↕ Défilement : OFF';
     btn.style.color = '';
-    badge.classList.remove('visible');
-    if(scrollInterval) { clearInterval(scrollInterval); scrollInterval = null; }
+    badge.classList.remove('on');
+    if(scrollInterval) { clearInterval(scrollInterval); scrollInterval=null; }
   }
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
 setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
 loadSong();
 </script>
