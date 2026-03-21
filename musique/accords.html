@@ -73,6 +73,9 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
   <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
   <div class="timer" id="timer">0:00</div>
   <div class="minfo" id="minfo">Mesure — / —</div>
+  <button class="btn btn-stop" onclick="adjustOffset(-0.25)" title="Accords trop en avance → cliquez">◀ -0.25s</button>
+  <div style="font-size:11px;color:var(--muted);background:var(--card2);padding:6px 10px;border-radius:7px;min-width:70px;text-align:center" id="offsetDisplay">offset: +0.5s</div>
+  <button class="btn btn-stop" onclick="adjustOffset(0.25)" title="Accords trop en retard → cliquez">+0.25s ▶</button>
   <div class="prog-wrap" onclick="seekTo(event)" id="progWrap">
     <div class="prog-bar" id="progBar"></div>
   </div>
@@ -110,6 +113,7 @@ let isPlaying = false;
 let animFrame = null;
 let currentMeasureIdx = -1;
 let syncInterval = null;
+let timeOffset = 0.5; // offset en secondes — positif = accords plus lents (en retard), négatif = plus rapides
 
 const BEAT_DUR = () => 60 / song.bpm;
 
@@ -126,6 +130,11 @@ function onYouTubeIframeAPIReady() {
       }
     }
   });
+}
+
+function adjustOffset(delta) {
+  timeOffset = Math.round((timeOffset + delta) * 100) / 100;
+  document.getElementById('offsetDisplay').textContent = `offset: ${timeOffset>=0?'+':''}${timeOffset}s`;
 }
 
 function loadSong() {
@@ -241,7 +250,10 @@ function seekTo(e) {
 function updateDisplay(elapsed) {
   if(!song) return;
   const totalDur = song.beats.length * BEAT_DUR();
-  if(elapsed >= totalDur) { stopPlay(); return; }
+  // Appliquer l'offset : positif = ralentit les accords (ils attendent la vidéo)
+  const adjustedElapsed = Math.max(0, elapsed - timeOffset);
+  if(adjustedElapsed >= totalDur) { stopPlay(); return; }
+  elapsed = adjustedElapsed;
   
   const beatIdx = Math.min(Math.floor(elapsed / BEAT_DUR()), song.beats.length-1);
   const chord = song.beats[beatIdx] || '〜';
