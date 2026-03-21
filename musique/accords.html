@@ -52,7 +52,6 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <span style="font-size:22px">🎸</span>
@@ -68,12 +67,7 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
     <a href="../index.html" class="abtn">← Accueil</a>
   </div>
 </header>
-
-<!-- YouTube toujours visible -->
-<div id="ytWrap">
-  <div id="ytPlayer"></div>
-</div>
-
+<div id="ytWrap"><div id="ytPlayer"></div></div>
 <div class="ctrl">
   <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">▶ Play</button>
   <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
@@ -83,7 +77,6 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
     <div class="prog-bar" id="progBar"></div>
   </div>
 </div>
-
 <div class="current-zone">
   <div class="chord-big" id="chordBig">—</div>
   <div class="chord-meta">
@@ -92,11 +85,7 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
     <div class="beat-dots" id="beatDots"></div>
   </div>
 </div>
-
-<div class="grid-scroll">
-  <div class="grid" id="grid"></div>
-</div>
-
+<div class="grid-scroll"><div class="grid" id="grid"></div></div>
 <div class="statusbar">
   <span><span class="sdot stopped" id="sdot"></span><span id="smode">Arrêté — Appuyez sur Play pour démarrer</span></span>
   <span id="sclock"></span>
@@ -108,10 +97,9 @@ const SONGS = {
     title: "Vargas Blues Band — Del Sur",
     bpm: 93,
     beatsPerMeasure: 4,
-    anacruzeBeats: 2,
     ytId: "NqvjXZQEhsI",
-    beats: [null, null, "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am7", "Am7", "Am7", "Am7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am", "Am", "A", "A", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am7", "Am7", "Am7", "Am7", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "F", "F", "F", "F", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Am7", "Am7", "Am7", "Am7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "C", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb7", "Bb7", "Bb7", "Bb7", "Dm", "Dm", "Dm", "Am", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm7", "Gm7", "Gm7", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "F", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bbmaj7", "Bbmaj7", "Bbmaj7", "C", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Dm", "Dm", "Dm", "C", "Gm7", "Gm", "Gm", "Gm", "Dm", "Dm", "Am", "Dm/A", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "Bb", "Dm", "Dm", "Dm", "C", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am7", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7"],
-    measures: [{"num": 1, "beats": [null, null], "anacruze": true}, {"num": 2, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 3, "beats": ["Gm", "Gm", "Gm", "Dm"]}, {"num": 4, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 5, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 6, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 7, "beats": ["Gm", "Gm", "Dm", "Dm"]}, {"num": 8, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 9, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 10, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 11, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 12, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 13, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 14, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 15, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 16, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 17, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 18, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 19, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 20, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 21, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 22, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 23, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 24, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 25, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 26, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 27, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 28, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 29, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 30, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 31, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 32, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 33, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 34, "beats": ["Am", "Am", "A", "A"]}, {"num": 35, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 36, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 37, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 38, "beats": ["Dm", "Dm", "Gm", "Gm"]}, {"num": 39, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 40, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 41, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 42, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 43, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 44, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 45, "beats": ["F", "F", "F", "F"]}, {"num": 46, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 47, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 48, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 49, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 50, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 51, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 52, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 53, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 54, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 55, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 56, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 57, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 58, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 59, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 60, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 61, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 62, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 63, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 64, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 65, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 66, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 67, "beats": ["Bb7", "Bb7", "Bb7", "Bb7"]}, {"num": 68, "beats": ["Dm", "Dm", "Dm", "Am"]}, {"num": 69, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 70, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 71, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 72, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 73, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 74, "beats": ["Gm", "Gm7", "Gm7", "Gm7"]}, {"num": 75, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 76, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 77, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 78, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 79, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 80, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 81, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 82, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 83, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 84, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 85, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 86, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 87, "beats": ["Gm7", "Gm7", "Gm7", "F"]}, {"num": 88, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 89, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 90, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 91, "beats": ["Bbmaj7", "Bbmaj7", "Bbmaj7", "C"]}, {"num": 92, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 93, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 94, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 95, "beats": ["Gm7", "Gm", "Gm", "Gm"]}, {"num": 96, "beats": ["Dm", "Dm", "Am", "Dm/A"]}, {"num": 97, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 98, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 99, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 100, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 101, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 102, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 103, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 104, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 105, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 106, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 107, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 108, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 109, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 110, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 111, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 112, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 113, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 114, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 115, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 116, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 117, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 118, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 119, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 120, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 121, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 122, "beats": ["Am", "Am", "Am", "Am7"]}, {"num": 123, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 124, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 125, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 126, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 127, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 128, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 129, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 130, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 131, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}]
+    beats: [null,null,"Dm","Dm","Dm","Dm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Dm7","Dm7","Dm7","Dm7","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","A7","A7","A7","A7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Am7","Am7","Am7","Am7","Bb","Bb","Bb","C","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Dm7","Dm7","Dm","Dm","Gm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","A7","A7","A7","A7","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Am","Am","A","A","Bb","Bb","Bb","C","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Dm","Dm","Gm","Gm","Gm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Am7","Am7","Am7","Am7","Gm","Gm","Gm","C","Dm","Dm","Dm","Dm","F","F","F","F","Dm","Dm","Dm","Dm","Gm","Gm","Gm","C","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","Am7","Am7","Am7","Am7","Dm7","Dm7","Dm","Dm","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Bb","Bb","Bb","C","Dm","Dm","Dm","Dm","Dm","Dm","Dm","C","Gm","Gm","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Bb7","Bb7","Bb7","Bb7","Dm","Dm","Dm","Am","A7","A7","A7","A7","Dm","Dm","Dm","Dm","Gm","Gm","Gm","Gm","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Gm","Gm7","Gm7","Gm7","A7","A7","A7","A7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Am","Am","Am","Am","Bb","Bb","Bb","Bb","Dm7","Dm7","Dm7","Dm7","Dm","Dm","Dm","Dm","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","F","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Am","Am","Am","Am","Bbmaj7","Bbmaj7","Bbmaj7","C","Dm7","Dm7","Dm7","Dm7","Am","Am","Am","Am","Dm","Dm","Dm","C","Gm7","Gm","Gm","Gm","Dm","Dm","Am","Dm/A","Dm","Dm","Dm","Dm/C","Gm","Gm","Gm","Gm","A7","A7","A7","A7","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm/C","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Gm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","Dm","A7","A7","A7","A7","Bb","Bb","Bb","Bb","Dm","Dm","Dm","C","A7","A7","A7","A7","Dm7","Dm7","Dm7","Dm7","Gm7","Gm7","Gm7","Gm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Gm","Gm","Gm","Gm","A7","A7","A7","A7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Gm","Gm","Gm7","Gm7","Gm7","Gm7","Gm7","Gm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Am","Am","Am","Am7","Bb","Bb","Bb","Bb","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7","Dm7"],
+    measures: [{"num":1,"beats":[null,null],"anacruze":true},{"num":2,"beats":["Dm","Dm","Dm","Dm"]},{"num":3,"beats":["Gm","Gm","Gm","Dm"]},{"num":4,"beats":["Dm","Dm","Dm","Dm"]},{"num":5,"beats":["A7","A7","A7","A7"]},{"num":6,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":7,"beats":["Gm","Gm","Dm","Dm"]},{"num":8,"beats":["Dm","Dm","Dm","Dm"]},{"num":9,"beats":["Dm","Dm","Dm","Dm"]},{"num":10,"beats":["Gm","Gm","Gm","Gm"]},{"num":11,"beats":["A7","A7","A7","A7"]},{"num":12,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":13,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":14,"beats":["Gm","Gm","Gm","Gm"]},{"num":15,"beats":["Gm","Gm","Gm","Gm"]},{"num":16,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":17,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":18,"beats":["Am7","Am7","Am7","Am7"]},{"num":19,"beats":["Bb","Bb","Bb","C"]},{"num":20,"beats":["Dm","Dm","Dm","Dm"]},{"num":21,"beats":["A7","A7","A7","A7"]},{"num":22,"beats":["Dm7","Dm7","Dm","Dm"]},{"num":23,"beats":["Gm","Gm","Gm","Gm"]},{"num":24,"beats":["Dm","Dm","Dm","Dm"]},{"num":25,"beats":["Dm","Dm","Dm","Dm"]},{"num":26,"beats":["Gm","Gm","Gm","Gm"]},{"num":27,"beats":["A7","A7","A7","A7"]},{"num":28,"beats":["Dm","Dm","Dm","Dm"]},{"num":29,"beats":["Dm","Dm","Dm","Dm"]},{"num":30,"beats":["Gm","Gm","Gm","Gm"]},{"num":31,"beats":["Gm","Gm","Gm","Gm"]},{"num":32,"beats":["Dm","Dm","Dm","Dm"]},{"num":33,"beats":["Dm","Dm","Dm","Dm"]},{"num":34,"beats":["Am","Am","A","A"]},{"num":35,"beats":["Bb","Bb","Bb","C"]},{"num":36,"beats":["Dm","Dm","Dm","Dm"]},{"num":37,"beats":["A7","A7","A7","A7"]},{"num":38,"beats":["Dm","Dm","Gm","Gm"]},{"num":39,"beats":["Gm","Gm","Gm","Gm"]},{"num":40,"beats":["Dm","Dm","Dm","Dm"]},{"num":41,"beats":["Dm","Dm","Dm","Dm"]},{"num":42,"beats":["Am7","Am7","Am7","Am7"]},{"num":43,"beats":["Gm","Gm","Gm","C"]},{"num":44,"beats":["Dm","Dm","Dm","Dm"]},{"num":45,"beats":["F","F","F","F"]},{"num":46,"beats":["Dm","Dm","Dm","Dm"]},{"num":47,"beats":["Gm","Gm","Gm","C"]},{"num":48,"beats":["Dm","Dm","Dm","Dm"]},{"num":49,"beats":["Dm","Dm","Dm","Dm"]},{"num":50,"beats":["Gm","Gm","Gm","Gm"]},{"num":51,"beats":["Am7","Am7","Am7","Am7"]},{"num":52,"beats":["Dm7","Dm7","Dm","Dm"]},{"num":53,"beats":["Dm","Dm","Dm","Dm"]},{"num":54,"beats":["Gm","Gm","Gm","Gm"]},{"num":55,"beats":["Gm","Gm","Gm","Gm"]},{"num":56,"beats":["Dm","Dm","Dm","Dm"]},{"num":57,"beats":["Dm","Dm","Dm","Dm"]},{"num":58,"beats":["A7","A7","A7","A7"]},{"num":59,"beats":["Bb","Bb","Bb","C"]},{"num":60,"beats":["Dm","Dm","Dm","Dm"]},{"num":61,"beats":["Dm","Dm","Dm","C"]},{"num":62,"beats":["Gm","Gm","Gm7","Gm7"]},{"num":63,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":64,"beats":["Dm","Dm","Dm","Dm"]},{"num":65,"beats":["Dm","Dm","Dm","Dm"]},{"num":66,"beats":["A7","A7","A7","A7"]},{"num":67,"beats":["Bb7","Bb7","Bb7","Bb7"]},{"num":68,"beats":["Dm","Dm","Dm","Am"]},{"num":69,"beats":["A7","A7","A7","A7"]},{"num":70,"beats":["Dm","Dm","Dm","Dm"]},{"num":71,"beats":["Gm","Gm","Gm","Gm"]},{"num":72,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":73,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":74,"beats":["Gm","Gm7","Gm7","Gm7"]},{"num":75,"beats":["A7","A7","A7","A7"]},{"num":76,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":77,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":78,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":79,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":80,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":81,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":82,"beats":["Am","Am","Am","Am"]},{"num":83,"beats":["Bb","Bb","Bb","Bb"]},{"num":84,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":85,"beats":["Dm","Dm","Dm","Dm"]},{"num":86,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":87,"beats":["Gm7","Gm7","Gm7","F"]},{"num":88,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":89,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":90,"beats":["Am","Am","Am","Am"]},{"num":91,"beats":["Bbmaj7","Bbmaj7","Bbmaj7","C"]},{"num":92,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":93,"beats":["Am","Am","Am","Am"]},{"num":94,"beats":["Dm","Dm","Dm","C"]},{"num":95,"beats":["Gm7","Gm","Gm","Gm"]},{"num":96,"beats":["Dm","Dm","Am","Dm/A"]},{"num":97,"beats":["Dm","Dm","Dm","Dm/C"]},{"num":98,"beats":["Gm","Gm","Gm","Gm"]},{"num":99,"beats":["A7","A7","A7","A7"]},{"num":100,"beats":["Dm","Dm","Dm","Dm"]},{"num":101,"beats":["Dm","Dm","Dm","Dm/C"]},{"num":102,"beats":["Gm","Gm","Gm","Gm"]},{"num":103,"beats":["Gm","Gm","Gm","Gm"]},{"num":104,"beats":["Dm","Dm","Dm","Dm"]},{"num":105,"beats":["Dm","Dm","Dm","Dm"]},{"num":106,"beats":["A7","A7","A7","A7"]},{"num":107,"beats":["Bb","Bb","Bb","Bb"]},{"num":108,"beats":["Dm","Dm","Dm","C"]},{"num":109,"beats":["A7","A7","A7","A7"]},{"num":110,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":111,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":112,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":113,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":114,"beats":["Gm","Gm","Gm","Gm"]},{"num":115,"beats":["A7","A7","A7","A7"]},{"num":116,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":117,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":118,"beats":["Gm","Gm","Gm7","Gm7"]},{"num":119,"beats":["Gm7","Gm7","Gm7","Gm7"]},{"num":120,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":121,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":122,"beats":["Am","Am","Am","Am7"]},{"num":123,"beats":["Bb","Bb","Bb","Bb"]},{"num":124,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":125,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":126,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":127,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":128,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":129,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":130,"beats":["Dm7","Dm7","Dm7","Dm7"]},{"num":131,"beats":["Dm7","Dm7","Dm7","Dm7"]}]
   }
 };
 
@@ -119,20 +107,23 @@ let song = null;
 let ytPlayer = null;
 let ytReady = false;
 let isPlaying = false;
-let startTime = null;
 let animFrame = null;
 let currentMeasureIdx = -1;
+let syncInterval = null;
+
 const BEAT_DUR = () => 60 / song.bpm;
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('ytPlayer', {
-    height: '200',
-    width: '100%',
+    height: '200', width: '100%',
     videoId: '',
     playerVars: {playsinline:1, rel:0, modestbranding:1},
     events: {
-      onReady: () => { ytReady = true; if(song) ytPlayer.cueVideoById(song.ytId); },
-      onStateChange: e => { if(e.data === YT.PlayerState.ENDED) stopPlay(); }
+      onReady: () => { ytReady=true; if(song) ytPlayer.cueVideoById(song.ytId); },
+      onStateChange: e => {
+        if(e.data === YT.PlayerState.ENDED) stopPlay();
+        if(e.data === YT.PlayerState.PAUSED && isPlaying) pausePlay();
+      }
     }
   });
 }
@@ -151,8 +142,8 @@ function buildGrid() {
   grid.innerHTML = '';
   song.measures.forEach((m, idx) => {
     const div = document.createElement('div');
-    div.className = 'mblock' + (m.anacruze ? ' anacruze' : '');
-    div.id = 'm_' + idx;
+    div.className = 'mblock'+(m.anacruze?' anacruze':'');
+    div.id = 'm_'+idx;
     let prev = null;
     const beatsHtml = m.beats.map(b => {
       const changed = b !== prev && b !== null;
@@ -167,8 +158,7 @@ function buildGrid() {
 function buildDots() {
   const d = document.getElementById('beatDots');
   d.innerHTML = '';
-  const n = song ? song.beatsPerMeasure : 4;
-  for(let i=0;i<n;i++){
+  for(let i=0;i<4;i++){
     const dot = document.createElement('div');
     dot.className = 'dot'+(i===0?' b1':'');
     dot.id = 'dot_'+i;
@@ -186,13 +176,29 @@ function startPlay() {
   document.getElementById('btnPlay').textContent = '⏸ Pause';
   document.getElementById('sdot').className = 'sdot live';
   document.getElementById('smode').textContent = 'Lecture en cours';
-  if(!startTime) {
-    startTime = performance.now();
-    if(ytReady && ytPlayer) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
-  } else {
-    if(ytReady && ytPlayer) ytPlayer.playVideo();
+  if(ytReady && ytPlayer) {
+    const state = ytPlayer.getPlayerState();
+    if(state !== 1) { // pas déjà en lecture
+      ytPlayer.seekTo(0);
+      ytPlayer.playVideo();
+    }
   }
+  // Sync toutes les 2 secondes avec YouTube
+  if(syncInterval) clearInterval(syncInterval);
+  syncInterval = setInterval(syncWithYT, 2000);
   tick();
+}
+
+function syncWithYT() {
+  // Resynchronise les accords sur la position réelle YouTube
+  if(!isPlaying || !ytReady || !ytPlayer) return;
+  try {
+    const ytTime = ytPlayer.getCurrentTime();
+    if(ytTime > 0) {
+      // On met à jour l'affichage en fonction du temps YouTube réel
+      updateDisplay(ytTime);
+    }
+  } catch(e) {}
 }
 
 function pausePlay() {
@@ -200,18 +206,19 @@ function pausePlay() {
   document.getElementById('btnPlay').textContent = '▶ Play';
   document.getElementById('smode').textContent = 'Pause';
   cancelAnimationFrame(animFrame);
+  if(syncInterval) { clearInterval(syncInterval); syncInterval=null; }
   if(ytReady && ytPlayer) ytPlayer.pauseVideo();
 }
 
 function stopPlay() {
   isPlaying = false;
-  startTime = null;
-  currentMeasureIdx = -1;
   document.getElementById('btnPlay').textContent = '▶ Play';
   document.getElementById('sdot').className = 'sdot stopped';
   document.getElementById('smode').textContent = 'Arrêté — Appuyez sur Play pour démarrer';
   cancelAnimationFrame(animFrame);
-  if(ytReady && ytPlayer) { ytPlayer.stopVideo(); }
+  if(syncInterval) { clearInterval(syncInterval); syncInterval=null; }
+  if(ytReady && ytPlayer) ytPlayer.stopVideo();
+  currentMeasureIdx = -1;
   document.getElementById('chordBig').textContent = '—';
   document.getElementById('nextChord').textContent = '—';
   document.getElementById('timer').textContent = '0:00';
@@ -222,42 +229,48 @@ function stopPlay() {
 }
 
 function seekTo(e) {
-  if(!song||!startTime) return;
+  if(!song) return;
   const rect = e.currentTarget.getBoundingClientRect();
   const pct = (e.clientX-rect.left)/rect.width;
   const totalDur = song.beats.length * BEAT_DUR();
-  startTime = performance.now() - pct*totalDur*1000;
-  if(ytReady && ytPlayer) ytPlayer.seekTo(pct*totalDur);
+  const targetTime = pct * totalDur;
+  if(ytReady && ytPlayer) ytPlayer.seekTo(targetTime);
+  updateDisplay(targetTime);
 }
 
-function tick() {
-  if(!isPlaying) return;
-  const elapsed = (performance.now()-startTime)/1000;
+function updateDisplay(elapsed) {
+  if(!song) return;
   const totalDur = song.beats.length * BEAT_DUR();
-  if(elapsed >= totalDur){ stopPlay(); return; }
-  const beatIdx = Math.min(Math.floor(elapsed/BEAT_DUR()), song.beats.length-1);
+  if(elapsed >= totalDur) { stopPlay(); return; }
+  
+  const beatIdx = Math.min(Math.floor(elapsed / BEAT_DUR()), song.beats.length-1);
   const chord = song.beats[beatIdx] || '〜';
   const beatInMeasure = beatIdx % song.beatsPerMeasure;
+  
   let measureIdx = 0, cumBeats = 0;
   for(let i=0;i<song.measures.length;i++){
     const mb = song.measures[i].beats.length;
     if(beatIdx < cumBeats+mb){ measureIdx=i; break; }
     cumBeats += mb;
   }
+  
   let nextChord = '—';
   for(let i=beatIdx+1;i<song.beats.length;i++){
     if(song.beats[i] && song.beats[i]!==song.beats[beatIdx]){ nextChord=song.beats[i]; break; }
   }
+  
   document.getElementById('chordBig').textContent = chord;
   document.getElementById('nextChord').textContent = nextChord;
   const mins=Math.floor(elapsed/60), secs=Math.floor(elapsed%60).toString().padStart(2,'0');
   document.getElementById('timer').textContent = `${mins}:${secs}`;
   document.getElementById('minfo').textContent = `Mesure ${song.measures[measureIdx]?.num||'—'} / 131`;
   document.getElementById('progBar').style.width = (elapsed/totalDur*100)+'%';
-  for(let i=0;i<song.beatsPerMeasure;i++){
+  
+  for(let i=0;i<4;i++){
     const d=document.getElementById('dot_'+i);
     if(d) d.classList.toggle('on', i===beatInMeasure);
   }
+  
   if(measureIdx !== currentMeasureIdx) {
     currentMeasureIdx = measureIdx;
     document.querySelectorAll('.mblock').forEach((el,i)=>{
@@ -266,6 +279,17 @@ function tick() {
       else el.className='mblock';
     });
     document.getElementById('m_'+measureIdx)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function tick() {
+  if(!isPlaying) return;
+  // Utilise le temps YouTube réel pour la synchro
+  if(ytReady && ytPlayer) {
+    try {
+      const ytTime = ytPlayer.getCurrentTime();
+      if(ytTime >= 0) updateDisplay(ytTime);
+    } catch(e) {}
   }
   animFrame = requestAnimationFrame(tick);
 }
