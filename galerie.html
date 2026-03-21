@@ -14,9 +14,12 @@
   <div id="selector">
     <label for="album-select">Album : </label>
     <select id="album-select"></select>
-<div id="topbar-count"><span id="count-photos">-</span> photos</div>
+    <div id="topbar-count"><span id="count-photos">-</span> photos</div>
   </div>
 </div>
+
+<!-- BOUTON ROUVRIR SIDEBAR (mobile) -->
+<button id="sidebar-toggle" onclick="showSidebar()" title="Infos photographe">👤 Infos</button>
 
 <!-- PANNEAU LATÉRAL GAUCHE -->
 <aside id="sidebar">
@@ -62,10 +65,7 @@
 
 <!-- CONTENU PRINCIPAL -->
 <div id="main-content">
-  <!-- Mini-albums vedette -->
   <div id="mini-albums"></div>
-
-  <!-- Photo du jour -->
   <div id="photo-of-day-section">
     <div id="photo-of-day-container">
       <img id="photo-of-day" alt="Photo du jour">
@@ -75,11 +75,10 @@
       </div>
     </div>
   </div>
-
-  <!-- Galerie principale -->
   <main id="gallery"></main>
 </div>
-<!-- Modal pour clic photo -->
+
+<!-- Modal -->
 <div id="modal" class="hidden">
   <div class="modal-content">
     <img id="modal-img">
@@ -96,5 +95,108 @@
 </div>
 
 <script src="js/app.js"></script>
+<script>
+// ═══════════════════════════════════════
+// SIDEBAR MAGIQUE — MOBILE UNIQUEMENT
+// ═══════════════════════════════════════
+function isMobile() { return window.innerWidth <= 768; }
+
+function createStars(x, y) {
+  const emojis = ['✨','⭐','🌟','💫','★','✦','🌠'];
+  for(let i = 0; i < 18; i++) {
+    const star = document.createElement('div');
+    star.className = 'star-particle';
+    star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    // Direction aléatoire
+    const angle = (Math.random() * 360) * Math.PI / 180;
+    const dist = 60 + Math.random() * 120;
+    star.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+    star.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+    star.style.left = (x + Math.random() * 200 - 100) + 'px';
+    star.style.top  = (y + Math.random() * 100) + 'px';
+    star.style.animationDelay = (Math.random() * 0.4) + 's';
+    star.style.fontSize = (12 + Math.random() * 14) + 'px';
+    document.body.appendChild(star);
+    setTimeout(() => star.remove(), 1600);
+  }
+}
+
+function showMessage() {
+  const msg = document.createElement('div');
+  msg.style.cssText = `
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    background:rgba(0,0,0,0.85); color:#f0f0f0;
+    padding:20px 30px; border-radius:14px; text-align:center;
+    font-size:16px; z-index:9998; border:1px solid #c0392b;
+    animation: fadeMsg 0.5s ease;
+    pointer-events:none;
+  `;
+  msg.innerHTML = '✨ À bientôt !<br><span style="font-size:12px;color:#888">Je reviens dans ma lanterne magique...</span>';
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 1800);
+}
+
+let sidebarTimer = null;
+
+function startSidebarTimer() {
+  if(!isMobile()) return;
+  // Calculer le temps de lecture du contenu
+  const sidebar = document.getElementById('sidebar');
+  const text = sidebar.innerText || '';
+  const wordCount = text.split(/\s+/).length;
+  const readingMs = Math.max(4000, wordCount * 200); // ~200ms par mot, min 4s
+  
+  clearTimeout(sidebarTimer);
+  sidebarTimer = setTimeout(() => {
+    hideSidebar();
+  }, readingMs);
+}
+
+function hideSidebar() {
+  if(!isMobile()) return;
+  const sidebar = document.getElementById('sidebar');
+  const rect = sidebar.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  
+  // Étoiles magiques
+  createStars(cx, cy);
+  showMessage();
+  
+  // Animation disparition
+  sidebar.classList.add('hiding');
+  
+  setTimeout(() => {
+    sidebar.classList.add('hidden-mobile');
+    sidebar.classList.remove('hiding');
+    // Montrer bouton retour
+    document.getElementById('sidebar-toggle').style.opacity = '1';
+  }, 650);
+}
+
+function showSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.remove('hidden-mobile', 'hiding');
+  document.getElementById('sidebar-toggle').style.opacity = '0';
+  startSidebarTimer(); // relancer le timer
+}
+
+// Démarrer au chargement sur mobile
+window.addEventListener('load', () => {
+  if(isMobile()) {
+    document.getElementById('sidebar-toggle').style.opacity = '0';
+    startSidebarTimer();
+  }
+});
+
+window.addEventListener('resize', () => {
+  if(!isMobile()) {
+    // Sur desktop — sidebar toujours visible
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.remove('hidden-mobile', 'hiding');
+    clearTimeout(sidebarTimer);
+  }
+});
+</script>
 </body>
 </html>
