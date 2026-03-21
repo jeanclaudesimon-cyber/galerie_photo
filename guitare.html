@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guitare Basse — Jean-Claude Simon</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+:root{--noir:#080808;--rouge:#c0392b;--blanc:#f0ece4;--gris:#888;--gris-clair:#bbb;--or:#c9a84c;--bleu:#4a9eff;--vert:#4a7c3f;--violet:#9b59b6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Josefin Sans',sans-serif;font-weight:300;background:var(--noir);color:var(--blanc);min-height:100vh}
+
+header{background:linear-gradient(135deg,#0a0a0a,#1a0800);border-bottom:2px solid var(--rouge);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-ic{width:42px;height:42px;background:var(--rouge);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.logo h1{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:2px;font-weight:300}
+.logo span{font-size:10px;color:var(--rouge);letter-spacing:3px;text-transform:uppercase;display:block}
+.back-btn{color:var(--gris);border:1px solid rgba(255,255,255,.1);padding:7px 16px;border-radius:7px;font-size:12px;font-weight:400;text-decoration:none;letter-spacing:1px;transition:.2s}
+.back-btn:hover{color:var(--blanc)}
+
+main{max-width:900px;margin:0 auto;padding:3rem 2rem}
+
+.hero-section{text-align:center;margin-bottom:3rem}
+.hero-section h2{font-family:'Cormorant Garamond',serif;font-size:2.8em;font-weight:300;color:var(--blanc);margin-bottom:.5rem}
+.hero-section h2 span{font-style:italic;color:var(--gris-clair)}
+.hero-section p{font-size:.9em;color:var(--gris);letter-spacing:.1em;line-height:1.8;max-width:500px;margin:0 auto}
+.hero-line{width:60px;height:1px;background:var(--rouge);margin:1.5rem auto}
+
+.tiles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:3rem}
+
+.hub-tile{position:relative;text-decoration:none;color:var(--blanc);overflow:hidden;height:240px;display:flex;align-items:flex-end;padding:28px;transition:transform .4s}
+.hub-tile:hover{transform:scale(1.02);z-index:2}
+.hub-tile .tile-bg{position:absolute;inset:0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);transition:background .4s}
+.hub-tile:hover .tile-bg{background:rgba(255,255,255,.07)}
+.hub-tile .tile-content{position:relative;z-index:1}
+.hub-tile .tile-icon{width:40px;height:40px;margin-bottom:14px;opacity:.7}
+.hub-tile h3{font-family:'Josefin Sans',sans-serif;font-weight:400;font-size:1.1em;letter-spacing:.15em;margin-bottom:6px}
+.hub-tile p{font-size:.75em;color:var(--gris);line-height:1.6;margin-bottom:14px;letter-spacing:.05em}
+.tile-cta{font-size:.7em;letter-spacing:.3em;text-transform:uppercase}
+
+#tile-partition .tile-bg{border-top:2px solid var(--bleu)}
+#tile-partition .tile-cta{color:var(--bleu)}
+#tile-accords .tile-bg{border-top:2px solid var(--rouge)}
+#tile-accords .tile-cta{color:var(--rouge)}
+#tile-theorie .tile-bg{border-top:2px solid var(--violet)}
+#tile-theorie .tile-cta{color:var(--violet)}
+
+.morceaux-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.morceaux-title{font-size:.75em;letter-spacing:.3em;color:var(--rouge);text-transform:uppercase;margin-bottom:1rem}
+.morceau-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);gap:1rem;flex-wrap:wrap}
+.morceau-item:last-child{border-bottom:none}
+.morceau-name{font-size:.9em;letter-spacing:.05em}
+.morceau-meta{font-size:.75em;color:var(--gris)}
+.morceau-links{display:flex;gap:8px}
+.mlink{font-size:.65em;letter-spacing:.2em;text-transform:uppercase;padding:4px 12px;border-radius:5px;text-decoration:none;transition:.2s}
+.mlink-p{color:var(--bleu);border:1px solid var(--bleu)}
+.mlink-p:hover{background:var(--bleu);color:#fff}
+.mlink-a{color:var(--rouge);border:1px solid var(--rouge)}
+.mlink-a:hover{background:var(--rouge);color:#fff}
+
+footer{text-align:center;padding:2rem;border-top:1px solid rgba(255,255,255,.06);font-size:.7em;letter-spacing:.2em;color:var(--gris)}
+
+@media(max-width:700px){.tiles-grid{grid-template-columns:1fr}.hub-tile{height:180px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-ic">🎸</div>
+    <div>
+      <h1>Guitare Basse</h1>
+      <span>Partitions · Accords · Théorie</span>
+    </div>
+  </div>
+  <a href="index.html" class="back-btn">← Accueil</a>
+</header>
+
+<main>
+
+  <div class="hero-section">
+    <h2>Mon <span>Atelier</span> Musical</h2>
+    <div class="hero-line"></div>
+    <p>Partitions, backing tracks et théorie pour la guitare basse. Jouez en suivant les accords en temps réel ou apprenez les gammes et intervalles.</p>
+  </div>
+
+  <!-- 3 TUILES -->
+  <div class="tiles-grid">
+
+    <a href="musique/partition.html" class="hub-tile" id="tile-partition">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="12" y="8" width="40" height="50" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="20" y1="20" x2="44" y2="20" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="28" x2="44" y2="28" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="36" x2="44" y2="36" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="44" x2="36" y2="44" stroke="white" stroke-width="1.5"/>
+          <circle cx="18" cy="20" r="2" fill="white"/>
+          <circle cx="18" cy="28" r="2" fill="white"/>
+        </svg>
+        <h3>Partition + Vidéo</h3>
+        <p>PDF de la partition avec défilement auto et backing track YouTube</p>
+        <span class="tile-cta">Jouer →</span>
+      </div>
+    </a>
+
+    <a href="musique/accords.html" class="hub-tile" id="tile-accords">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="8" y="14" width="20" height="14" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <rect x="36" y="14" width="20" height="14" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <rect x="8" y="36" width="20" height="14" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <rect x="36" y="36" width="20" height="14" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <text x="18" y="25" fill="white" font-size="8" text-anchor="middle" font-family="sans-serif">Dm</text>
+          <text x="46" y="25" fill="white" font-size="8" text-anchor="middle" font-family="sans-serif">Gm</text>
+          <text x="18" y="47" fill="white" font-size="8" text-anchor="middle" font-family="sans-serif">A7</text>
+          <text x="46" y="47" fill="white" font-size="8" text-anchor="middle" font-family="sans-serif">Bb</text>
+        </svg>
+        <h3>Accords Style Moises</h3>
+        <p>Grille d'accords qui défile au BPM — jouez sans regarder la partition</p>
+        <span class="tile-cta">Démarrer →</span>
+      </div>
+    </a>
+
+    <a href="musique/theorie.html" class="hub-tile" id="tile-theorie">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="4" y="28" width="56" height="3" fill="white" opacity=".3"/>
+          <rect x="4" y="34" width="56" height="3" fill="white" opacity=".3"/>
+          <rect x="4" y="22" width="56" height="3" fill="white" opacity=".3"/>
+          <rect x="4" y="40" width="56" height="3" fill="white" opacity=".3"/>
+          <circle cx="16" cy="30" r="5" fill="white" opacity=".9"/>
+          <circle cx="28" cy="36" r="5" fill="none" stroke="white" stroke-width="1.5" opacity=".7"/>
+          <circle cx="40" cy="30" r="5" fill="white" opacity=".9"/>
+          <circle cx="52" cy="36" r="5" fill="none" stroke="white" stroke-width="1.5" opacity=".7"/>
+          <line x1="16" y1="25" x2="16" y2="10" stroke="white" stroke-width="1.5"/>
+          <line x1="40" y1="25" x2="40" y2="10" stroke="white" stroke-width="1.5"/>
+          <line x1="16" y1="10" x2="40" y2="10" stroke="white" stroke-width="1.5"/>
+        </svg>
+        <h3>Théorie Basse</h3>
+        <p>Manche interactif, gammes, intervalles et accords expliqués</p>
+        <span class="tile-cta">Apprendre →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- LISTE MORCEAUX -->
+  <div class="morceaux-section">
+    <div class="morceaux-title">🎵 Morceaux disponibles</div>
+
+    <div class="morceau-item">
+      <div>
+        <div class="morceau-name">Vargas Blues Band — Del Sur</div>
+        <div class="morceau-meta">93 BPM · 4/4 · 131 mesures · Ré mineur</div>
+      </div>
+      <div class="morceau-links">
+        <a href="musique/partition.html" class="mlink mlink-p">📄 Partition</a>
+        <a href="musique/accords.html" class="mlink mlink-a">🎸 Accords</a>
+      </div>
+    </div>
+
+    <!-- Ajoutez vos morceaux ici -->
+
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2025 Jean-Claude Simon · Guitare Basse</p>
+</footer>
+
+</body>
+</html>
