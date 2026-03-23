@@ -3,282 +3,306 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Partition — Guitare Basse</title>
+<title>Lecteur — Guitare Basse</title>
+<script src="https://www.youtube.com/iframe_api"></script>
 <style>
-:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--blu:#4a9eff;--bdr:rgba(255,255,255,0.08)}
+:root{--dk:#0d0d0d;--card:#1a1a1a;--card2:#242424;--txt:#f0f0f0;--muted:#777;--accent:#e8621a;--grn:#5cb87a;--bdr:rgba(255,255,255,0.08)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:10px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;flex-shrink:0}
-.logo h1{font-size:15px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+body{font-family:'Segoe UI',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px solid var(--accent);padding:12px 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo h1{font-size:16px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
 .hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:5px 10px;border-radius:7px;font-size:12px}
-.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:5px 12px;border-radius:7px;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap}
+.sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;border-radius:7px;font-size:13px}
+.abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none}
 .abtn:hover{color:#fff}
-.toolbar{display:flex;gap:8px;align-items:center;padding:8px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap;flex-shrink:0}
-.btn{padding:7px 16px;border-radius:7px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+
+/* YOUTUBE */
+#ytWrap{background:#000;border-bottom:1px solid var(--bdr)}
+#ytPlayer{width:100%;height:220px}
+
+/* TITRE MORCEAU */
+.song-title{padding:12px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.song-name{font-size:18px;font-weight:700;color:var(--txt)}
+.song-meta{font-size:12px;color:var(--muted)}
+
+/* CONTROLS */
+.ctrl{display:flex;gap:8px;align-items:center;padding:10px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.btn{padding:9px 22px;border-radius:8px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-play{background:var(--accent);color:#fff}
 .btn-play:hover{background:#f58340}
-.btn-sm{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:5px 10px;font-size:11px}
-.zoom-info{font-size:11px;color:var(--muted);padding:5px 10px;background:var(--card2);border-radius:6px}
-.scroll-toggle{font-size:11px;padding:5px 12px}
-.page-nav{display:flex;gap:6px;align-items:center;margin-left:auto}
-.pnum{font-size:11px;color:var(--muted)}
+.btn-stop{background:var(--card2);color:var(--txt);border:1px solid var(--bdr)}
+.timer{font-family:monospace;font-size:18px;color:var(--accent);background:var(--card2);padding:6px 14px;border-radius:7px;min-width:70px;text-align:center}
+.prog-wrap{flex:1;min-width:150px;background:rgba(255,255,255,.06);border-radius:4px;height:8px;cursor:pointer;border-radius:8px}
+.prog-bar{height:100%;background:var(--accent);border-radius:8px;width:0%;transition:width .1s linear}
+.offset-wrap{display:flex;gap:6px;align-items:center}
+.offset-btn{background:var(--card2);color:var(--muted);border:1px solid var(--bdr);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.offset-val{font-size:11px;color:var(--muted);background:var(--card2);padding:5px 10px;border-radius:6px;min-width:80px;text-align:center}
 
-/* SPLIT */
-.split{display:flex;flex:1;overflow:hidden;min-height:0}
+/* 3 ACCORDS */
+.chords-zone{flex:1;display:flex;flex-direction:column;justify-content:center}
 
-/* PDF */
-.pdf-zone{flex:1;overflow-y:auto;background:#2a2a2a;padding:1rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
-.pdf-page{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.5);max-width:100%}
-.pdf-loading{color:var(--muted);font-size:14px;padding:2rem;text-align:center}
+.mc-row{display:flex;align-items:center;padding:14px 1.5rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.mc-row:last-child{border-bottom:none}
+.mc-row.current{background:rgba(232,98,26,.06);padding:20px 1.5rem}
+.mc-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);min-width:80px}
+.mc-chord{font-weight:900;line-height:1}
+.mc-chord.c1{font-size:72px;color:var(--accent)}
+.mc-chord.c2{font-size:42px;color:var(--txt)}
+.mc-chord.c3{font-size:28px;color:var(--muted)}
+.mc-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.beat-dots{display:flex;gap:8px}
+.dot{width:16px;height:16px;border-radius:50%;background:var(--card2);border:1px solid var(--bdr);transition:.1s}
+.dot.on{background:var(--accent);box-shadow:0 0 12px rgba(232,98,26,.7)}
+.dot.b1{border-color:#f58340;width:20px;height:20px}
+.mnum-badge{font-size:11px;color:var(--muted);background:var(--card2);padding:4px 10px;border-radius:10px}
 
-/* YT PANEL */
-.yt-panel{width:300px;background:var(--card);border-left:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0}
-.yt-header{padding:8px 12px;border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
-.yt-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
-#ytPlayerDiv{width:100%}
-.yt-info{padding:8px 12px}
-.yt-title{font-size:12px;font-weight:600;margin-bottom:3px}
-.yt-sub{font-size:10px;color:var(--muted)}
-.yt-ctrl{padding:8px 12px;display:flex;gap:8px;border-top:1px solid var(--bdr);margin-top:auto}
-.yt-btn{flex:1;padding:7px;border-radius:6px;border:none;font-size:12px;font-weight:700;cursor:pointer}
-.yt-play{background:var(--accent);color:#fff}
-.yt-stop{background:var(--card2);color:var(--txt);border:1px solid var(--bdr)}
+.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:6px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem;margin-top:auto}
+.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}
+.live{background:var(--grn)}.stopped{background:var(--muted)}
 
-.scroll-badge{position:fixed;bottom:16px;right:16px;background:rgba(232,98,26,.9);color:#fff;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;display:none;z-index:100}
-.scroll-badge.on{display:block}
-.statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:4px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem;flex-shrink:0}
-
-@media(max-width:700px){.yt-panel{width:100%;max-height:200px;border-left:none;border-top:1px solid var(--bdr)}.split{flex-direction:column}}
+@media(max-width:600px){
+  .mc-chord.c1{font-size:56px}
+  .mc-chord.c2{font-size:34px}
+  .mc-chord.c3{font-size:22px}
+  .mc-label{min-width:60px;font-size:9px}
+  #ytPlayer{height:180px}
+  .offset-wrap{display:none}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo"><h1>📄 Partition Basse</h1></div>
+  <div class="logo"><h1>🎸 Lecteur Basse</h1></div>
   <div class="hdr-r">
     <select class="sel" id="songSelect" onchange="loadSong()">
       <option value="vargas">Vargas Blues Band — Del Sur</option>
     </select>
-    <a href="accords.html" class="abtn">🎸 Accords</a>
+    <a href="accords.html" class="abtn">📊 Grille</a>
     <a href="theorie.html" class="abtn">🎼 Théorie</a>
-    <a href="../guitare.html" class="abtn">🎸 Hub</a>
+    <a href="../guitare.html" class="abtn">🎸</a>
     <a href="../index.html" class="abtn">← Accueil</a>
   </div>
 </header>
 
-<div class="toolbar">
-  <button class="btn btn-play" id="btnPlay" onclick="toggleVideo()">▶ Lancer la vidéo</button>
-  <button class="btn btn-sm" onclick="changeZoom(-0.15)">🔍−</button>
-  <span class="zoom-info" id="zoomInfo">100%</span>
-  <button class="btn btn-sm" onclick="changeZoom(0.15)">🔍+</button>
-  <button class="btn btn-sm scroll-toggle" id="scrollBtn" onclick="toggleAutoScroll()">↕ Défilement : OFF</button>
-  <div class="page-nav">
-    <button class="btn btn-sm" onclick="prevPage()">◀</button>
-    <span class="pnum" id="pageNum">Page — / —</span>
-    <button class="btn btn-sm" onclick="nextPage()">▶</button>
+<!-- YouTube -->
+<div id="ytWrap"><div id="ytPlayer"></div></div>
+
+<!-- Titre morceau -->
+<div class="song-title">
+  <div>
+    <div class="song-name" id="songName">—</div>
+    <div class="song-meta" id="songMeta">—</div>
+  </div>
+  <div class="mnum-badge" id="measureBadge">M — / —</div>
+</div>
+
+<!-- Controls -->
+<div class="ctrl">
+  <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">▶ Play</button>
+  <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
+  <div class="timer" id="timer">0:00</div>
+  <div class="prog-wrap" onclick="seekTo(event)"><div class="prog-bar" id="progBar"></div></div>
+  <div class="offset-wrap">
+    <button class="offset-btn" onclick="adjustOffset(-0.25)">◀ -0.25s</button>
+    <div class="offset-val" id="offsetDisplay">offset: +0.5s</div>
+    <button class="offset-btn" onclick="adjustOffset(0.25)">+0.25s ▶</button>
   </div>
 </div>
 
-<div class="split">
-  <div class="pdf-zone" id="pdfZone">
-    <div class="pdf-loading" id="pdfLoading">⏳ Chargement de la partition...</div>
+<!-- 3 Accords -->
+<div class="chords-zone">
+  <div class="mc-row current">
+    <div class="mc-label">En cours</div>
+    <div class="mc-chord c1" id="chord1">—</div>
+    <div class="mc-right">
+      <div class="beat-dots" id="beatDots"></div>
+    </div>
   </div>
-  <div class="yt-panel" id="ytPanel">
-    <div class="yt-header">
-      <span>🎬 Backing Track</span>
-      <button class="yt-close" onclick="collapseYT()">×</button>
-    </div>
-    <div id="ytPlayerDiv"></div>
-    <div class="yt-info">
-      <div class="yt-title" id="ytTitle">Vargas Blues Band — Del Sur</div>
-      <div class="yt-sub">Accords qui défilent</div>
-    </div>
-    <div class="yt-ctrl">
-      <button class="yt-btn yt-play" onclick="ytPlayPause()" id="ytPlayBtn">▶ Play</button>
-      <button class="yt-btn yt-stop" onclick="ytStop()">⏹ Stop</button>
-    </div>
+  <div class="mc-row">
+    <div class="mc-label" style="color:#f58340">Suivant →</div>
+    <div class="mc-chord c2" id="chord2">—</div>
+  </div>
+  <div class="mc-row">
+    <div class="mc-label">Après →→</div>
+    <div class="mc-chord c3" id="chord3">—</div>
   </div>
 </div>
 
-<div class="scroll-badge" id="scrollBadge">↕ Défilement auto actif</div>
-<div class="statusbar"><span id="smode">Prêt</span><span id="sclock"></span></div>
+<div class="statusbar">
+  <span><span class="sdot stopped" id="sdot"></span><span id="smode">Arrêté — Play pour démarrer</span></span>
+  <span id="sclock"></span>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
 const SONGS = {
   vargas: {
     title: "Vargas Blues Band — Del Sur",
-    pdfUrl: "https://jeanclaudesimon-cyber.github.io/galerie_photo/musique/Vargas%20Blues%20Band%20%20Del%20Sur.pdf",
-    ytId: "NqvjXZQEhsI",
+    meta: "93 BPM · 4/4 · 131 mesures · Ré mineur",
     bpm: 93,
-    totalMeasures: 131
+    beatsPerMeasure: 4,
+    totalMeasures: 131,
+    ytId: "NqvjXZQEhsI",
+    beats: [null, null, "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am7", "Am7", "Am7", "Am7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am", "Am", "A", "A", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Am7", "Am7", "Am7", "Am7", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "F", "F", "F", "F", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Am7", "Am7", "Am7", "Am7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "C", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "C", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb7", "Bb7", "Bb7", "Bb7", "Dm", "Dm", "Dm", "Am", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Gm", "Gm", "Gm", "Gm", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm7", "Gm7", "Gm7", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm", "Dm", "Dm", "Dm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "F", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Bbmaj7", "Bbmaj7", "Bbmaj7", "C", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am", "Dm", "Dm", "Dm", "C", "Gm7", "Gm", "Gm", "Gm", "Dm", "Dm", "Am", "Dm/A", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm/C", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Gm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "Dm", "A7", "A7", "A7", "A7", "Bb", "Bb", "Bb", "Bb", "Dm", "Dm", "Dm", "C", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm", "Gm", "A7", "A7", "A7", "A7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Gm", "Gm", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Gm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Am", "Am", "Am", "Am7", "Bb", "Bb", "Bb", "Bb", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7", "Dm7"],
+    measures: [{"num": 1, "beats": [null, null], "anacruze": true}, {"num": 2, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 3, "beats": ["Gm", "Gm", "Gm", "Dm"]}, {"num": 4, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 5, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 6, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 7, "beats": ["Gm", "Gm", "Dm", "Dm"]}, {"num": 8, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 9, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 10, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 11, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 12, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 13, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 14, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 15, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 16, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 17, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 18, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 19, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 20, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 21, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 22, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 23, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 24, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 25, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 26, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 27, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 28, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 29, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 30, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 31, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 32, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 33, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 34, "beats": ["Am", "Am", "A", "A"]}, {"num": 35, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 36, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 37, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 38, "beats": ["Dm", "Dm", "Gm", "Gm"]}, {"num": 39, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 40, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 41, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 42, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 43, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 44, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 45, "beats": ["F", "F", "F", "F"]}, {"num": 46, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 47, "beats": ["Gm", "Gm", "Gm", "C"]}, {"num": 48, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 49, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 50, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 51, "beats": ["Am7", "Am7", "Am7", "Am7"]}, {"num": 52, "beats": ["Dm7", "Dm7", "Dm", "Dm"]}, {"num": 53, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 54, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 55, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 56, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 57, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 58, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 59, "beats": ["Bb", "Bb", "Bb", "C"]}, {"num": 60, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 61, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 62, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 63, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 64, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 65, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 66, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 67, "beats": ["Bb7", "Bb7", "Bb7", "Bb7"]}, {"num": 68, "beats": ["Dm", "Dm", "Dm", "Am"]}, {"num": 69, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 70, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 71, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 72, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 73, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 74, "beats": ["Gm", "Gm7", "Gm7", "Gm7"]}, {"num": 75, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 76, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 77, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 78, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 79, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 80, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 81, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 82, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 83, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 84, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 85, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 86, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 87, "beats": ["Gm7", "Gm7", "Gm7", "F"]}, {"num": 88, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 89, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 90, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 91, "beats": ["Bbmaj7", "Bbmaj7", "Bbmaj7", "C"]}, {"num": 92, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 93, "beats": ["Am", "Am", "Am", "Am"]}, {"num": 94, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 95, "beats": ["Gm7", "Gm", "Gm", "Gm"]}, {"num": 96, "beats": ["Dm", "Dm", "Am", "Dm/A"]}, {"num": 97, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 98, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 99, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 100, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 101, "beats": ["Dm", "Dm", "Dm", "Dm/C"]}, {"num": 102, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 103, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 104, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 105, "beats": ["Dm", "Dm", "Dm", "Dm"]}, {"num": 106, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 107, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 108, "beats": ["Dm", "Dm", "Dm", "C"]}, {"num": 109, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 110, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 111, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 112, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 113, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 114, "beats": ["Gm", "Gm", "Gm", "Gm"]}, {"num": 115, "beats": ["A7", "A7", "A7", "A7"]}, {"num": 116, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 117, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 118, "beats": ["Gm", "Gm", "Gm7", "Gm7"]}, {"num": 119, "beats": ["Gm7", "Gm7", "Gm7", "Gm7"]}, {"num": 120, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 121, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 122, "beats": ["Am", "Am", "Am", "Am7"]}, {"num": 123, "beats": ["Bb", "Bb", "Bb", "Bb"]}, {"num": 124, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 125, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 126, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 127, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 128, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 129, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 130, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}, {"num": 131, "beats": ["Dm7", "Dm7", "Dm7", "Dm7"]}]
   }
 };
 
-let currentSong = null;
-let pdfDoc = null;
-let totalPages = 1;
-let zoom = 1.0;
-let autoScroll = false;
-let scrollInterval = null;
-let ytPlayer = null;
-let ytReady = false;
-let ytPlaying = false;
-let pdfTotalHeight = 0; // calculé après rendu complet de toutes les pages
+let song=null, ytPlayer=null, ytReady=false, isPlaying=false;
+let animFrame=null, syncInterval=null, currentMeasureIdx=-1;
+let timeOffset = 0.5;
+const BEAT_DUR = () => 60/song.bpm;
 
 function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('ytPlayerDiv', {
-    height: '169',
-    width: '300',
-    videoId: '',
-    playerVars: {playsinline:1, rel:0, modestbranding:1},
-    events: {
-      onReady: () => { ytReady=true; if(currentSong) ytPlayer.cueVideoById(currentSong.ytId); },
-      onStateChange: e => {
-        ytPlaying = e.data === YT.PlayerState.PLAYING;
-        document.getElementById('ytPlayBtn').textContent = ytPlaying ? '⏸ Pause' : '▶ Play';
-        if(e.data === YT.PlayerState.ENDED && autoScroll) toggleAutoScroll();
+  ytPlayer = new YT.Player('ytPlayer', {
+    height:'220', width:'100%', videoId:'',
+    playerVars:{playsinline:1, rel:0, modestbranding:1},
+    events:{
+      onReady: ()=>{ ytReady=true; if(song) ytPlayer.cueVideoById(song.ytId); },
+      onStateChange: e=>{
+        if(e.data===YT.PlayerState.ENDED) stopPlay();
+        if(e.data===YT.PlayerState.PAUSED && isPlaying) pausePlay();
       }
     }
   });
 }
 
-function toggleVideo() {
-  const panel = document.getElementById('ytPanel');
-  panel.style.display = 'flex';
-  if(ytReady && ytPlayer) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
-  document.getElementById('btnPlay').textContent = '⏸ Vidéo en cours';
-}
-
-function ytPlayPause() {
-  if(!ytReady) return;
-  ytPlaying ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
-}
-
-function ytStop() {
-  if(!ytReady) return;
-  ytPlayer.stopVideo();
-  document.getElementById('btnPlay').textContent = '▶ Lancer la vidéo';
-}
-
-function collapseYT() {
-  document.getElementById('ytPanel').style.display = 'none';
-  ytStop();
-}
-
-async function loadSong() {
+function loadSong() {
   const key = document.getElementById('songSelect').value;
-  currentSong = SONGS[key];
-  document.getElementById('ytTitle').textContent = currentSong.title;
-  document.getElementById('smode').textContent = 'Chargement PDF...';
-  if(ytReady && ytPlayer) ytPlayer.cueVideoById(currentSong.ytId);
-  await loadPDF(currentSong.pdfUrl);
+  song = SONGS[key];
+  stopPlay();
+  buildDots();
+  document.getElementById('songName').textContent = song.title;
+  document.getElementById('songMeta').textContent = song.meta;
+  if(ytReady && ytPlayer) ytPlayer.cueVideoById(song.ytId);
 }
 
-async function loadPDF(url) {
-  try {
-    document.getElementById('pdfLoading').style.display = 'block';
-    pdfDoc = await pdfjsLib.getDocument(url).promise;
-    totalPages = pdfDoc.numPages;
-    document.getElementById('pdfLoading').style.display = 'none';
-    await renderAllPages();
-    document.getElementById('smode').textContent = `✅ ${totalPages} page(s) — ${currentSong.title}`;
-  } catch(e) {
-    document.getElementById('pdfLoading').textContent = '❌ PDF introuvable. Vérifiez que le fichier est dans musique/ sur GitHub.';
-    document.getElementById('smode').textContent = 'Erreur chargement PDF';
-    console.error(e);
+function buildDots() {
+  const d = document.getElementById('beatDots');
+  d.innerHTML = '';
+  for(let i=0;i<song.beatsPerMeasure;i++){
+    const dot = document.createElement('div');
+    dot.className = 'dot'+(i===0?' b1':'');
+    dot.id = 'dot_'+i;
+    d.appendChild(dot);
   }
 }
 
-async function renderAllPages() {
-  const zone = document.getElementById('pdfZone');
-  zone.innerHTML = '';
-  pdfTotalHeight = 0;
-  const containerWidth = zone.clientWidth - 32;
-  for(let i=1; i<=totalPages; i++) {
-    const page = await pdfDoc.getPage(i);
-    const vp = page.getViewport({scale:1});
-    const scale = (containerWidth/vp.width) * zoom;
-    const svp = page.getViewport({scale});
-    const canvas = document.createElement('canvas');
-    canvas.width = svp.width;
-    canvas.height = svp.height;
-    canvas.className = 'pdf-page';
-    canvas.id = 'page_'+i;
-    zone.appendChild(canvas);
-    await page.render({canvasContext:canvas.getContext('2d'), viewport:svp}).promise;
-    pdfTotalHeight += svp.height + 16; // accumule hauteur de chaque page + gap
-  }
-  pdfTotalHeight -= zone.clientHeight; // hauteur scrollable réelle
-  document.getElementById('pageNum').textContent = `Page 1 / ${totalPages}`;
-  document.getElementById('smode').textContent = `✅ ${totalPages} page(s) — ${Math.round(pdfTotalHeight)}px scrollable`;
+function adjustOffset(delta) {
+  timeOffset = Math.round((timeOffset+delta)*100)/100;
+  document.getElementById('offsetDisplay').textContent = `offset: ${timeOffset>=0?'+':''}${timeOffset}s`;
 }
 
-function changeZoom(delta) {
-  zoom = Math.max(0.5, Math.min(2.5, zoom+delta));
-  document.getElementById('zoomInfo').textContent = Math.round(zoom*100)+'%';
-  if(pdfDoc) renderAllPages();
-}
-
-function prevPage() {
-  const zone = document.getElementById('pdfZone');
-  const pages = zone.querySelectorAll('.pdf-page');
-  let current = 1;
-  pages.forEach((p,i) => {
-    const rect = p.getBoundingClientRect();
-    if(rect.top < window.innerHeight/2) current = i+1;
-  });
-  if(current > 1) { document.getElementById('page_'+(current-1)).scrollIntoView({behavior:'smooth'}); document.getElementById('pageNum').textContent=`Page ${current-1} / ${totalPages}`; }
-}
-
-function nextPage() {
-  const zone = document.getElementById('pdfZone');
-  const pages = zone.querySelectorAll('.pdf-page');
-  let current = 1;
-  pages.forEach((p,i) => {
-    const rect = p.getBoundingClientRect();
-    if(rect.top < window.innerHeight/2) current = i+1;
-  });
-  if(current < totalPages) { document.getElementById('page_'+(current+1)).scrollIntoView({behavior:'smooth'}); document.getElementById('pageNum').textContent=`Page ${current+1} / ${totalPages}`; }
-}
-
-function toggleAutoScroll() {
-  autoScroll = !autoScroll;
-  const btn = document.getElementById('scrollBtn');
-  const badge = document.getElementById('scrollBadge');
-  if(autoScroll) {
-    btn.textContent = '↕ Défilement : ON';
-    btn.style.color = 'var(--accent)';
-    badge.classList.add('on');
-    const zone = document.getElementById('pdfZone');
-    // Utiliser la hauteur calculée lors du rendu
-    zone.scrollTop = 0;
-    if(pdfTotalHeight <= 50) {
-      document.getElementById('smode').textContent = '⚠️ PDF pas encore chargé — attendez puis réessayez';
-      autoScroll = false;
-      btn.textContent = '↕ Défilement : OFF';
-      btn.style.color = '';
-      badge.classList.remove('on');
-      return;
+function getNextChord(fromIdx, skip=0) {
+  let count=0, last=song.beats[fromIdx];
+  for(let i=fromIdx+1;i<song.beats.length;i++){
+    if(song.beats[i] && song.beats[i]!==last){
+      if(count===skip) return song.beats[i];
+      count++; last=song.beats[i];
     }
-    const totalMs = (currentSong.totalMeasures * 4 / currentSong.bpm) * 60000;
-    const scrollPerMs = pdfTotalHeight / totalMs;
-    document.getElementById('smode').textContent = `↕ Défilement auto — ${Math.round(totalMs/1000)}s pour ${Math.round(pdfTotalHeight)}px (${totalPages} pages)`;
-    scrollInterval = setInterval(() => {
-      zone.scrollTop += scrollPerMs * 100;
-      if(zone.scrollTop >= pdfTotalHeight - 10) toggleAutoScroll();
-    }, 100);
-  } else {
-    btn.textContent = '↕ Défilement : OFF';
-    btn.style.color = '';
-    badge.classList.remove('on');
-    if(scrollInterval) { clearInterval(scrollInterval); scrollInterval=null; }
-    document.getElementById('smode').textContent = 'Défilement arrêté';
   }
+  return '—';
+}
+
+function togglePlay() {
+  if(!song) loadSong();
+  isPlaying ? pausePlay() : startPlay();
+}
+
+function startPlay() {
+  isPlaying = true;
+  document.getElementById('btnPlay').textContent = '⏸ Pause';
+  document.getElementById('sdot').className = 'sdot live';
+  document.getElementById('smode').textContent = 'Lecture en cours';
+  if(ytReady && ytPlayer){
+    if(ytPlayer.getPlayerState()!==1){ ytPlayer.seekTo(0); ytPlayer.playVideo(); }
+  }
+  if(syncInterval) clearInterval(syncInterval);
+  syncInterval = setInterval(()=>{
+    if(!isPlaying||!ytReady||!ytPlayer) return;
+    try{ const t=ytPlayer.getCurrentTime(); if(t>0) updateDisplay(t); }catch(e){}
+  }, 2000);
+  tick();
+}
+
+function pausePlay() {
+  isPlaying=false;
+  document.getElementById('btnPlay').textContent='▶ Play';
+  document.getElementById('smode').textContent='Pause';
+  cancelAnimationFrame(animFrame);
+  if(syncInterval){clearInterval(syncInterval);syncInterval=null;}
+  if(ytReady&&ytPlayer) ytPlayer.pauseVideo();
+}
+
+function stopPlay() {
+  isPlaying=false;
+  document.getElementById('btnPlay').textContent='▶ Play';
+  document.getElementById('sdot').className='sdot stopped';
+  document.getElementById('smode').textContent='Arrêté — Play pour démarrer';
+  cancelAnimationFrame(animFrame);
+  if(syncInterval){clearInterval(syncInterval);syncInterval=null;}
+  if(ytReady&&ytPlayer) ytPlayer.stopVideo();
+  currentMeasureIdx=-1;
+  ['chord1','chord2','chord3'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('timer').textContent='0:00';
+  document.getElementById('measureBadge').textContent='M — / —';
+  document.getElementById('progBar').style.width='0%';
+  for(let i=0;i<4;i++){const d=document.getElementById('dot_'+i);if(d)d.classList.remove('on');}
+}
+
+function seekTo(e) {
+  if(!song) return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  const t=pct*song.beats.length*BEAT_DUR();
+  if(ytReady&&ytPlayer) ytPlayer.seekTo(t);
+  updateDisplay(t);
+}
+
+function updateDisplay(elapsed) {
+  if(!song) return;
+  elapsed = Math.max(0, elapsed-timeOffset);
+  const totalDur = song.beats.length*BEAT_DUR();
+  if(elapsed>=totalDur){stopPlay();return;}
+
+  const beatIdx = Math.min(Math.floor(elapsed/BEAT_DUR()), song.beats.length-1);
+  const chord = song.beats[beatIdx]||'〜';
+  const beatInMeasure = beatIdx%song.beatsPerMeasure;
+
+  // 3 accords
+  document.getElementById('chord1').textContent = chord;
+  document.getElementById('chord2').textContent = getNextChord(beatIdx,0);
+  document.getElementById('chord3').textContent = getNextChord(beatIdx,1);
+
+  // Timer
+  const mins=Math.floor(elapsed/60), secs=Math.floor(elapsed%60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent=`${mins}:${secs}`;
+
+  // Progress
+  document.getElementById('progBar').style.width=(elapsed/totalDur*100)+'%';
+
+  // Mesure
+  let measureIdx=0, cumBeats=0;
+  for(let i=0;i<song.measures.length;i++){
+    const mb=song.measures[i].beats.length;
+    if(beatIdx<cumBeats+mb){measureIdx=i;break;}
+    cumBeats+=mb;
+  }
+  document.getElementById('measureBadge').textContent=`M ${song.measures[measureIdx]?.num||'—'} / ${song.totalMeasures}`;
+
+  // Dots
+  for(let i=0;i<song.beatsPerMeasure;i++){
+    const d=document.getElementById('dot_'+i);
+    if(d) d.classList.toggle('on', i===beatInMeasure);
+  }
+}
+
+function tick() {
+  if(!isPlaying) return;
+  if(ytReady&&ytPlayer){
+    try{const t=ytPlayer.getCurrentTime();if(t>=0)updateDisplay(t);}catch(e){}
+  }
+  animFrame=requestAnimationFrame(tick);
 }
 
 setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
