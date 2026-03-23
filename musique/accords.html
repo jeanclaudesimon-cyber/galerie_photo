@@ -16,9 +16,13 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
 .sel{background:var(--card2);color:var(--txt);border:1px solid var(--bdr);padding:6px 12px;border-radius:7px;font-size:13px;cursor:pointer}
 .abtn{background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer}
 .abtn:hover{color:#fff}
+
+/* YOUTUBE */
 #ytWrap{background:#000;border-bottom:1px solid var(--bdr);overflow:hidden}
 #ytPlayer{width:100%;height:200px}
-.ctrl{display:flex;gap:10px;align-items:center;padding:10px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+
+/* CONTROLS */
+.ctrl{display:flex;gap:8px;align-items:center;padding:8px 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);flex-wrap:wrap}
 .btn{padding:9px 20px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
 .btn-play{background:var(--accent);color:#fff;font-size:16px}
 .btn-play:hover{background:#f58340}
@@ -27,6 +31,8 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
 .minfo{font-size:12px;color:var(--muted);background:var(--card2);padding:6px 14px;border-radius:7px}
 .prog-wrap{flex:1;min-width:120px;background:rgba(255,255,255,.06);border-radius:4px;height:6px;cursor:pointer}
 .prog-bar{height:100%;background:var(--accent);border-radius:4px;width:0%;transition:width .1s linear}
+
+/* ZONE ACCORDS — DESKTOP */
 .current-zone{padding:1rem 1.5rem;background:var(--card);border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:1.5rem}
 .chord-big{font-size:72px;font-weight:900;color:var(--accent);line-height:1;min-width:160px;text-align:center}
 .chord-meta{display:flex;flex-direction:column;gap:6px}
@@ -36,19 +42,58 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
 .dot{width:16px;height:16px;border-radius:50%;background:var(--card2);border:1px solid var(--bdr);transition:.1s}
 .dot.on{background:var(--accent);box-shadow:0 0 10px rgba(232,98,26,.6)}
 .dot.b1{border-color:#f58340;width:20px;height:20px}
+
+/* ZONE MOBILE — 3 accords empilés */
+.mobile-chords{display:none;flex-direction:column;background:var(--card);border-bottom:1px solid var(--bdr)}
+.mc-row{display:flex;align-items:center;padding:10px 1.5rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.mc-row:last-child{border-bottom:none}
+.mc-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);min-width:70px}
+.mc-chord{font-weight:900;color:var(--accent)}
+.mc-chord.size1{font-size:52px;line-height:1}
+.mc-chord.size2{font-size:34px;color:var(--txt)}
+.mc-chord.size3{font-size:24px;color:var(--muted)}
+.mc-dots{display:flex;gap:6px;margin-left:auto}
+
+/* GRILLE */
 .grid-scroll{flex:1;overflow-y:auto;padding:1rem 1.5rem}
 .grid{display:flex;flex-wrap:wrap;gap:6px}
-.mblock{background:var(--card2);border:1px solid var(--bdr);border-radius:8px;padding:8px 6px;min-width:120px;flex:1;max-width:200px;position:relative;transition:.2s}
+.mblock{background:var(--card2);border:1px solid var(--bdr);border-radius:8px;padding:8px 6px;min-width:120px;flex:1;max-width:200px;transition:.2s}
 .mblock.active{background:rgba(232,98,26,.2);border-color:var(--accent);transform:scale(1.04);box-shadow:0 0 16px rgba(232,98,26,.3)}
 .mblock.passed{opacity:.3}
 .mnum{font-size:9px;color:var(--muted);margin-bottom:4px}
 .mbeats{display:flex;gap:3px}
 .mbeat{flex:1;text-align:center;padding:4px 2px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(255,255,255,.04);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mbeat.changed{color:var(--accent)}
+
 .statusbar{background:var(--card);border-top:1px solid var(--bdr);padding:6px 1.5rem;font-size:11px;color:var(--muted);display:flex;gap:1.5rem}
 .sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}
 .live{background:var(--grn)}.stopped{background:var(--muted)}
-@media(max-width:600px){.chord-big{font-size:52px;min-width:110px}.mblock{min-width:90px}}
+
+/* ================================
+   RESPONSIVE MOBILE
+================================= */
+@media(max-width:700px){
+  /* Header compact */
+  header{padding:8px 1rem}
+  .logo h1{font-size:14px}
+  .hdr-r .abtn{padding:5px 8px;font-size:10px}
+
+  /* YouTube plus petit */
+  #ytPlayer{height:160px}
+
+  /* Controls compacts */
+  .ctrl{padding:6px 1rem;gap:6px}
+  .btn{padding:7px 14px;font-size:13px}
+  .timer{font-size:15px;padding:5px 10px}
+  .minfo{display:none}
+
+  /* Cacher desktop chord zone et grille */
+  .current-zone{display:none}
+  .grid-scroll{display:none}
+
+  /* Afficher mobile chord zone */
+  .mobile-chords{display:flex}
+}
 </style>
 </head>
 <body>
@@ -63,34 +108,63 @@ header{background:linear-gradient(135deg,#1a0a00,#2a1400);border-bottom:2px soli
     </select>
     <a href="partition.html" class="abtn">📄 Partition</a>
     <a href="theorie.html" class="abtn">🎼 Théorie</a>
-    <a href="../guitare.html" class="abtn">🎸 Guitare</a>
+    <a href="../guitare.html" class="abtn">🎸</a>
     <a href="../index.html" class="abtn">← Accueil</a>
   </div>
 </header>
+
+<!-- YouTube -->
 <div id="ytWrap"><div id="ytPlayer"></div></div>
+
+<!-- Controls -->
 <div class="ctrl">
   <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">▶ Play</button>
   <button class="btn btn-stop" onclick="stopPlay()">⏹ Stop</button>
   <div class="timer" id="timer">0:00</div>
   <div class="minfo" id="minfo">Mesure — / —</div>
-  <button class="btn btn-stop" onclick="adjustOffset(-0.25)" title="Accords trop en avance → cliquez">◀ -0.25s</button>
+  <button class="btn btn-stop" onclick="adjustOffset(-0.25)">◀ -0.25s</button>
   <div style="font-size:11px;color:var(--muted);background:var(--card2);padding:6px 10px;border-radius:7px;min-width:70px;text-align:center" id="offsetDisplay">offset: +0.5s</div>
-  <button class="btn btn-stop" onclick="adjustOffset(0.25)" title="Accords trop en retard → cliquez">+0.25s ▶</button>
-  <div class="prog-wrap" onclick="seekTo(event)" id="progWrap">
-    <div class="prog-bar" id="progBar"></div>
-  </div>
+  <button class="btn btn-stop" onclick="adjustOffset(0.25)">+0.25s ▶</button>
+  <div class="prog-wrap" onclick="seekTo(event)"><div class="prog-bar" id="progBar"></div></div>
 </div>
+
+<!-- DESKTOP : accord actuel + grille -->
 <div class="current-zone">
   <div class="chord-big" id="chordBig">—</div>
   <div class="chord-meta">
     <div class="next-chord">Suivant : <span id="nextChord">—</span></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:2px">Temps</div>
+    <div class="next-chord" style="margin-top:4px">Après : <span id="nextChord2" style="font-size:16px;color:var(--muted)">—</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">Temps</div>
     <div class="beat-dots" id="beatDots"></div>
   </div>
 </div>
+
+<!-- MOBILE : 3 accords empilés -->
+<div class="mobile-chords">
+  <!-- Ligne 1 : accord en cours (très grand) -->
+  <div class="mc-row" style="background:rgba(232,98,26,.06);padding:16px 1.5rem">
+    <div class="mc-label">En cours</div>
+    <div class="mc-chord size1" id="mChord1">—</div>
+    <div class="mc-dots" id="beatDotsMobile"></div>
+  </div>
+  <!-- Ligne 2 : accord suivant -->
+  <div class="mc-row">
+    <div class="mc-label" style="color:#f58340">Suivant →</div>
+    <div class="mc-chord size2" id="mChord2">—</div>
+    <div style="font-size:11px;color:var(--muted);margin-left:auto" id="minfo2">—</div>
+  </div>
+  <!-- Ligne 3 : accord après -->
+  <div class="mc-row">
+    <div class="mc-label">Après →→</div>
+    <div class="mc-chord size3" id="mChord3">—</div>
+  </div>
+</div>
+
+<!-- Grille desktop -->
 <div class="grid-scroll"><div class="grid" id="grid"></div></div>
+
 <div class="statusbar">
-  <span><span class="sdot stopped" id="sdot"></span><span id="smode">Arrêté — Appuyez sur Play pour démarrer</span></span>
+  <span><span class="sdot stopped" id="sdot"></span><span id="smode">Arrêté — Play pour démarrer</span></span>
   <span id="sclock"></span>
 </div>
 
@@ -106,34 +180,27 @@ const SONGS = {
   }
 };
 
-let song = null;
-let ytPlayer = null;
-let ytReady = false;
-let isPlaying = false;
-let animFrame = null;
-let currentMeasureIdx = -1;
-let syncInterval = null;
-let timeOffset = 0.5; // offset en secondes — positif = accords plus lents (en retard), négatif = plus rapides
-
+let song = null, ytPlayer = null, ytReady = false, isPlaying = false;
+let animFrame = null, currentMeasureIdx = -1, syncInterval = null;
+let timeOffset = 0.5;
 const BEAT_DUR = () => 60 / song.bpm;
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('ytPlayer', {
-    height: '200', width: '100%',
-    videoId: '',
-    playerVars: {playsinline:1, rel:0, modestbranding:1},
-    events: {
+    height:'200', width:'100%', videoId:'',
+    playerVars:{playsinline:1, rel:0, modestbranding:1},
+    events:{
       onReady: () => { ytReady=true; if(song) ytPlayer.cueVideoById(song.ytId); },
       onStateChange: e => {
-        if(e.data === YT.PlayerState.ENDED) stopPlay();
-        if(e.data === YT.PlayerState.PAUSED && isPlaying) pausePlay();
+        if(e.data===YT.PlayerState.ENDED) stopPlay();
+        if(e.data===YT.PlayerState.PAUSED && isPlaying) pausePlay();
       }
     }
   });
 }
 
 function adjustOffset(delta) {
-  timeOffset = Math.round((timeOffset + delta) * 100) / 100;
+  timeOffset = Math.round((timeOffset+delta)*100)/100;
   document.getElementById('offsetDisplay').textContent = `offset: ${timeOffset>=0?'+':''}${timeOffset}s`;
 }
 
@@ -149,14 +216,13 @@ function loadSong() {
 function buildGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  song.measures.forEach((m, idx) => {
+  song.measures.forEach((m,idx) => {
     const div = document.createElement('div');
     div.className = 'mblock'+(m.anacruze?' anacruze':'');
     div.id = 'm_'+idx;
     let prev = null;
     const beatsHtml = m.beats.map(b => {
-      const changed = b !== prev && b !== null;
-      prev = b;
+      const changed = b!==prev && b!==null; prev=b;
       return `<div class="mbeat${changed?' changed':''}">${b||'〜'}</div>`;
     }).join('');
     div.innerHTML = `<div class="mnum">${m.anacruze?'Ana.':'M'+m.num}</div><div class="mbeats">${beatsHtml}</div>`;
@@ -165,14 +231,37 @@ function buildGrid() {
 }
 
 function buildDots() {
+  // Desktop
   const d = document.getElementById('beatDots');
   d.innerHTML = '';
   for(let i=0;i<4;i++){
     const dot = document.createElement('div');
-    dot.className = 'dot'+(i===0?' b1':'');
-    dot.id = 'dot_'+i;
+    dot.className='dot'+(i===0?' b1':'');
+    dot.id='dot_'+i;
     d.appendChild(dot);
   }
+  // Mobile
+  const dm = document.getElementById('beatDotsMobile');
+  dm.innerHTML = '';
+  for(let i=0;i<4;i++){
+    const dot = document.createElement('div');
+    dot.className='dot'+(i===0?' b1':'');
+    dot.id='dotm_'+i;
+    dm.appendChild(dot);
+  }
+}
+
+function getNextDifferentChord(fromIdx, skip=0) {
+  let count = 0;
+  let lastChord = song.beats[fromIdx];
+  for(let i=fromIdx+1; i<song.beats.length; i++) {
+    if(song.beats[i] && song.beats[i] !== lastChord) {
+      if(count === skip) return song.beats[i];
+      count++;
+      lastChord = song.beats[i];
+    }
+  }
+  return '—';
 }
 
 function togglePlay() {
@@ -186,28 +275,14 @@ function startPlay() {
   document.getElementById('sdot').className = 'sdot live';
   document.getElementById('smode').textContent = 'Lecture en cours';
   if(ytReady && ytPlayer) {
-    const state = ytPlayer.getPlayerState();
-    if(state !== 1) { // pas déjà en lecture
-      ytPlayer.seekTo(0);
-      ytPlayer.playVideo();
-    }
+    if(ytPlayer.getPlayerState()!==1){ ytPlayer.seekTo(0); ytPlayer.playVideo(); }
   }
-  // Sync toutes les 2 secondes avec YouTube
   if(syncInterval) clearInterval(syncInterval);
-  syncInterval = setInterval(syncWithYT, 2000);
+  syncInterval = setInterval(() => {
+    if(!isPlaying||!ytReady||!ytPlayer) return;
+    try { const t=ytPlayer.getCurrentTime(); if(t>0) updateDisplay(t); } catch(e){}
+  }, 2000);
   tick();
-}
-
-function syncWithYT() {
-  // Resynchronise les accords sur la position réelle YouTube
-  if(!isPlaying || !ytReady || !ytPlayer) return;
-  try {
-    const ytTime = ytPlayer.getCurrentTime();
-    if(ytTime > 0) {
-      // On met à jour l'affichage en fonction du temps YouTube réel
-      updateDisplay(ytTime);
-    }
-  } catch(e) {}
 }
 
 function pausePlay() {
@@ -215,76 +290,85 @@ function pausePlay() {
   document.getElementById('btnPlay').textContent = '▶ Play';
   document.getElementById('smode').textContent = 'Pause';
   cancelAnimationFrame(animFrame);
-  if(syncInterval) { clearInterval(syncInterval); syncInterval=null; }
-  if(ytReady && ytPlayer) ytPlayer.pauseVideo();
+  if(syncInterval){clearInterval(syncInterval);syncInterval=null;}
+  if(ytReady&&ytPlayer) ytPlayer.pauseVideo();
 }
 
 function stopPlay() {
   isPlaying = false;
   document.getElementById('btnPlay').textContent = '▶ Play';
   document.getElementById('sdot').className = 'sdot stopped';
-  document.getElementById('smode').textContent = 'Arrêté — Appuyez sur Play pour démarrer';
+  document.getElementById('smode').textContent = 'Arrêté — Play pour démarrer';
   cancelAnimationFrame(animFrame);
-  if(syncInterval) { clearInterval(syncInterval); syncInterval=null; }
-  if(ytReady && ytPlayer) ytPlayer.stopVideo();
+  if(syncInterval){clearInterval(syncInterval);syncInterval=null;}
+  if(ytReady&&ytPlayer) ytPlayer.stopVideo();
   currentMeasureIdx = -1;
-  document.getElementById('chordBig').textContent = '—';
-  document.getElementById('nextChord').textContent = '—';
-  document.getElementById('timer').textContent = '0:00';
-  document.getElementById('minfo').textContent = 'Mesure — / —';
-  document.getElementById('progBar').style.width = '0%';
-  for(let i=0;i<4;i++){const d=document.getElementById('dot_'+i);if(d)d.classList.remove('on');}
+  ['chordBig','nextChord','nextChord2','mChord1','mChord2','mChord3'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent='—';
+  });
+  document.getElementById('timer').textContent='0:00';
+  document.getElementById('minfo').textContent='Mesure — / —';
+  document.getElementById('progBar').style.width='0%';
+  for(let i=0;i<4;i++){
+    ['dot_'+i,'dotm_'+i].forEach(id=>{const d=document.getElementById(id);if(d)d.classList.remove('on');});
+  }
   document.querySelectorAll('.mblock').forEach(el=>el.classList.remove('active','passed'));
 }
 
 function seekTo(e) {
   if(!song) return;
-  const rect = e.currentTarget.getBoundingClientRect();
-  const pct = (e.clientX-rect.left)/rect.width;
-  const totalDur = song.beats.length * BEAT_DUR();
-  const targetTime = pct * totalDur;
-  if(ytReady && ytPlayer) ytPlayer.seekTo(targetTime);
-  updateDisplay(targetTime);
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  const t=pct*song.beats.length*BEAT_DUR();
+  if(ytReady&&ytPlayer) ytPlayer.seekTo(t);
+  updateDisplay(t);
 }
 
 function updateDisplay(elapsed) {
   if(!song) return;
-  const totalDur = song.beats.length * BEAT_DUR();
-  // Appliquer l'offset : positif = ralentit les accords (ils attendent la vidéo)
-  const adjustedElapsed = Math.max(0, elapsed - timeOffset);
-  if(adjustedElapsed >= totalDur) { stopPlay(); return; }
-  elapsed = adjustedElapsed;
-  
-  const beatIdx = Math.min(Math.floor(elapsed / BEAT_DUR()), song.beats.length-1);
-  const chord = song.beats[beatIdx] || '〜';
-  const beatInMeasure = beatIdx % song.beatsPerMeasure;
-  
-  let measureIdx = 0, cumBeats = 0;
+  const totalDur = song.beats.length*BEAT_DUR();
+  elapsed = Math.max(0, elapsed-timeOffset);
+  if(elapsed>=totalDur){stopPlay();return;}
+  const beatIdx = Math.min(Math.floor(elapsed/BEAT_DUR()), song.beats.length-1);
+  const chord = song.beats[beatIdx]||'〜';
+  const beatInMeasure = beatIdx%song.beatsPerMeasure;
+
+  // Accords suivants
+  const next1 = getNextDifferentChord(beatIdx, 0);
+  const next2 = getNextDifferentChord(beatIdx, 1);
+
+  // Mesure
+  let measureIdx=0, cumBeats=0;
   for(let i=0;i<song.measures.length;i++){
-    const mb = song.measures[i].beats.length;
-    if(beatIdx < cumBeats+mb){ measureIdx=i; break; }
-    cumBeats += mb;
+    const mb=song.measures[i].beats.length;
+    if(beatIdx<cumBeats+mb){measureIdx=i;break;}
+    cumBeats+=mb;
   }
-  
-  let nextChord = '—';
-  for(let i=beatIdx+1;i<song.beats.length;i++){
-    if(song.beats[i] && song.beats[i]!==song.beats[beatIdx]){ nextChord=song.beats[i]; break; }
-  }
-  
+
+  // Desktop
   document.getElementById('chordBig').textContent = chord;
-  document.getElementById('nextChord').textContent = nextChord;
+  document.getElementById('nextChord').textContent = next1;
+  document.getElementById('nextChord2').textContent = next2;
+
+  // Mobile
+  document.getElementById('mChord1').textContent = chord;
+  document.getElementById('mChord2').textContent = next1;
+  document.getElementById('mChord3').textContent = next2;
+  document.getElementById('minfo2').textContent = `M${song.measures[measureIdx]?.num||'—'}`;
+
   const mins=Math.floor(elapsed/60), secs=Math.floor(elapsed%60).toString().padStart(2,'0');
-  document.getElementById('timer').textContent = `${mins}:${secs}`;
-  document.getElementById('minfo').textContent = `Mesure ${song.measures[measureIdx]?.num||'—'} / 131`;
-  document.getElementById('progBar').style.width = (elapsed/totalDur*100)+'%';
-  
+  document.getElementById('timer').textContent=`${mins}:${secs}`;
+  document.getElementById('minfo').textContent=`Mesure ${song.measures[measureIdx]?.num||'—'} / 131`;
+  document.getElementById('progBar').style.width=(elapsed/totalDur*100)+'%';
+
+  // Dots desktop + mobile
   for(let i=0;i<4;i++){
-    const d=document.getElementById('dot_'+i);
-    if(d) d.classList.toggle('on', i===beatInMeasure);
+    const on=i===beatInMeasure;
+    ['dot_'+i,'dotm_'+i].forEach(id=>{const d=document.getElementById(id);if(d)d.classList.toggle('on',on);});
   }
-  
-  if(measureIdx !== currentMeasureIdx) {
-    currentMeasureIdx = measureIdx;
+
+  if(measureIdx!==currentMeasureIdx){
+    currentMeasureIdx=measureIdx;
     document.querySelectorAll('.mblock').forEach((el,i)=>{
       if(i<measureIdx) el.className='mblock passed';
       else if(i===measureIdx) el.className='mblock active';
@@ -296,14 +380,10 @@ function updateDisplay(elapsed) {
 
 function tick() {
   if(!isPlaying) return;
-  // Utilise le temps YouTube réel pour la synchro
-  if(ytReady && ytPlayer) {
-    try {
-      const ytTime = ytPlayer.getCurrentTime();
-      if(ytTime >= 0) updateDisplay(ytTime);
-    } catch(e) {}
+  if(ytReady&&ytPlayer){
+    try{const t=ytPlayer.getCurrentTime();if(t>=0)updateDisplay(t);}catch(e){}
   }
-  animFrame = requestAnimationFrame(tick);
+  animFrame=requestAnimationFrame(tick);
 }
 
 setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
