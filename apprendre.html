@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apprendre HTML · CSS · JS — Sjc</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vert: #4a7c3f;
+  --vert2: #6aad5e;
+  --dk: #0f1a0d;
+  --dk2: #162213;
+  --card: #1c2b19;
+  --card2: #243320;
+  --txt: #e8f0e4;
+  --muted: #8a9e84;
+  --or: #c8941a;
+  --bdr: rgba(74,124,63,0.25);
+  --rouge: #e05555;
+  --bleu: #5b9bd5;
+  --jaune: #c8941a;
+  --mauve: #a57fd4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--dk);color:var(--txt);min-height:100vh}
+header{background:linear-gradient(135deg,#0a1508 0%,#1a2e14 100%);border-bottom:2px solid var(--vert);padding:0 2rem;position:sticky;top:0;z-index:100}
+.hdr{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:13px}
+.logo-ic{width:42px;height:42px;background:var(--vert);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.logo h1{font-family:'Bebas Neue';font-size:21px;letter-spacing:2.5px;line-height:1}
+.logo span{font-size:10px;color:var(--vert2);letter-spacing:3px;text-transform:uppercase}
+main{max-width:1100px;margin:0 auto;padding:2rem}
+
+/* TITRE DE SECTION */
+.stitle{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;color:var(--vert2);margin-bottom:1.2rem;margin-top:2.5rem;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* CARTE QUESTION */
+.q-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+.q-block{background:var(--dk2);border:2px solid var(--vert);border-radius:10px;padding:.8rem 1.2rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:10px}
+.q-block .q-icon{font-size:18px;margin-top:2px}
+.q-block p{font-size:14px;font-weight:600;color:var(--txt);line-height:1.6}
+.r-block{padding:.2rem 0 .5rem 0}
+.r-block p{font-size:14px;line-height:1.8;color:var(--txt)}
+.r-block p+p{margin-top:.6rem}
+
+/* CODE */
+.code-block{background:#0a1208;border:1px solid var(--bdr);border-radius:8px;padding:1rem 1.2rem;margin:.8rem 0;font-family:'Fira Code',monospace;font-size:13px;line-height:1.8;overflow-x:auto}
+.code-block .tag{color:var(--bleu)}
+.code-block .attr{color:var(--or)}
+.code-block .val{color:var(--rouge)}
+.code-block .txt{color:var(--txt)}
+.code-block .sel{color:var(--vert2)}
+.code-block .prop{color:var(--bleu)}
+.code-block .comm{color:var(--muted);font-style:italic}
+.code-block .ok{color:var(--vert2)}
+.code-block .ko{color:var(--rouge)}
+.code-block .hl{background:rgba(106,173,94,0.1);border-left:3px solid var(--vert2);padding-left:.5rem;display:block}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;margin:2px}
+.badge-vert{background:rgba(74,124,63,.25);color:var(--vert2)}
+.badge-or{background:rgba(200,148,26,.2);color:var(--or)}
+.badge-rouge{background:rgba(224,85,85,.2);color:var(--rouge)}
+
+/* ASTUCE */
+.tip{background:rgba(74,124,63,.08);border-left:3px solid var(--vert2);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.8rem 0;font-size:13px;color:var(--muted)}
+.tip strong{color:var(--vert2)}
+
+/* TABLE */
+.ref-table{width:100%;border-collapse:collapse;font-size:13px;margin:.8rem 0}
+.ref-table th{background:var(--card2);color:var(--vert2);padding:8px 12px;text-align:left;font-family:'Bebas Neue';letter-spacing:1px;font-size:14px}
+.ref-table td{padding:7px 12px;border-bottom:1px solid rgba(74,124,63,.1)}
+.ref-table td:first-child{font-family:'Fira Code';color:var(--bleu);font-size:12px}
+.ref-table td:last-child{color:var(--muted)}
+.ref-table tr:last-child td{border-bottom:none}
+
+.statusbar{background:var(--dk2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:11px;color:var(--muted);margin-top:2rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-ic">💻</div>
+      <div>
+        <h1>APPRENDRE</h1>
+        <span>HTML · CSS · JS — Référence Sjc</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span style="font-size:11px;color:var(--vert2)">📚 Mon guide personnel</span>
+      <a href="index.html" style="background:transparent;color:var(--muted);border:1px solid var(--bdr);padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">← Accueil</a>
+    </div>
+  </div>
+</header>
+<main>
+
+  <!-- ========== HTML ========== -->
+  <div class="stitle">🏗️ HTML — La Structure</div>
+
+  <!-- Q1 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment fonctionne le lien entre CSS en haut et HTML en bas ? Par exemple .info-card h3 et mon &lt;h3&gt; dans le code ?</p>
+    </div>
+    <div class="r-block">
+      <p>C'est ce qu'on appelle un <strong>sélecteur CSS</strong>. Il dit : <em>"Applique ce style à tous les h3 qui se trouvent DANS un élément avec la classe info-card"</em>.</p>
+      <div class="code-block">
+<span class="comm">/* CSS en haut */</span>
+<span class="sel">.info-card h3</span> {
+  <span class="prop">color</span>: <span class="val">var(--vert2)</span>;
+  <span class="prop">font-size</span>: <span class="val">16px</span>;
+}
+
+<span class="comm">/* HTML en bas — le navigateur fait le lien automatiquement */</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"info-card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h3&gt;</span>💡 Mon titre<span class="tag">&lt;/h3&gt;</span>  <span class="comm">← reçoit le style</span>
+<span class="tag">&lt;/div&gt;</span>
+      </div>
+      <div class="tip"><strong>Astuce :</strong> Le CSS s'applique automatiquement à tous les éléments qui correspondent au sélecteur — pas besoin de répéter le style à chaque fois !</div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Les balises HTML — comment ça fonctionne ? Ouvrir et fermer ?</p>
+    </div>
+    <div class="r-block">
+      <p>La règle est toujours la même : <strong>ouvrir</strong> puis <strong>fermer</strong> avec un slash <code>/</code></p>
+      <div class="code-block">
+<span class="tag">&lt;balise&gt;</span>contenu<span class="tag">&lt;/balise&gt;</span>
+      </div>
+      <table class="ref-table">
+        <tr><th>Balise</th><th>Effet</th><th>Exemple</th></tr>
+        <tr><td>&lt;strong&gt;</td><td>Gras</td><td>&lt;strong&gt;texte&lt;/strong&gt;</td></tr>
+        <tr><td>&lt;em&gt;</td><td>Italique</td><td>&lt;em&gt;texte&lt;/em&gt;</td></tr>
+        <tr><td>&lt;p&gt;</td><td>Paragraphe</td><td>&lt;p&gt;texte&lt;/p&gt;</td></tr>
+        <tr><td>&lt;h1&gt; à &lt;h6&gt;</td><td>Titres</td><td>&lt;h2&gt;Mon titre&lt;/h2&gt;</td></tr>
+        <tr><td>&lt;a&gt;</td><td>Lien</td><td>&lt;a href="url"&gt;texte&lt;/a&gt;</td></tr>
+        <tr><td>&lt;img&gt;</td><td>Image</td><td>&lt;img src="photo.jpg"&gt;</td></tr>
+        <tr><td>&lt;br&gt;</td><td>Saut de ligne</td><td>pas de fermeture</td></tr>
+      </table>
+      <div class="tip"><strong>Erreur classique :</strong> <span class="code-block" style="display:inline;padding:2px 6px"><span class="ko">&lt;/strong&gt;texte&lt;/strong&gt;</span></span> ← le slash ne doit pas être au début ! La bonne version : <span class="code-block" style="display:inline;padding:2px 6px"><span class="ok">&lt;strong&gt;texte&lt;/strong&gt;</span></span></div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>C'est quoi la différence entre &lt;br&gt;&lt;br&gt; et des &lt;p&gt; séparés ?</p>
+    </div>
+    <div class="r-block">
+      <div class="code-block">
+<span class="comm">/* Mauvaise pratique — simuler des paragraphes avec br */</span>
+<span class="tag">&lt;p&gt;</span>Premier texte.<span class="tag">&lt;br&gt;&lt;br&gt;</span>
+Deuxième texte.<span class="tag">&lt;/p&gt;</span>
+
+<span class="comm">/* Bonne pratique — vrais paragraphes séparés */</span>
+<span class="tag">&lt;p&gt;</span>Premier texte.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>Deuxième texte.<span class="tag">&lt;/p&gt;</span>
+
+<span class="comm">/* Gérer l'espace dans le CSS */</span>
+<span class="sel">p</span> { <span class="prop">margin-bottom</span>: <span class="val">1rem</span>; }
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Les div imbriquées — comment ne pas se perdre dans les fermetures ?</p>
+    </div>
+    <div class="r-block">
+      <p>Chaque <code>&lt;div&gt;</code> ouverte doit être fermée avec <code>&lt;/div&gt;</code>. Entre les vidéos on a 2 fermetures, à la toute dernière on en a 3 :</p>
+      <div class="code-block">
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-embed"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;iframe</span> <span class="attr">src</span>=<span class="val">"..."</span><span class="tag">&gt;&lt;/iframe&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>  <span class="comm">← ferme vid-embed</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-info"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-title"</span><span class="tag">&gt;</span>Titre<span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-date"</span><span class="tag">&gt;</span>Date<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>  <span class="comm">← ferme vid-info</span>
+<span class="tag">&lt;/div&gt;</span>    <span class="comm">← ferme vid-card</span>
+<span class="comm">/* Dernière vidéo : ajouter encore un &lt;/div&gt; pour fermer le conteneur videos */</span>
+<span class="tag">&lt;/div&gt;</span>    <span class="comm">← ferme videos (seulement à la fin !)</span>
+      </div>
+      <div class="tip"><strong>Astuce pro :</strong> Ajouter des commentaires pour s'y retrouver !<br>
+      <code>&lt;/div&gt;<span class="comm">&lt;!-- fin vid-card --&gt;</span></code> — invisible sur la page mais très utile !</div>
+    </div>
+  </div>
+
+  <!-- ========== CSS ========== -->
+  <div class="stitle">🎨 CSS — Le Style</div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>C'est quoi la différence entre le style inline et le CSS en haut ?</p>
+    </div>
+    <div class="r-block">
+      <div class="code-block">
+<span class="comm">/* Style inline — directement dans la balise HTML */</span>
+<span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="val">"font-size:13px;color:red"</span><span class="tag">&gt;</span>texte<span class="tag">&lt;/p&gt;</span>
+
+<span class="comm">/* CSS en haut — bien mieux ! */</span>
+<span class="sel">.info-card p</span> {
+  <span class="prop">font-size</span>: <span class="val">13px</span>;
+  <span class="prop">color</span>: <span class="val">red</span>;
+}
+<span class="comm">/* Et dans le HTML simplement : */</span>
+<span class="tag">&lt;p&gt;</span>texte<span class="tag">&lt;/p&gt;</span>  <span class="comm">← plus besoin du style inline !</span>
+      </div>
+      <div class="tip"><strong>Avantage CSS en haut :</strong> Si tu veux changer la couleur un jour, tu ne la changes qu'à <strong>un seul endroit</strong> et ça se met à jour partout automatiquement !</div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment mettre un mot en gras ET en vert avec &lt;strong&gt; ?</p>
+    </div>
+    <div class="r-block">
+      <div class="code-block">
+<span class="comm">/* Option 1 — style inline (rapide mais pas propre) */</span>
+<span class="tag">&lt;strong</span> <span class="attr">style</span>=<span class="val">"color:#6aad5e"</span><span class="tag">&gt;</span>texte<span class="tag">&lt;/strong&gt;</span>
+
+<span class="comm">/* Option 2 — dans le CSS (propre et réutilisable) */</span>
+<span class="sel">.info-card strong</span> { <span class="prop">color</span>: <span class="val">var(--vert2)</span>; }
+<span class="sel">.hero-info strong</span> { <span class="prop">color</span>: <span class="val">var(--vert2)</span>; }
+
+<span class="comm">/* Option 3 — partout sur la page */</span>
+<span class="sel">strong</span> { <span class="prop">color</span>: <span class="val">var(--vert2)</span>; }
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>C'est quoi les variables CSS comme var(--vert2) ?</p>
+    </div>
+    <div class="r-block">
+      <p>Les variables CSS se définissent une fois en haut dans <code>:root</code> et s'utilisent partout avec <code>var(--nom)</code> :</p>
+      <div class="code-block">
+<span class="sel">:root</span> {
+  <span class="prop">--vert</span>: <span class="val">#4a7c3f</span>;
+  <span class="prop">--vert2</span>: <span class="val">#6aad5e</span>;  <span class="comm">← vert clair</span>
+  <span class="prop">--or</span>: <span class="val">#c8941a</span>;
+}
+
+<span class="comm">/* Utilisation */</span>
+<span class="sel">h3</span> { <span class="prop">color</span>: <span class="val">var(--vert2)</span>; }
+<span class="sel">strong</span> { <span class="prop">color</span>: <span class="val">var(--vert2)</span>; }
+      </div>
+      <div class="tip"><strong>Avantage :</strong> Si tu veux changer le vert de tout ton site, tu changes juste <strong>une ligne</strong> dans :root !</div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>C'est quoi le media query et comment l'utiliser pour le responsive mobile ?</p>
+    </div>
+    <div class="r-block">
+      <p>Le media query applique des styles différents selon la taille de l'écran :</p>
+      <div class="code-block">
+<span class="comm">/* Style normal — PC */</span>
+<span class="sel">.hero</span> { <span class="prop">grid-template-columns</span>: <span class="val">1fr 1fr</span>; }  <span class="comm">← 2 colonnes</span>
+
+<span class="comm">/* Style mobile — écran &lt; 768px */</span>
+<span class="sel">@media(max-width:768px)</span> {
+  <span class="hl">  <span class="sel">.hero</span> { <span class="prop">grid-template-columns</span>: <span class="val">1fr</span>; }  <span class="comm">← 1 colonne</span></span>
+  <span class="sel">.hero-img img</span> { <span class="prop">height</span>: <span class="val">220px</span>; }  <span class="comm">← image moins haute</span>
+  <span class="sel">.videos</span> { <span class="prop">grid-template-columns</span>: <span class="val">1fr</span>; }
+}
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== OUTILS ========== -->
+  <div class="stitle">🛠️ Outils & Astuces</div>
+
+  <!-- Q9 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment utiliser VS Code directement dans GitHub sans rien installer ?</p>
+    </div>
+    <div class="r-block">
+      <p>Sur n'importe quelle page de ton repo GitHub, appuie sur la touche <strong style="background:var(--card2);padding:2px 8px;border-radius:4px;border:1px solid var(--bdr)">.</strong> (point) du clavier.</p>
+      <p>VS Code s'ouvre dans le navigateur avec :</p>
+      <div class="code-block">
+<span class="ok">✓</span> Coloration syntaxique — chaque balise a sa couleur
+<span class="ok">✓</span> Div ouvrante/fermante surlignée au clic
+<span class="ok">✓</span> Erreurs en rouge automatiquement
+<span class="ok">✓</span> Ctrl+S pour sauvegarder → commit GitHub
+      </div>
+      <div class="tip"><strong>Enregistrer :</strong> Ctrl+S → petit message de commit → Commit & Push</div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment ajouter des emojis dans le HTML ?</p>
+    </div>
+    <div class="r-block">
+      <p>Les emojis fonctionnent directement dans le HTML — juste copier-coller !</p>
+      <div class="code-block">
+<span class="tag">&lt;h3&gt;</span>🥚 Premier œuf détecté !<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;p&gt;</span>🐣 Éclosion aujourd'hui !<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;span&gt;</span>📅 24 mars 2026<span class="tag">&lt;/span&gt;</span>
+      </div>
+      <p>Sites pour trouver des emojis :</p>
+      <div style="margin-top:.5rem">
+        <span class="badge badge-vert">emojipedia.org</span> — chercher en anglais (egg, bird, nest...)
+        <span class="badge badge-vert">getemoji.com</span> — parcourir par catégories
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Les commentaires HTML — comment ça marche ?</p>
+    </div>
+    <div class="r-block">
+      <p>Un commentaire est invisible sur la page mais très utile pour s'y retrouver dans le code :</p>
+      <div class="code-block">
+<span class="comm">&lt;!-- Ceci est un commentaire, invisible sur la page --&gt;</span>
+
+<span class="tag">&lt;/div&gt;</span><span class="comm">&lt;!-- fin vid-card --&gt;</span>
+<span class="tag">&lt;/div&gt;</span><span class="comm">&lt;!-- fin vid-info --&gt;</span>
+<span class="tag">&lt;/div&gt;</span><span class="comm">&lt;!-- fin videos --&gt;</span>
+      </div>
+      <div class="tip"><strong>Astuce :</strong> Utilise les commentaires pour marquer tes fermetures de div — tu ne te perdras plus jamais !</div>
+    </div>
+  </div>
+
+</main>
+<div class="statusbar">
+  <span>💻 Référence HTML·CSS·JS — Sjc</span>
+  <span>📚 Construit au fil des conversations</span>
+  <span id="clock"></span>
+</div>
+<script>
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
+</script>
+</body>
+</html>
