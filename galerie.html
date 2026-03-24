@@ -133,7 +133,7 @@ function showMessage() {
   `;
   msg.innerHTML = '✨ À bientôt !<br><span style="font-size:12px;color:#888">Je reviens dans ma lanterne magique...</span>';
   document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 1200);
+  setTimeout(() => msg.remove(), 1800);
 }
 
 let sidebarTimer = null;
@@ -144,7 +144,7 @@ function startSidebarTimer() {
   const sidebar = document.getElementById('sidebar');
   const text = sidebar.innerText || '';
   const wordCount = text.split(/\s+/).length;
-  const readingMs = Math.max(4000, wordCount * 200); // ~200ms par mot, min 4s
+  const readingMs = Math.max(4000, wordCount * 100); // ~200ms par mot, min 4s
   
   clearTimeout(sidebarTimer);
   sidebarTimer = setTimeout(() => {
