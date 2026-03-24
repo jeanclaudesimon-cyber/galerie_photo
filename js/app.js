@@ -4,6 +4,12 @@
 const FLICKR_API_KEY = "37a243d5b14bf833201965702402868c";
 const FLICKR_USER_ID = "21237428@N08";
 
+// Google Sheet CSV — descriptions des photos
+// Format : colonne A = titre exact Flickr, colonne B = description
+const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMk5NsspFpfz0FMvFdIBXkmMBuvMeDt8vZSWMfG0rkweRgIFB8YtUYbKlt-F97qjaxCZx0cs5LxFe-/pub?output=csv"; // ← colle ton lien CSV ici
+
+let descriptionsSheet = {}; // { "titre_en_minuscules": "description" }
+
 const flickrAlbums = {
   "72157603637269892": "Oiseaux et insectes",
   "72157603622203535": "Oiseaux",
@@ -126,6 +132,7 @@ const closeModal = document.getElementById("close");
 const countEl = document.getElementById("count-photos");
 
 async function init() {
+  await loadGoogleSheet();
   buildAlbumSelect();
   await loadPhotoOfDay();
   const firstId = Object.keys(flickrAlbums)[0];
@@ -314,37 +321,47 @@ function openModalFromUrl(photoUrl, title, isFlickr, index) {
   modalImg.src = photoUrl;
   photoTitle.textContent = title || photoUrl.split("/").pop();
 
+  // Description depuis Google Sheet (priorité) ou localStorage (fallback)
   const fileName = photoUrl.split("/").pop();
   const albumPart = photoUrl.includes("albums/") ? photoUrl.split("albums/")[1].split("/")[0] : photoUrl;
   const storageKey = isFlickr ? `note_${photoUrl}` : `note_${albumPart}_${fileName}`;
-  const savedNote = localStorage.getItem(storageKey);
+
+  const sheetDesc = descriptionsSheet[title ? title.toLowerCase() : ""];
+  const savedNote = sheetDesc || localStorage.getItem(storageKey);
+
   photoNotes.textContent = savedNote || "Clique ici pour ajouter une description...";
   photoNotes.style.color = savedNote ? "#ddd" : "#888";
   photoNotes.style.fontStyle = savedNote ? "normal" : "italic";
 
-  photoNotes.onclick = function() {
-    const current = localStorage.getItem(storageKey) || "";
-    photoNotes.contentEditable = "true";
-    photoNotes.style.color = "#fff";
-    photoNotes.style.fontStyle = "normal";
-    photoNotes.textContent = current;
-    photoNotes.focus();
-    photoNotes.onblur = function() {
-      const newNote = photoNotes.textContent.trim();
-      photoNotes.contentEditable = "false";
-      if (newNote) {
-        localStorage.setItem(storageKey, newNote);
-        photoNotes.textContent = newNote;
-        photoNotes.style.color = "#ddd";
-        photoNotes.style.fontStyle = "normal";
-      } else {
-        localStorage.removeItem(storageKey);
-        photoNotes.textContent = "Clique ici pour ajouter une description...";
-        photoNotes.style.color = "#888";
-        photoNotes.style.fontStyle = "italic";
-      }
+  // Si la description vient du Sheet, pas d'édition (lecture seule)
+  // Si elle vient du localStorage ou est absente, on peut éditer
+  if (!sheetDesc) {
+    photoNotes.onclick = function() {
+      const current = localStorage.getItem(storageKey) || "";
+      photoNotes.contentEditable = "true";
+      photoNotes.style.color = "#fff";
+      photoNotes.style.fontStyle = "normal";
+      photoNotes.textContent = current;
+      photoNotes.focus();
+      photoNotes.onblur = function() {
+        const newNote = photoNotes.textContent.trim();
+        photoNotes.contentEditable = "false";
+        if (newNote) {
+          localStorage.setItem(storageKey, newNote);
+          photoNotes.textContent = newNote;
+          photoNotes.style.color = "#ddd";
+          photoNotes.style.fontStyle = "normal";
+        } else {
+          localStorage.removeItem(storageKey);
+          photoNotes.textContent = "Clique ici pour ajouter une description...";
+          photoNotes.style.color = "#888";
+          photoNotes.style.fontStyle = "italic";
+        }
+      };
     };
-  };
+  } else {
+    photoNotes.onclick = null; // description Sheet = non éditable ici
+  }
 
   if (!isFlickr) {
     exifList.innerHTML = "<li>Lecture des EXIF...</li>";
@@ -509,3 +526,25 @@ document.addEventListener("keydown", (e) => {
 });
 
 init();
+
+// ============================
+// GOOGLE SHEET — DESCRIPTIONS
+// ============================
+async function loadGoogleSheet() {
+  if (!GOOGLE_SHEET_URL) return;
+  try {
+    const res = await fetch(GOOGLE_SHEET_URL);
+    const text = await res.text();
+    const lines = text.trim().split("\n").slice(1);
+    lines.forEach(line => {
+      const firstComma = line.indexOf(",");
+      if (firstComma === -1) return;
+      const titre = line.substring(0, firstComma).trim().replace(/"/g, "");
+      const description = line.substring(firstComma + 1).trim().replace(/^"|"$/g, "");
+      if (titre) descriptionsSheet[titre.toLowerCase()] = description;
+    });
+    console.log("Google Sheet chargé :", Object.keys(descriptionsSheet).length, "descriptions");
+  } catch(e) {
+    console.log("Google Sheet non disponible :", e);
+  }
+}
