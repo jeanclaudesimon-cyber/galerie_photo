@@ -291,6 +291,21 @@ const MODES = {
     intervals: [0,2,4,5,7,9,10],
     description: 'Majeure avec 7te min — blues/rock',
     color: '#2980b9'
+  },
+  'Lydienne': {
+    intervals: [0,2,4,6,7,9,11],
+    description: 'Majeure avec #4 — lumineux, flottant, cinématique',
+    color: '#f0c040'
+  },
+  'Phrygienne': {
+    intervals: [0,1,3,5,7,8,10],
+    description: 'Mineur avec b2 — sombre, flamenco, metal',
+    color: '#c0392b'
+  },
+  'Pentatonique Maj': {
+    intervals: [0,2,4,7,9],
+    description: '5 notes majeures — country, rock, gospel',
+    color: '#27ae60'
   }
 };
 
@@ -409,6 +424,68 @@ Corde D : 3 - 5 - 7
 Corde G : 3 - 5`,
     utilisation: ['Blues-rock', 'Funk', 'Sur accord dominant (A7, G7)', 'Rock classique'],
     astuce: 'Parfaite sur les accords de 7ème dominante (A7, G7, D7). C\'est la gamme des riffs de blues-rock !'
+  },
+  {
+    name: 'Gamme Lydienne',
+    sub: 'Majeure avec #4 — lumineux, flottant, cinématique ✨',
+    intervals: [0,2,4,6,7,9,11],
+    colors: ['root','scale-note','third','scale-note','fifth','scale-note','scale-note','root'],
+    degrees: ['1','2','3','#4','5','6','7','8'],
+    explication: `La lydienne = gamme majeure avec la quarte augmentée (#4). Cette seule note modifiée crée un effet très caractéristique : lumineux, rêveur, presque magique. C'est la gamme des musiques de films et du rock progressif.`,
+    comment_lire: `• Comme la majeure SAUF la 4te qui est augmentée (#4)
+• Majeure  : 1 2 3 4  5 6 7
+• Lydienne : 1 2 3 #4 5 6 7
+Le #4 (dièse 4) est la note "magique" — elle crée ce son flottant et cinématique si reconnaissable.`,
+    doigte: `En F lydien (tonique F, corde E frette 1) :
+Corde E : 1 - 3 - 5
+Corde A : 1 - 3 - 5
+Corde D : 2 - 3 - 5
+Corde G : 2 - 4 - 5
+→ La note #4 se joue 1 frette plus haut que la quarte normale`,
+    utilisation: ['Musiques de film', 'Rock progressif', 'Jazz fusion', 'Pop flottante', 'Sur accords Maj7'],
+    astuce: 'Joe Satriani et Steve Vai l\'utilisent énormément. Sur basse, essayez-la sur un accord Gmaj7 ou Cmaj7.'
+  },
+  {
+    name: 'Gamme Phrygienne',
+    sub: 'Mineur avec b2 — sombre, flamenco, metal 🔥',
+    intervals: [0,1,3,5,7,8,10],
+    colors: ['root','scale-note','third','scale-note','fifth','scale-note','seventh','root'],
+    degrees: ['1','b2','b3','4','5','b6','b7','8'],
+    explication: `La phrygienne = gamme mineure naturelle avec la seconde bémolisée (b2). Ce demi-ton entre la tonique et la seconde est sa signature sonore : très sombre, tendu, oriental. C'est la gamme du flamenco, du metal et de la musique espagnole.`,
+    comment_lire: `• Comme la mineure naturelle SAUF la 2nde qui est bémolisée (b2)
+• Mineur nat. : 1 2  b3 4 5 b6 b7
+• Phrygienne  : 1 b2 b3 4 5 b6 b7
+Le b2 (un demi-ton au-dessus de la tonique) donne ce son immédiatement reconnaissable — presque menaçant.`,
+    doigte: `En E phrygien (tonique E, corde E à vide) :
+Corde E : 0 - 1 - 3
+Corde A : 0 - 1 - 3
+Corde D : 0 - 1 - 3
+Corde G : 0 - 1 - 3
+→ Remarquez : frette 0 puis 1 directement (demi-ton caractéristique)`,
+    utilisation: ['Flamenco', 'Metal', 'Musique espagnole', 'Fusion', 'Sur accord m (avec tension)'],
+    astuce: 'Très utilisée en E ou A. Le passage tonique → b2 est sa signature. Sur basse, ce demi-ton sonnera très dramatique sur un accord de puissance (power chord).'
+  },
+  {
+    name: 'Pentatonique Majeure',
+    sub: '5 notes majeures — country, gospel, rock positif 🌟',
+    intervals: [0,2,4,7,9],
+    colors: ['penta','penta','penta','penta','penta','penta'],
+    degrees: ['1','2','3','5','6','8'],
+    explication: `La pentatonique majeure = gamme majeure SANS la 4te et la 7te. Ces 5 notes sonnent toujours lumineuses et positives ensemble. C'est la gamme du gospel, de la country et des riffs rock "feel good". Elle est à la gamme majeure ce que la pentatonique mineure est à la mineure.`,
+    comment_lire: `Toutes les notes sont en orange car elles ont toutes la même importance.
+• 1 = fondamentale (commencer ici)
+• 2 = seconde (note mélodique douce)
+• 3 = tierce majeure (caractère joyeux)
+• 5 = quinte (stabilité et puissance)
+• 6 = sixte (couleur swing/gospel)`,
+    doigte: `LA BOX majeure — en G (corde E frette 3) :
+Corde E : 3 - 5
+Corde A : 2 - 5
+Corde D : 2 - 4
+Corde G : 2 - 4
+→ Même logique que la box mineure mais décalée de 3 frettes vers le bas`,
+    utilisation: ['Country', 'Gospel', 'Rock', 'Pop', 'Improvisation sur accords majeurs'],
+    astuce: 'Astuce : la pentatonique majeure de C = pentatonique mineure de A (même notes, autre tonique). Apprenez-en une, vous avez les deux !'
   }
 ];
 
@@ -595,7 +672,10 @@ function buildScales() {
         'Pentatonique Mineure ⭐': 'Pentatonique Min',
         'Blues Scale': 'Blues',
         'Gamme Dorienne': 'Dorienne',
-        'Gamme Mixolydienne': 'Mixolydienne'
+        'Gamme Mixolydienne': 'Mixolydienne',
+        'Gamme Lydienne': 'Lydienne',
+        'Gamme Phrygienne': 'Phrygienne',
+        'Pentatonique Majeure': 'Pentatonique Maj'
       };
       if(modeMap[s.name]) {
         currentMode = modeMap[s.name];
