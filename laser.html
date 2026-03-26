@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laser Sculpfun S9 — Réglages & Essais</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --noir: #080808;
+  --noir2: #111111;
+  --noir3: #1a1a1a;
+  --noir4: #242424;
+  --blanc: #f0f0f0;
+  --blanc2: #c8c8c8;
+  --laser: #ff3d00;
+  --laser2: #ff6d3d;
+  --laser3: rgba(255,61,0,0.12);
+  --bdr: rgba(255,255,255,0.08);
+  --bdr2: rgba(255,61,0,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--noir);color:var(--blanc);min-height:100vh;overflow-x:hidden}
+
+/* GRAIN TEXTURE */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* HEADER */
+header{background:var(--noir2);border-bottom:1px solid var(--bdr);padding:0 2rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.hdr{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-ic{width:40px;height:40px;border:1px solid var(--laser);border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.logo-ic::before{content:'';position:absolute;inset:0;background:var(--laser3)}
+.logo-ic svg{width:22px;height:22px;stroke:var(--laser);fill:none;stroke-width:1.5;position:relative;z-index:1}
+.logo-text h1{font-family:'Space Mono',monospace;font-size:14px;letter-spacing:3px;color:var(--blanc);text-transform:uppercase}
+.logo-text span{font-size:10px;color:var(--laser);letter-spacing:2px;font-family:'Space Mono',monospace}
+.hdr-r{display:flex;gap:8px;align-items:center}
+.abtn{background:transparent;color:var(--blanc2);border:1px solid var(--bdr);padding:6px 14px;border-radius:5px;font-size:11px;font-family:'Space Mono',monospace;text-decoration:none;letter-spacing:1px;transition:.2s}
+.abtn:hover{border-color:var(--laser);color:var(--laser)}
+
+/* HERO BAND */
+.hero-band{background:var(--noir2);border-bottom:1px solid var(--bdr2);padding:1.4rem 2rem;position:relative;overflow:hidden}
+.hero-band::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--laser),transparent)}
+.hero-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.hero-machine{font-family:'Space Mono',monospace;font-size:11px;color:var(--laser);letter-spacing:2px;border:1px solid var(--bdr2);padding:6px 14px;border-radius:4px;background:var(--laser3)}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.h-stat{text-align:center}
+.h-stat-n{font-family:'Space Mono',monospace;font-size:22px;color:var(--blanc);line-height:1}
+.h-stat-l{font-size:10px;color:var(--blanc2);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.hero-divider{width:1px;height:40px;background:var(--bdr);flex-shrink:0}
+
+/* MAIN */
+main{max-width:1300px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+
+/* FILTRES */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
+.filter-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);letter-spacing:2px;margin-right:4px}
+.fbtn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:4px;font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px}
+.fbtn:hover,.fbtn.active{background:var(--laser3);border-color:var(--laser);color:var(--laser)}
+.fbtn.active{font-weight:700}
+.filter-sep{width:1px;height:20px;background:var(--bdr);margin:0 4px}
+
+/* SECTION TITLE */
+.stitle{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--laser);text-transform:uppercase;margin-bottom:1.2rem;margin-top:2rem;display:flex;align-items:center;gap:12px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* GRILLE FICHES */
+.fiches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.2rem;margin-bottom:2rem}
+
+/* FICHE ESSAI */
+.fiche{background:var(--noir2);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;transition:.25s;cursor:pointer;position:relative}
+.fiche:hover{border-color:rgba(255,61,0,0.4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,61,0,0.08)}
+.fiche.marqueterie{border-left:2px solid #c8941a}
+.fiche-img{height:200px;background:var(--noir3);overflow:hidden;position:relative}
+.fiche-img img{width:100%;height:100%;object-fit:cover;transition:.3s;filter:grayscale(20%)}
+.fiche:hover .fiche-img img{transform:scale(1.03);filter:grayscale(0%)}
+.fiche-img-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--bdr)}
+.fiche-img-placeholder svg{width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:1;opacity:.4}
+.fiche-img-placeholder span{font-size:11px;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace}
+.fiche-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap}
+.badge{padding:3px 8px;border-radius:3px;font-size:9px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.badge-decoupe{background:rgba(255,61,0,.85);color:#fff}
+.badge-gravure{background:rgba(255,200,0,.85);color:#000}
+.badge-image{background:rgba(80,180,255,.85);color:#000}
+.badge-texte{background:rgba(180,255,80,.85);color:#000}
+.badge-marqueterie{background:rgba(200,148,26,.85);color:#fff}
+.badge-dessin{background:rgba(200,100,255,.85);color:#fff}
+.note-badge{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;border:2px solid}
+.note-5{background:rgba(92,184,122,.15);border-color:#5cb87a;color:#5cb87a}
+.note-4{background:rgba(92,184,122,.1);border-color:#8bc34a;color:#8bc34a}
+.note-3{background:rgba(255,200,0,.1);border-color:#ffc107;color:#ffc107}
+.note-2{background:rgba(255,100,0,.1);border-color:#ff6d3d;color:#ff6d3d}
+.note-1{background:rgba(217,95,95,.1);border-color:#d95f5f;color:#d95f5f}
+
+.fiche-body{padding:1rem}
+.fiche-mat{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--blanc);margin-bottom:2px}
+.fiche-ep{font-size:11px;color:var(--laser);font-family:'Space Mono',monospace}
+.fiche-params{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:.8rem 0;padding:.7rem;background:var(--noir3);border-radius:5px;border:1px solid var(--bdr)}
+.param-item{text-align:center}
+.param-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--blanc);line-height:1}
+.param-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.fiche-comment{font-size:12px;color:var(--blanc2);line-height:1.6;margin-top:.5rem;border-top:1px solid var(--bdr);padding-top:.6rem}
+.fiche-marqueterie-tag{display:flex;align-items:center;gap:5px;margin-top:.5rem;font-size:10px;color:#c8941a;font-family:'Space Mono',monospace}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal.hidden{display:none}
+.modal-inner{background:var(--noir2);border:1px solid var(--bdr2);border-radius:10px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--laser),transparent)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:32px;height:32px;border-radius:4px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2}
+.modal-close:hover{border-color:var(--laser);color:var(--laser)}
+.modal-img{width:100%;max-height:400px;object-fit:cover;border-radius:8px 8px 0 0}
+.modal-img-placeholder{height:220px;background:var(--noir3);display:flex;align-items:center;justify-content:center;border-radius:8px 8px 0 0}
+.modal-content{padding:1.5rem}
+.modal-title{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--blanc);margin-bottom:.3rem}
+.modal-sub{font-size:12px;color:var(--laser);font-family:'Space Mono',monospace;margin-bottom:1.2rem}
+.modal-params{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;background:var(--noir3);border-radius:6px;padding:1rem;border:1px solid var(--bdr);margin-bottom:1.2rem}
+.mp-item{text-align:center}
+.mp-val{font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc);line-height:1}
+.mp-val span{font-size:11px;color:var(--blanc2)}
+.mp-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+.modal-section-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--laser);text-transform:uppercase;margin-bottom:.5rem;margin-top:1rem}
+.modal-comment{font-size:13px;color:var(--blanc2);line-height:1.7}
+.modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:1rem}
+
+/* TABLE VUE */
+.vue-toggle{display:flex;gap:6px;margin-left:auto}
+.vtbtn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:13px;transition:.2s}
+.vtbtn.active,.vtbtn:hover{border-color:var(--laser);color:var(--laser)}
+
+/* TABLE */
+.table-wrap{background:var(--noir2);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin-bottom:2rem;display:none}
+.table-wrap.visible{display:block}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;text-align:left;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--blanc2);border-bottom:1px solid var(--bdr);background:var(--noir3);text-transform:uppercase}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:.15s}
+tbody tr:hover{background:rgba(255,61,0,.04)}
+tbody td{padding:10px 14px;font-size:12px}
+td.mono{font-family:'Space Mono',monospace;color:var(--laser)}
+td.mat{font-weight:600;color:var(--blanc)}
+
+/* STATUSBAR */
+.statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;margin-top:2rem}
+
+/* AJOUTER FICHE */
+.add-btn{background:var(--laser3);border:1px dashed var(--laser2);color:var(--laser);padding:10px 20px;border-radius:6px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px}
+.add-btn:hover{background:rgba(255,61,0,.2)}
+
+@media(max-width:768px){
+  .fiches-grid{grid-template-columns:1fr}
+  .modal-params{grid-template-columns:repeat(3,1fr)}
+  .hero-stats{gap:1rem}
+  main{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-ic">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><circle cx="19" cy="5" r="2" fill="var(--laser)" stroke="none"/><line x1="19" y1="3" x2="22" y2="1" stroke="var(--laser)" stroke-width="1"/></svg>
+      </div>
+      <div class="logo-text">
+        <h1>Sculpfun S9</h1>
+        <span>Laser · Réglages & Essais</span>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <a href="index.html" class="abtn">← Accueil</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero-band">
+  <div class="hero-in">
+    <div class="hero-machine">⚡ SCULPFUN S9 · 5.5W · 410×420mm</div>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-n" id="stat-total">0</div><div class="h-stat-l">Essais</div></div>
+      <div class="h-stat"><div class="h-stat-n" id="stat-mats">0</div><div class="h-stat-l">Matériaux</div></div>
+      <div class="h-stat"><div class="h-stat-n" id="stat-reussis">0</div><div class="h-stat-l">Réussis ✓</div></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- FILTRES -->
+  <div class="filters">
+    <span class="filter-label">MATÉRIAU :</span>
+    <button class="fbtn active" onclick="filterBy('mat','all')">Tous</button>
+    <button class="fbtn" onclick="filterBy('mat','Bois massif')">Bois</button>
+    <button class="fbtn" onclick="filterBy('mat','Contreplaqué')">Contreplaqué</button>
+    <button class="fbtn" onclick="filterBy('mat','Acrylique')">Acrylique</button>
+    <button class="fbtn" onclick="filterBy('mat','Placage')">Placage</button>
+    <button class="fbtn" onclick="filterBy('mat','Ardoise')">Ardoise</button>
+    <button class="fbtn" onclick="filterBy('mat','Carton')">Carton</button>
+    <button class="fbtn" onclick="filterBy('mat','Papier')">Papier</button>
+    <div class="filter-sep"></div>
+    <span class="filter-label">TYPE :</span>
+    <button class="fbtn" onclick="filterBy('type','Découpe')">Découpe</button>
+    <button class="fbtn" onclick="filterBy('type','Gravure')">Gravure</button>
+    <button class="fbtn" onclick="filterBy('type','Image')">Image</button>
+    <button class="fbtn" onclick="filterBy('type','Texte')">Texte</button>
+    <button class="fbtn" onclick="filterBy('type','Marqueterie')">Marqueterie</button>
+    <div class="filter-sep"></div>
+    <div class="vue-toggle">
+      <button class="vtbtn active" id="btnGrid" onclick="setVue('grid')" title="Grille">⊞</button>
+      <button class="vtbtn" id="btnTable" onclick="setVue('table')" title="Tableau">☰</button>
+    </div>
+  </div>
+
+  <!-- GRILLE -->
+  <div class="stitle">🔥 Fiches Essais</div>
+  <div class="fiches-grid" id="fichesGrid"></div>
+
+  <!-- TABLE -->
+  <div class="table-wrap" id="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Matériau</th><th>Ép.</th><th>Type</th><th>Puissance</th><th>Vitesse</th><th>Passes</th><th>Note</th><th>Commentaire</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal hidden" id="modal">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalImgWrap"></div>
+    <div class="modal-content">
+      <div class="modal-title" id="mTitle"></div>
+      <div class="modal-sub" id="mSub"></div>
+      <div class="modal-params" id="mParams"></div>
+      <div class="modal-section-title">Commentaires & Observations</div>
+      <div class="modal-comment" id="mComment"></div>
+      <div class="modal-tags" id="mTags"></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span>⚡ Sculpfun S9 · Saint-Léger, Belgique</span>
+  <span id="sclock"></span>
+</div>
+
+<script>
+// ================================================
+// DONNÉES — Ajoute tes essais ici !
+// ================================================
+const ESSAIS = [
+  {
+    id: 1,
+    materiau: "Contreplaqué",
+    epaisseur: "3mm",
+    type: ["Découpe"],
+    puissance: 100,
+    vitesse: 300,
+    passes: 3,
+    note: 5,
+    marqueterie: false,
+    photo: "", // URL photo GitHub ou laisser vide
+    commentaire: "Découpe nette, bords propres. 3 passes nécessaires pour traverser complètement. Vitesse 300 mm/min optimale pour éviter de brûler les bords.",
+  },
+  {
+    id: 2,
+    materiau: "Contreplaqué",
+    epaisseur: "3mm",
+    type: ["Gravure", "Image"],
+    puissance: 60,
+    vitesse: 1500,
+    passes: 1,
+    note: 4,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Gravure image photo — bon résultat en 254 DPI. Contraste correct. Éviter les zones très claires qui disparaissent.",
+  },
+  {
+    id: 3,
+    materiau: "Ardoise",
+    epaisseur: "5mm",
+    type: ["Gravure", "Texte"],
+    puissance: 80,
+    vitesse: 800,
+    passes: 1,
+    note: 5,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Résultat magnifique sur ardoise ! Contraste blanc/noir parfait. Pas besoin de plusieurs passes. Idéal pour gravure de texte et logos.",
+  },
+  {
+    id: 4,
+    materiau: "Placage",
+    epaisseur: "0.6mm",
+    type: ["Découpe", "Marqueterie"],
+    puissance: 80,
+    vitesse: 600,
+    passes: 1,
+    note: 4,
+    marqueterie: true,
+    photo: "",
+    commentaire: "Découpe propre du placage pour incrustation. 1 seule passe suffit. Attention aux zones fragiles du bois — tenir le placage à plat avec des aimants.",
+  },
+  {
+    id: 5,
+    materiau: "Acrylique",
+    epaisseur: "3mm",
+    type: ["Découpe"],
+    puissance: 100,
+    vitesse: 200,
+    passes: 4,
+    note: 3,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Découpe difficile — bords fondus légèrement. 4 passes nécessaires. Résultat correct mais pas parfait. Essayer vitesse 150 la prochaine fois.",
+  },
+  {
+    id: 6,
+    materiau: "Carton",
+    epaisseur: "2mm",
+    type: ["Découpe", "Dessin"],
+    puissance: 50,
+    vitesse: 800,
+    passes: 1,
+    note: 5,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Parfait ! Découpe très nette du carton en 1 seule passe. Idéal pour prototypes et gabarits. Puissance 50% largement suffisante.",
+  },
+  {
+    id: 7,
+    materiau: "Bois massif",
+    epaisseur: "10mm",
+    type: ["Gravure", "Texte"],
+    puissance: 90,
+    vitesse: 600,
+    passes: 1,
+    note: 4,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Gravure profonde sur chêne. Belle couleur brune caramélisée. Nettoyer avec brosse après gravure pour enlever les résidus.",
+  },
+  {
+    id: 8,
+    materiau: "Papier",
+    epaisseur: "0.1mm",
+    type: ["Découpe", "Dessin"],
+    puissance: 15,
+    vitesse: 2000,
+    passes: 1,
+    note: 5,
+    marqueterie: false,
+    photo: "",
+    commentaire: "Découpe très fine sur papier 80g. Résultat propre et précis. Puissance très basse — attention à ne pas mettre trop ou le papier brûle.",
+  },
+];
+
+// ================================================
+// ÉTAT
+// ================================================
+let filtreActif = { mat: 'all', type: null };
+let vueActuelle = 'grid';
+let essaisFiltres = [...ESSAIS];
+
+// ================================================
+// FILTRES
+// ================================================
+function filterBy(dim, val) {
+  if (dim === 'mat') {
+    filtreActif.mat = val;
+    filtreActif.type = null;
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    // Réactiver "Tous" si all
+  } else {
+    filtreActif.type = filtreActif.type === val ? null : val;
+    filtreActif.mat = 'all';
+  }
+  // Highlight bouton actif
+  document.querySelectorAll('.fbtn').forEach(b => {
+    const txt = b.textContent.trim();
+    const isAll = txt === 'Tous' && filtreActif.mat === 'all' && !filtreActif.type;
+    const isMat = filtreActif.mat !== 'all' && b.getAttribute('onclick')?.includes(filtreActif.mat);
+    const isType = filtreActif.type && b.getAttribute('onclick')?.includes(filtreActif.type);
+    b.classList.toggle('active', isAll || isMat || isType);
+  });
+  applyFilter();
+}
+
+function applyFilter() {
+  essaisFiltres = ESSAIS.filter(e => {
+    const matOk = filtreActif.mat === 'all' || e.materiau === filtreActif.mat || e.materiau.includes(filtreActif.mat);
+    const typeOk = !filtreActif.type || e.type.includes(filtreActif.type);
+    return matOk && typeOk;
+  });
+  renderGrid();
+  renderTable();
+  updateStats();
+}
+
+// ================================================
+// RENDER GRID
+// ================================================
+function typeBadge(t) {
+  const map = {
+    'Découpe': 'badge-decoupe',
+    'Gravure': 'badge-gravure',
+    'Image': 'badge-image',
+    'Texte': 'badge-texte',
+    'Marqueterie': 'badge-marqueterie',
+    'Dessin': 'badge-dessin',
+  };
+  return `<span class="badge ${map[t]||'badge-gravure'}">${t}</span>`;
+}
+
+function noteClass(n) {
+  return `note-${n}`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('fichesGrid');
+  if (essaisFiltres.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:12px">Aucun essai pour ces filtres</div>`;
+    return;
+  }
+  grid.innerHTML = essaisFiltres.map(e => `
+    <div class="fiche ${e.marqueterie?'marqueterie':''}" onclick="openModal(${e.id})">
+      <div class="fiche-img">
+        ${e.photo
+          ? `<img src="${e.photo}" alt="${e.materiau}" loading="lazy">`
+          : `<div class="fiche-img-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Photo à venir</span>
+            </div>`
+        }
+        <div class="fiche-badges">${e.type.map(typeBadge).join('')}</div>
+        <div class="note-badge ${noteClass(e.note)}">${e.note}</div>
+      </div>
+      <div class="fiche-body">
+        <div class="fiche-mat">${e.materiau}</div>
+        <div class="fiche-ep">Épaisseur : ${e.epaisseur}</div>
+        <div class="fiche-params">
+          <div class="param-item"><div class="param-val">${e.puissance}<span style="font-size:9px">%</span></div><div class="param-lbl">Puissance</div></div>
+          <div class="param-item"><div class="param-val">${e.vitesse}<span style="font-size:9px">mm/m</span></div><div class="param-lbl">Vitesse</div></div>
+          <div class="param-item"><div class="param-val">${e.passes}<span style="font-size:9px">x</span></div><div class="param-lbl">Passes</div></div>
+        </div>
+        <div class="fiche-comment">${e.commentaire.substring(0,100)}${e.commentaire.length>100?'…':''}</div>
+        ${e.marqueterie?`<div class="fiche-marqueterie-tag">◆ Marqueterie / Incrustation</div>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ================================================
+// RENDER TABLE
+// ================================================
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = essaisFiltres.map(e => `
+    <tr onclick="openModal(${e.id})">
+      <td class="mat">${e.materiau}</td>
+      <td class="mono">${e.epaisseur}</td>
+      <td>${e.type.map(typeBadge).join(' ')}</td>
+      <td class="mono">${e.puissance}%</td>
+      <td class="mono">${e.vitesse} mm/m</td>
+      <td class="mono">${e.passes}x</td>
+      <td><span class="note-badge ${noteClass(e.note)}" style="position:relative;top:0;right:0;display:inline-flex;width:26px;height:26px;font-size:11px">${e.note}</span></td>
+      <td style="font-size:11px;color:var(--blanc2);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.commentaire}</td>
+    </tr>
+  `).join('');
+}
+
+// ================================================
+// MODAL
+// ================================================
+function openModal(id) {
+  const e = ESSAIS.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById('mTitle').textContent = `${e.materiau} · ${e.epaisseur}`;
+  document.getElementById('mSub').textContent = e.type.join(' + ') + (e.marqueterie ? ' · ◆ Marqueterie' : '');
+  document.getElementById('modalImgWrap').innerHTML = e.photo
+    ? `<img class="modal-img" src="${e.photo}" alt="${e.materiau}">`
+    : `<div class="modal-img-placeholder"><svg viewBox="0 0 24 24" width="48" height="48" stroke="rgba(255,255,255,.15)" fill="none" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+  document.getElementById('mParams').innerHTML = `
+    <div class="mp-item"><div class="mp-val">${e.puissance}<span>%</span></div><div class="mp-lbl">Puissance</div></div>
+    <div class="mp-item"><div class="mp-val">${e.vitesse}<span> mm/m</span></div><div class="mp-lbl">Vitesse</div></div>
+    <div class="mp-item"><div class="mp-val">${e.passes}<span>x</span></div><div class="mp-lbl">Passes</div></div>
+  `;
+  document.getElementById('mComment').textContent = e.commentaire;
+  document.getElementById('mTags').innerHTML = e.type.map(typeBadge).join('') + (e.marqueterie ? '<span class="badge badge-marqueterie">◆ Marqueterie</span>' : '');
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ================================================
+// VUE GRID / TABLE
+// ================================================
+function setVue(v) {
+  vueActuelle = v;
+  document.getElementById('fichesGrid').style.display = v === 'grid' ? 'grid' : 'none';
+  document.getElementById('tableWrap').classList.toggle('visible', v === 'table');
+  document.getElementById('btnGrid').classList.toggle('active', v === 'grid');
+  document.getElementById('btnTable').classList.toggle('active', v === 'table');
+}
+
+// ================================================
+// STATS
+// ================================================
+function updateStats() {
+  document.getElementById('stat-total').textContent = ESSAIS.length;
+  const mats = new Set(ESSAIS.map(e => e.materiau));
+  document.getElementById('stat-mats').textContent = mats.size;
+  document.getElementById('stat-reussis').textContent = ESSAIS.filter(e => e.note >= 4).length;
+}
+
+// ================================================
+// INIT
+// ================================================
+renderGrid();
+renderTable();
+updateStats();
+setInterval(() => {
+  document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE');
+}, 1000);
+</script>
+</body>
+</html>
