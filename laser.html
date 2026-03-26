@@ -450,7 +450,7 @@ function renderGrid() {
           <div class="param-item"><div class="param-val">${e.puissance}<span style="font-size:9px">%</span></div><div class="param-lbl">Puissance</div></div>
           <div class="param-item"><div class="param-val">${e.vitesse}<span style="font-size:9px">mm/m</span></div><div class="param-lbl">Vitesse</div></div>
           <div class="param-item"><div class="param-val">${e.passes}<span style="font-size:9px">x</span></div><div class="param-lbl">Passes</div></div>
-          <div class="param-item"><div class="param-val">${e.decalage}<span style="font-size:9px">mm/m</span></div><div class="param-lbl">Decalage</div></div>
+          <div class="param-item"><div class="param-val">${e.decalage}<span style="font-size:9px"></span></div><div class="param-lbl">Decalage</div></div>
         </div>
         <div class="fiche-comment">${e.commentaire.substring(0,100)}${e.commentaire.length>100?'…':''}</div>
         ${e.marqueterie?`<div class="fiche-marqueterie-tag">◆ Marqueterie / Incrustation</div>`:''}
@@ -493,7 +493,7 @@ function openModal(id) {
   document.getElementById('mParams').innerHTML = `
     <div class="mp-item"><div class="mp-val">${e.puissance}<span>%</span></div><div class="mp-lbl">Puissance</div></div>
     <div class="mp-item"><div class="mp-val">${e.vitesse}<span> mm/m</span></div><div class="mp-lbl">Vitesse</div></div>
-    <div class="mp-item"><div class="mp-val">${e.decalage}<span> mm/m</span></div><div class="mp-lbl">Decalage</div></div>
+    <div class="mp-item"><div class="mp-val">${e.decalage}<span> mm</span></div><div class="mp-lbl">Decalage</div></div>
     <div class="mp-item"><div class="mp-val">${e.passes}<span>x</span></div><div class="mp-lbl">Passes</div></div>
   `;
   document.getElementById('mComment').textContent = e.commentaire;
