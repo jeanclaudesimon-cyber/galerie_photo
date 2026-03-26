@@ -85,6 +85,13 @@ main{max-width:1300px;margin:0 auto;padding:2rem;position:relative;z-index:1}
 .badge-texte{background:rgba(180,255,80,.85);color:#000}
 .badge-marqueterie{background:rgba(200,148,26,.85);color:#fff}
 .badge-dessin{background:rgba(200,100,255,.85);color:#fff}
+/* ================================================
+   POUR AJOUTER UN NOUVEAU TYPE DE BADGE :
+   1. Ajouter ici la classe CSS avec sa couleur
+   2. Ajouter dans typeBadge() dans le JS
+   Exemple :
+   .badge-nouveautype{background:rgba(R,G,B,.85);color:#fff}
+================================================ */
 .note-badge{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;border:2px solid}
 .note-5{background:rgba(92,184,122,.15);border-color:#5cb87a;color:#5cb87a}
 .note-4{background:rgba(92,184,122,.1);border-color:#8bc34a;color:#8bc34a}
@@ -95,9 +102,11 @@ main{max-width:1300px;margin:0 auto;padding:2rem;position:relative;z-index:1}
 .fiche-body{padding:1rem}
 .fiche-mat{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--blanc);margin-bottom:2px}
 .fiche-ep{font-size:11px;color:var(--laser);font-family:'Space Mono',monospace}
-.fiche-params{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:.8rem 0;padding:.7rem;background:var(--noir3);border-radius:5px;border:1px solid var(--bdr)}
+
+/* FIX : 4 colonnes (puissance / vitesse / passes / décalage) */
+.fiche-params{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin:.8rem 0;padding:.7rem;background:var(--noir3);border-radius:5px;border:1px solid var(--bdr)}
 .param-item{text-align:center}
-.param-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--blanc);line-height:1}
+.param-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--blanc);line-height:1}
 .param-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 .fiche-comment{font-size:12px;color:var(--blanc2);line-height:1.6;margin-top:.5rem;border-top:1px solid var(--bdr);padding-top:.6rem}
 .fiche-marqueterie-tag{display:flex;align-items:center;gap:5px;margin-top:.5rem;font-size:10px;color:#c8941a;font-family:'Space Mono',monospace}
@@ -114,7 +123,8 @@ main{max-width:1300px;margin:0 auto;padding:2rem;position:relative;z-index:1}
 .modal-content{padding:1.5rem}
 .modal-title{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--blanc);margin-bottom:.3rem}
 .modal-sub{font-size:12px;color:var(--laser);font-family:'Space Mono',monospace;margin-bottom:1.2rem}
-.modal-params{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;background:var(--noir3);border-radius:6px;padding:1rem;border:1px solid var(--bdr);margin-bottom:1.2rem}
+/* FIX : 4 colonnes dans le modal */
+.modal-params{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;background:var(--noir3);border-radius:6px;padding:1rem;border:1px solid var(--bdr);margin-bottom:1.2rem}
 .mp-item{text-align:center}
 .mp-val{font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc);line-height:1}
 .mp-val span{font-size:11px;color:var(--blanc2)}
@@ -142,13 +152,11 @@ td.mat{font-weight:600;color:var(--blanc)}
 /* STATUSBAR */
 .statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;margin-top:2rem}
 
-/* AJOUTER FICHE */
-.add-btn{background:var(--laser3);border:1px dashed var(--laser2);color:var(--laser);padding:10px 20px;border-radius:6px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px}
-.add-btn:hover{background:rgba(255,61,0,.2)}
-
 @media(max-width:768px){
   .fiches-grid{grid-template-columns:1fr}
-  .modal-params{grid-template-columns:repeat(3,1fr)}
+  /* Sur mobile : 2 colonnes pour les params */
+  .fiche-params{grid-template-columns:1fr 1fr}
+  .modal-params{grid-template-columns:repeat(2,1fr)}
   .hero-stats{gap:1rem}
   main{padding:1rem}
 }
@@ -221,7 +229,7 @@ td.mat{font-weight:600;color:var(--blanc)}
     <table>
       <thead>
         <tr>
-          <th>Matériau</th><th>Ép.</th><th>Type</th><th>Decalage</th><th>Puissance</th><th>Vitesse</th><th>Passes</th><th>Note</th><th>Commentaire</th>
+          <th>Matériau</th><th>Ép.</th><th>Type</th><th>Décalage</th><th>Puissance</th><th>Vitesse</th><th>Passes</th><th>Note</th><th>Commentaire</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -255,19 +263,38 @@ td.mat{font-weight:600;color:var(--blanc)}
 // ================================================
 // DONNÉES — Ajoute tes essais ici !
 // ================================================
+// STRUCTURE COMPLÈTE D'UN ESSAI :
+// {
+//   id: (numero unique, jamais répété),
+//   materiau: "Nom du matériau",
+//   epaisseur: "Xmm",
+//   type: ["Découpe"],        ← tableau, valeurs possibles :
+//                                "Découpe", "Gravure", "Image",
+//                                "Texte", "Marqueterie", "Dessin"
+//                                plusieurs ex: ["Gravure","Texte"]
+//   decalage: "0.1mm intérieur",  ← mettre "" si pas de décalage
+//   puissance: 80,            ← en %
+//   vitesse: 300,             ← en mm/min
+//   passes: 2,
+//   note: 5,                  ← de 1 à 5
+//   marqueterie: false,       ← true si marqueterie/incrustation
+//   photo: "",                ← URL GitHub images/ ou laisser ""
+//   commentaire: "...",
+// }
+// ================================================
 const ESSAIS = [
   {
     id: 1,
     materiau: "Contreplaqué peuplier A4 Créative deco",
     epaisseur: "3mm +/-2mm",
     type: ["Découpe"],
-    decalage: "0.2mm interieur",
+    decalage: "0.2mm intérieur",
     puissance: 80,
     vitesse: 300,
     passes: 2,
     note: 5,
     marqueterie: true,
-    photo: "", // URL photo GitHub ou laisser vide
+    photo: "",
     commentaire: "Découpe nette, bords propres. 2 passes nécessaires pour traverser complètement. Vitesse 300 mm/min optimale pour éviter de brûler les bords. Découpe de carré de 10 x 10 mm pour test incrustation. Calque bleu avec le decalage, calque noir pièce qui est sans decalage et qui va rentrer dans le calque bleu",
   },
   {
@@ -275,6 +302,7 @@ const ESSAIS = [
     materiau: "Contreplaqué",
     epaisseur: "3mm",
     type: ["Gravure", "Image"],
+    decalage: "",
     puissance: 60,
     vitesse: 1500,
     passes: 1,
@@ -288,6 +316,7 @@ const ESSAIS = [
     materiau: "Ardoise",
     epaisseur: "5mm",
     type: ["Gravure", "Texte"],
+    decalage: "",
     puissance: 80,
     vitesse: 800,
     passes: 1,
@@ -301,20 +330,21 @@ const ESSAIS = [
     materiau: "Placage érable et merisier",
     epaisseur: "0.8mm",
     type: ["Découpe", "Marqueterie"],
-    decalage: "0.1mm interieur",
+    decalage: "0.1mm intérieur",
     puissance: 87,
     vitesse: 600,
     passes: 1,
     note: 5,
     marqueterie: true,
-    photo: "https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/20260325_220513.jpg" ,
-    commentaire: "Calque bleu avec décalage de trait de -0.1mm intérieur: c'estla partie qui va recevoir l'incrustation -calque noir décalage 0 c'est la partie qui va rentre dans le calque bleu — tenir le placage à plat avec des aimants.",
+    photo: "https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/20260325_220513.jpg",
+    commentaire: "Calque bleu avec décalage de trait de -0.1mm intérieur: c'est la partie qui va recevoir l'incrustation — calque noir décalage 0 c'est la partie qui va rentrer dans le calque bleu — tenir le placage à plat avec des aimants.",
   },
   {
     id: 5,
     materiau: "Acrylique",
     epaisseur: "3mm",
     type: ["Découpe"],
+    decalage: "",
     puissance: 100,
     vitesse: 200,
     passes: 4,
@@ -328,6 +358,7 @@ const ESSAIS = [
     materiau: "Carton",
     epaisseur: "2mm",
     type: ["Découpe", "Dessin"],
+    decalage: "",
     puissance: 50,
     vitesse: 800,
     passes: 1,
@@ -341,6 +372,7 @@ const ESSAIS = [
     materiau: "Bois massif",
     epaisseur: "10mm",
     type: ["Gravure", "Texte"],
+    decalage: "",
     puissance: 90,
     vitesse: 600,
     passes: 1,
@@ -354,6 +386,7 @@ const ESSAIS = [
     materiau: "Papier",
     epaisseur: "0.1mm",
     type: ["Découpe", "Dessin"],
+    decalage: "",
     puissance: 15,
     vitesse: 2000,
     passes: 1,
@@ -378,18 +411,15 @@ function filterBy(dim, val) {
   if (dim === 'mat') {
     filtreActif.mat = val;
     filtreActif.type = null;
-    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
-    // Réactiver "Tous" si all
   } else {
     filtreActif.type = filtreActif.type === val ? null : val;
     filtreActif.mat = 'all';
   }
-  // Highlight bouton actif
   document.querySelectorAll('.fbtn').forEach(b => {
-    const txt = b.textContent.trim();
-    const isAll = txt === 'Tous' && filtreActif.mat === 'all' && !filtreActif.type;
-    const isMat = filtreActif.mat !== 'all' && b.getAttribute('onclick')?.includes(filtreActif.mat);
-    const isType = filtreActif.type && b.getAttribute('onclick')?.includes(filtreActif.type);
+    const onclick = b.getAttribute('onclick') || '';
+    const isAll = b.textContent.trim() === 'Tous' && filtreActif.mat === 'all' && !filtreActif.type;
+    const isMat = filtreActif.mat !== 'all' && onclick.includes(`'${filtreActif.mat}'`);
+    const isType = filtreActif.type && onclick.includes(`'${filtreActif.type}'`);
     b.classList.toggle('active', isAll || isMat || isType);
   });
   applyFilter();
@@ -397,7 +427,7 @@ function filterBy(dim, val) {
 
 function applyFilter() {
   essaisFiltres = ESSAIS.filter(e => {
-    const matOk = filtreActif.mat === 'all' || e.materiau === filtreActif.mat || e.materiau.includes(filtreActif.mat);
+    const matOk = filtreActif.mat === 'all' || e.materiau.includes(filtreActif.mat);
     const typeOk = !filtreActif.type || e.type.includes(filtreActif.type);
     return matOk && typeOk;
   });
@@ -407,31 +437,41 @@ function applyFilter() {
 }
 
 // ================================================
-// RENDER GRID
+// BADGES TYPE
+// ================================================
+// Pour ajouter un nouveau type de badge :
+// 1. Ajouter la classe CSS .badge-nouveautype dans le <style>
+// 2. Ajouter la ligne ici dans le map
+// 3. Utiliser dans type: ["NouveauType"] dans un essai
 // ================================================
 function typeBadge(t) {
   const map = {
-    'Découpe': 'badge-decoupe',
-    'Gravure': 'badge-gravure',
-    'Image': 'badge-image',
-    'Texte': 'badge-texte',
+    'Découpe':     'badge-decoupe',
+    'Gravure':     'badge-gravure',
+    'Image':       'badge-image',
+    'Texte':       'badge-texte',
     'Marqueterie': 'badge-marqueterie',
-    'Dessin': 'badge-dessin',
+    'Dessin':      'badge-dessin',
+    // Ajouter ici : 'NouveauType': 'badge-nouveautype',
   };
   return `<span class="badge ${map[t]||'badge-gravure'}">${t}</span>`;
 }
 
-function noteClass(n) {
-  return `note-${n}`;
-}
+function noteClass(n) { return `note-${n}`; }
 
+// ================================================
+// RENDER GRID
+// ================================================
 function renderGrid() {
   const grid = document.getElementById('fichesGrid');
   if (essaisFiltres.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:12px">Aucun essai pour ces filtres</div>`;
     return;
   }
-  grid.innerHTML = essaisFiltres.map(e => `
+  grid.innerHTML = essaisFiltres.map(e => {
+    // FIX : afficher "—" si pas de décalage
+    const dec = e.decalage || '—';
+    return `
     <div class="fiche ${e.marqueterie?'marqueterie':''}" onclick="openModal(${e.id})">
       <div class="fiche-img">
         ${e.photo
@@ -451,13 +491,13 @@ function renderGrid() {
           <div class="param-item"><div class="param-val">${e.puissance}<span style="font-size:9px">%</span></div><div class="param-lbl">Puissance</div></div>
           <div class="param-item"><div class="param-val">${e.vitesse}<span style="font-size:9px">mm/m</span></div><div class="param-lbl">Vitesse</div></div>
           <div class="param-item"><div class="param-val">${e.passes}<span style="font-size:9px">x</span></div><div class="param-lbl">Passes</div></div>
-          <div class="param-item"><div class="param-val">${e.decalage}<span style="font-size:9px"></span></div><div class="param-lbl">Decalage</div></div>
+          <div class="param-item"><div class="param-val" style="font-size:10px">${dec}</div><div class="param-lbl">Décalage</div></div>
         </div>
         <div class="fiche-comment">${e.commentaire.substring(0,100)}${e.commentaire.length>100?'…':''}</div>
         ${e.marqueterie?`<div class="fiche-marqueterie-tag">◆ Marqueterie / Incrustation</div>`:''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // ================================================
@@ -465,19 +505,22 @@ function renderGrid() {
 // ================================================
 function renderTable() {
   const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = essaisFiltres.map(e => `
+  tbody.innerHTML = essaisFiltres.map(e => {
+    // FIX : afficher "—" si pas de décalage, sans doubler les unités
+    const dec = e.decalage || '—';
+    return `
     <tr onclick="openModal(${e.id})">
       <td class="mat">${e.materiau}</td>
       <td class="mono">${e.epaisseur}</td>
       <td>${e.type.map(typeBadge).join(' ')}</td>
-      <td class="mono">${e.decalage} mm</td>
+      <td class="mono">${dec}</td>
       <td class="mono">${e.puissance}%</td>
       <td class="mono">${e.vitesse} mm/m</td>
       <td class="mono">${e.passes}x</td>
       <td><span class="note-badge ${noteClass(e.note)}" style="position:relative;top:0;right:0;display:inline-flex;width:26px;height:26px;font-size:11px">${e.note}</span></td>
       <td style="font-size:11px;color:var(--blanc2);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.commentaire}</td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 // ================================================
@@ -486,6 +529,8 @@ function renderTable() {
 function openModal(id) {
   const e = ESSAIS.find(x => x.id === id);
   if (!e) return;
+  // FIX : décalage propre, sans doubler les unités
+  const dec = e.decalage || '—';
   document.getElementById('mTitle').textContent = `${e.materiau} · ${e.epaisseur}`;
   document.getElementById('mSub').textContent = e.type.join(' + ') + (e.marqueterie ? ' · ◆ Marqueterie' : '');
   document.getElementById('modalImgWrap').innerHTML = e.photo
@@ -494,8 +539,8 @@ function openModal(id) {
   document.getElementById('mParams').innerHTML = `
     <div class="mp-item"><div class="mp-val">${e.puissance}<span>%</span></div><div class="mp-lbl">Puissance</div></div>
     <div class="mp-item"><div class="mp-val">${e.vitesse}<span> mm/m</span></div><div class="mp-lbl">Vitesse</div></div>
-    <div class="mp-item"><div class="mp-val">${e.decalage}<span> mm</span></div><div class="mp-lbl">Decalage</div></div>
     <div class="mp-item"><div class="mp-val">${e.passes}<span>x</span></div><div class="mp-lbl">Passes</div></div>
+    <div class="mp-item"><div class="mp-val" style="font-size:14px">${dec}</div><div class="mp-lbl">Décalage</div></div>
   `;
   document.getElementById('mComment').textContent = e.commentaire;
   document.getElementById('mTags').innerHTML = e.type.map(typeBadge).join('') + (e.marqueterie ? '<span class="badge badge-marqueterie">◆ Marqueterie</span>' : '');
