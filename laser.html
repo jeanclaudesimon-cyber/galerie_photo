@@ -85,7 +85,7 @@ main{max-width:1300px;margin:0 auto;padding:2rem;position:relative;z-index:1}
 .badge-texte{background:rgba(180,255,80,.85);color:#000}
 .badge-marqueterie{background:rgba(200,148,26,.85);color:#fff}
 .badge-dessin{background:rgba(200,100,255,.85);color:#fff}
-.badge-tracage{background:rgba(200,100,255,.85);color:#ffffffba}
+.badge-traçage{background:rgba(114, 29, 159, 0.85);color:#fff}
 /* ================================================
    POUR AJOUTER UN NOUVEAU TYPE DE BADGE :
    1. Ajouter ici la classe CSS avec sa couleur
@@ -288,7 +288,7 @@ const ESSAIS = [
     id: 1,
     materiau: "Contreplaqué peuplier A4 Créative deco",
     epaisseur: "3mm +/-2mm",
-    type: ["Découpe","tracage"],
+    type: ["Découpe","traçage"],
     decalage: "0.2mm intérieur",
     puissance: 80,
     vitesse: 300,
@@ -453,7 +453,7 @@ function typeBadge(t) {
     'Texte':       'badge-texte',
     'Marqueterie': 'badge-marqueterie',
     'Dessin':      'badge-dessin',
-    'Traçage':      'badge-tracage',
+    'Traçage':      'badge-traçage',
     // Ajouter ici : 'NouveauType': 'badge-nouveautype',
   };
   return `<span class="badge ${map[t]||'badge-gravure'}">${t}</span>`;
