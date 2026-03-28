@@ -167,81 +167,6 @@ td.mat{font-weight:600;color:var(--blanc)}
 .pdf-btn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:4px;font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px;display:none;align-items:center;gap:6px}
 .pdf-btn:hover{border-color:#555;color:var(--blanc)}
 .pdf-btn.visible{display:flex}
-
-/* CONSEILS & ASTUCES - STYLE TECHNIQUE */
-#laser-tips {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 2rem;
-  position: relative;
-  z-index: 1;
-}
-
-#laser-tips h3 {
-  font-family: 'Space Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: var(--laser);
-  text-transform: uppercase;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#laser-tips h3::after {
-  content: '';
-  height: 1px;
-  flex-grow: 1;
-  background: var(--bdr2);
-}
-
-.tip-card {
-  background: var(--noir2);
-  border: 1px solid var(--bdr);
-  border-left: 3px solid var(--laser);
-  padding: 20px;
-  margin-bottom: 12px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.tip-card:hover {
-  background: var(--noir3);
-  border-color: var(--laser2);
-  transform: translateX(4px);
-  box-shadow: 10px 0 30px rgba(255, 61, 0, 0.05);
-}
-
-.tip-card h4 {
-  font-family: 'Space Mono', monospace;
-  font-size: 13px;
-  color: var(--blanc);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tip-card p {
-  font-size: 13px;
-  color: var(--blanc2);
-  line-height: 1.6;
-  font-weight: 300;
-}
-
-.tip-card strong {
-  color: var(--laser);
-  font-weight: 500;
-}
-
-.tip-card em {
-  color: var(--laser2);
-  font-style: normal;
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-}
-
 </style>
 </head>
 <body>
@@ -302,7 +227,7 @@ td.mat{font-weight:600;color:var(--blanc)}
 <button class="pdf-btn" id="btnPdf" onclick="exportPDF()" title="Exporter en PDF">⬇ PDF</button>
     </div>
   </div>
- 
+
   <!-- GRILLE -->
   <div class="stitle">🔥 Fiches Essais</div>
   <div class="fiches-grid" id="fichesGrid"></div>
@@ -333,6 +258,7 @@ td.mat{font-weight:600;color:var(--blanc)}
       <div class="modal-section-title">Commentaires & Observations</div>
       <div class="modal-comment" id="mComment"></div>
       <div class="modal-tags" id="mTags"></div>
+    </div>
   </div>
 </div>
 
@@ -922,22 +848,6 @@ function exportPDF() {
     },
     margin: { left: 14, right: 14 },
   });
-<section id="laser-tips" class="no-print">
-  <h3>Astuces & Retours d'Expérience</h3>
-  <div class="tip-card">
-    <h4>🪨 Gravure sur Ardoise</h4>
-    <p>Pour un rendu photo optimal, ne pas oublier d'<strong>inverser l'image</strong> : le laser blanchit la pierre. Privilégiez le mode <em>Jarvis</em> à 0.080mm pour plus de finesse.</p>
-  </div>
-  <div class="tip-card">
-    <h4>🪵 Incrustations (Marqueterie)</h4>
-    <p>Utilisez un <strong>décalage de trait (offset) de -0.1mm</strong> sur le calque intérieur pour que les pièces s'emboîtent parfaitement sans jeu.</p>
-  </div>
-  <div class="tip-card">
-    <h4>📄 Découpe Papier / Carton</h4>
-    <p>Toujours tester à <strong>puissance minimale (15-17%)</strong> pour éviter de brûler les bords. Une seule passe suffit généralement à haute vitesse.</p>
-  </div>
-</section>
-
 
   // Pied de page
   const pageCount = doc.internal.getNumberOfPages();
