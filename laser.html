@@ -168,11 +168,6 @@ td.mat{font-weight:600;color:var(--blanc)}
 .pdf-btn:hover{border-color:#555;color:var(--blanc)}
 .pdf-btn.visible{display:flex}
 
-/*CSS CONSEILS*/
-/* CONSEILS & ASTUCES - STYLE TECHNIQUE */
-
-/*CSS CONSEILS FIN*/
-
 </style>
 </head>
 <body>
@@ -854,24 +849,7 @@ function exportPDF() {
     },
     margin: { left: 14, right: 14 },
   });
-  //ajout de ce code pour carte conseils
-  <section id="laser-tips" class="no-print">
-  <h3>Astuces & Retours d'Expérience</h3>
-  <div class="tip-card">
-    <h4>🪨 Gravure sur Ardoise</h4>
-    <p>Pour un rendu photo optimal, ne pas oublier d'<strong>inverser l'image</strong> : le laser blanchit la pierre. Privilégiez le mode <em>Jarvis</em> à 0.080mm pour plus de finesse.</p>
-  </div>
-  <div class="tip-card">
-    <h4>🪵 Incrustations (Marqueterie)</h4>
-    <p>Utilisez un <strong>décalage de trait (offset) de -0.1mm</strong> sur le calque intérieur pour que les pièces s'emboîtent parfaitement sans jeu.</p>
-  </div>
-  <div class="tip-card">
-    <h4>📄 Découpe Papier / Carton</h4>
-    <p>Toujours tester à <strong>puissance minimale (15-17%)</strong> pour éviter de brûler les bords. Une seule passe suffit généralement à haute vitesse.</p>
-  </div>
-</section>
-// FIN AJOUT DU CODE CARTE CONSEILS
-
+  
   // Pied de page
   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
