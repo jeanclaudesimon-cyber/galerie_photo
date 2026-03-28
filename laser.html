@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Laser Sculpfun S9 — Réglages & Essais</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root {
   --noir: #080808;
@@ -161,6 +163,10 @@ td.mat{font-weight:600;color:var(--blanc)}
   .hero-stats{gap:1rem}
   main{padding:1rem}
 }
+/* BOUTON PDF */
+.pdf-btn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:4px;font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px;display:none;align-items:center;gap:6px}
+.pdf-btn:hover{border-color:#555;color:var(--blanc)}
+.pdf-btn.visible{display:flex}
 </style>
 </head>
 <body>
@@ -218,6 +224,7 @@ td.mat{font-weight:600;color:var(--blanc)}
     <div class="vue-toggle">
       <button class="vtbtn active" id="btnGrid" onclick="setVue('grid')" title="Grille">⊞</button>
       <button class="vtbtn" id="btnTable" onclick="setVue('table')" title="Tableau">☰</button>
+<button class="pdf-btn" id="btnPdf" onclick="exportPDF()" title="Exporter en PDF">⬇ PDF</button>
     </div>
   </div>
 
@@ -722,8 +729,138 @@ function setVue(v) {
   document.getElementById('tableWrap').classList.toggle('visible', v === 'table');
   document.getElementById('btnGrid').classList.toggle('active', v === 'grid');
   document.getElementById('btnTable').classList.toggle('active', v === 'table');
+  // Bouton PDF visible seulement en vue tableau
+  document.getElementById('btnPdf').classList.toggle('visible', v === 'table');
 }
+// ================================================
+// PDF
+// ================================================
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
+  const dateStr = new Date().toLocaleDateString('fr-BE', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+  // En-tête
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(0);
+  doc.text('Sculpfun S9 — Réglages & Essais', 14, 16);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(80);
+  doc.text('5.5W · 410×420mm · Saint-Léger, Belgique', 14, 22);
+
+  let filtreLabel = 'Tous les essais';
+  if (filtreActif.mat !== 'all') filtreLabel = 'Matériau : ' + filtreActif.mat;
+  if (filtreActif.type) filtreLabel = 'Type : ' + filtreActif.type;
+  doc.text(filtreLabel + '  —  ' + essaisFiltres.length + ' essai(s)  —  Imprimé le ' + dateStr, 14, 28);
+
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.4);
+  doc.line(14, 31, 283, 31);
+
+  // Tableau
+  const colonnes = [
+    { header: 'Matériau',    dataKey: 'mat' },
+    { header: 'Ép.',         dataKey: 'ep' },
+    { header: 'Type',        dataKey: 'type' },
+    { header: 'Décalage',    dataKey: 'dec' },
+    { header: 'Puiss.',      dataKey: 'pw' },
+    { header: 'Vitesse',     dataKey: 'vit' },
+    { header: 'Passes',      dataKey: 'pas' },
+    { header: 'Note',        dataKey: 'note' },
+    { header: 'Commentaire', dataKey: 'com' },
+  ];
+
+  const lignes = essaisFiltres.map(e => ({
+    mat:  e.materiau + (e.marqueterie ? ' ◆' : ''),
+    ep:   e.epaisseur,
+    type: e.type.join(' / '),
+    dec:  e.decalage || '—',
+    pw:   e.puissance + '%',
+    vit:  e.vitesse + ' mm/m',
+    pas:  e.passes + 'x',
+    note: e.note + '/5',
+    com:  e.commentaire,
+  }));
+
+  doc.autoTable({
+    startY: 34,
+    columns: colonnes,
+    body: lignes,
+    theme: 'plain',
+    styles: {
+      font: 'helvetica',
+      fontSize: 8,
+      textColor: [0, 0, 0],
+      cellPadding: { top: 3, bottom: 3, left: 3, right: 3 },
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2,
+      overflow: 'linebreak',
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      fontSize: 8,
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      lineWidth: 0.4,
+      halign: 'center',
+    },
+    bodyStyles: {
+      fillColor: [255, 255, 255],
+    },
+    alternateRowStyles: {
+      fillColor: [245, 245, 245],
+    },
+    didDrawCell: function(data) {
+      if (data.column.dataKey === 'type' && data.section === 'body') {
+        const cell = data.cell;
+        const types = data.row.raw.type.split(' / ');
+        doc.setFillColor(data.row.index % 2 === 0 ? 255 : 245, data.row.index % 2 === 0 ? 255 : 245, data.row.index % 2 === 0 ? 255 : 245);
+        doc.rect(cell.x + 0.1, cell.y + 0.1, cell.width - 0.2, cell.height - 0.2, 'F');
+        let xOff = cell.x + 2;
+        const yMid = cell.y + cell.height / 2;
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        types.forEach(t => {
+          const tw = doc.getTextWidth(t) + 4;
+          doc.setDrawColor(0);
+          doc.setLineWidth(0.3);
+          doc.rect(xOff, yMid - 3.5, tw, 6, 'S');
+          doc.setTextColor(0);
+          doc.text(t, xOff + 2, yMid + 1);
+          xOff += tw + 2;
+        });
+      }
+    },
+    columnStyles: {
+      mat:  { cellWidth: 42 },
+      ep:   { cellWidth: 16, halign: 'center' },
+      type: { cellWidth: 38 },
+      dec:  { cellWidth: 24, halign: 'center' },
+      pw:   { cellWidth: 14, halign: 'center' },
+      vit:  { cellWidth: 22, halign: 'center' },
+      pas:  { cellWidth: 13, halign: 'center' },
+      note: { cellWidth: 12, halign: 'center' },
+      com:  { cellWidth: 'auto' },
+    },
+    margin: { left: 14, right: 14 },
+  });
+
+  // Pied de page
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text('Sculpfun S9 — ' + dateStr, 14, doc.internal.pageSize.height - 6);
+    doc.text('Page ' + i + ' / ' + pageCount, doc.internal.pageSize.width - 14, doc.internal.pageSize.height - 6, { align: 'right' });
+  }
+
+  doc.save('sculpfun-s9-essais-' + dateStr.replace(/\//g,'-') + '.pdf');
+}
 // ================================================
 // STATS
 // ================================================
