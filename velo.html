@@ -306,7 +306,7 @@ const TRAJETS = [
     coords: [47.9167, 6.9833],
     photo: "",
     description: "Tour complet du lac de Kruth-Wildenstein avec montée vers le Markstein. Vue imprenable depuis les crêtes. Effort soutenu mais récompensé par le panorama sur les Vosges.",
-    komoot: "",
+    komoot: "komoot: "https://www.komoot.com/fr-fr/tour/2576550362",",
     galerie: [
       {
         photo: "",
@@ -505,10 +505,19 @@ function openModal(id) {
     galerieEl.innerHTML = '';
   }
 
-  document.getElementById('mKomoot').innerHTML = t.komoot
-    ? `<a href="${t.komoot}" target="_blank" class="modal-komoot">🗺️ Voir sur Komoot →</a>`
-    : '';
-
+ document.getElementById('mKomoot').innerHTML = t.komoot
+  ? `
+    <div class="modal-section-title">🗺️ Trajet Komoot</div>
+    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--bdr2);margin-bottom:1rem">
+      <iframe 
+        src="${t.komoot.replace('/fr-fr/tour/', '/fr-fr/tour/').replace(/\?.*$/, '')}/embed"
+        width="100%" height="380" frameborder="0" scrolling="no"
+        style="display:block">
+      </iframe>
+    </div>
+    <a href="${t.komoot}" target="_blank" class="modal-komoot">🗺️ Ouvrir sur Komoot →</a>
+  `
+  : '';
   document.getElementById('modal').classList.remove('hidden');
 }
 
