@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vélo Électrique — Mes Trajets</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --noir: #080808;
+  --noir2: #111111;
+  --noir3: #1a1a1a;
+  --blanc: #f0f0f0;
+  --blanc2: #c8c8c8;
+  --velo: #4fc3f7;
+  --velo2: #81d4fa;
+  --velo3: rgba(79,195,247,0.12);
+  --velo4: rgba(79,195,247,0.06);
+  --bdr: rgba(255,255,255,0.08);
+  --bdr2: rgba(79,195,247,0.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--noir);color:var(--blanc);min-height:100vh;overflow-x:hidden}
+
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* HEADER */
+header{background:var(--noir2);border-bottom:1px solid var(--bdr);padding:0 2rem;position:sticky;top:0;z-index:200;backdrop-filter:blur(10px)}
+.hdr{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-ic{width:40px;height:40px;border:1px solid var(--velo);border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.logo-ic::before{content:'';position:absolute;inset:0;background:var(--velo3)}
+.logo-ic svg{width:22px;height:22px;stroke:var(--velo);fill:none;stroke-width:1.5;position:relative;z-index:1}
+.logo-text h1{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:3px;color:var(--blanc);text-transform:uppercase}
+.logo-text span{font-size:10px;color:var(--velo);letter-spacing:2px;font-family:'Space Mono',monospace}
+.abtn{background:transparent;color:var(--blanc2);border:1px solid var(--bdr);padding:6px 14px;border-radius:5px;font-size:11px;font-family:'Space Mono',monospace;text-decoration:none;letter-spacing:1px;transition:.2s}
+.abtn:hover{border-color:var(--velo);color:var(--velo)}
+
+/* HERO BAND */
+.hero-band{background:var(--noir2);border-bottom:1px solid var(--bdr2);padding:1.4rem 2rem;position:relative;overflow:hidden}
+.hero-band::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--velo),transparent)}
+.hero-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--velo);letter-spacing:2px;border:1px solid var(--bdr2);padding:6px 14px;border-radius:4px;background:var(--velo3)}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.h-stat{text-align:center}
+.h-stat-n{font-family:'Space Mono',monospace;font-size:22px;color:var(--blanc);line-height:1}
+.h-stat-l{font-size:10px;color:var(--blanc2);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.hero-divider{width:1px;height:40px;background:var(--bdr);flex-shrink:0}
+
+/* MAIN LAYOUT */
+main{max-width:1400px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+
+/* FILTRES */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.filter-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);letter-spacing:2px;margin-right:4px}
+.fbtn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:4px;font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px}
+.fbtn:hover,.fbtn.active{background:var(--velo3);border-color:var(--velo);color:var(--velo)}
+.fbtn.active{font-weight:700}
+.filter-sep{width:1px;height:20px;background:var(--bdr);margin:0 4px}
+
+/* SECTION TITLE */
+.stitle{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--velo);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* LAYOUT CÔTE À CÔTE */
+.content-split{display:grid;grid-template-columns:1fr 420px;gap:1.5rem;align-items:start}
+
+/* FICHES */
+.fiches-col{}
+.fiches-grid{display:flex;flex-direction:column;gap:1rem}
+
+/* FICHE TRAJET */
+.fiche{background:var(--noir2);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;transition:.25s;cursor:pointer}
+.fiche:hover{border-color:rgba(79,195,247,0.4);transform:translateX(3px);box-shadow:0 4px 24px rgba(79,195,247,0.08)}
+.fiche-inner{display:flex;gap:0}
+.fiche-img{width:180px;flex-shrink:0;position:relative;overflow:hidden;background:var(--noir3)}
+.fiche-img img{width:100%;height:100%;object-fit:cover;transition:.3s;filter:grayscale(15%)}
+.fiche:hover .fiche-img img{transform:scale(1.05);filter:grayscale(0%)}
+.fiche-img-placeholder{width:100%;height:100%;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.fiche-img-placeholder svg{width:32px;height:32px;stroke:rgba(79,195,247,.3);fill:none;stroke-width:1}
+.fiche-img-placeholder span{font-size:10px;color:rgba(255,255,255,.15);font-family:'Space Mono',monospace}
+.fiche-region{position:absolute;top:8px;left:8px;padding:2px 8px;border-radius:3px;font-size:9px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px}
+.region-belgique{background:rgba(79,195,247,.85);color:#000}
+.region-alsace{background:rgba(255,180,0,.85);color:#000}
+
+.fiche-body{padding:1rem 1.2rem;flex:1;display:flex;flex-direction:column;gap:.5rem}
+.fiche-titre{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--blanc)}
+.fiche-lieu{font-size:11px;color:var(--velo);font-family:'Space Mono',monospace}
+.fiche-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:.6rem;background:var(--noir3);border-radius:5px;border:1px solid var(--bdr)}
+.stat-item{text-align:center}
+.stat-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--blanc);line-height:1}
+.stat-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.fiche-desc{font-size:12px;color:var(--blanc2);line-height:1.5}
+.fiche-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.fiche-date{font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace}
+.fiche-komoot{font-size:10px;color:var(--velo);font-family:'Space Mono',monospace;text-decoration:none;border:1px solid var(--bdr2);padding:2px 8px;border-radius:3px;transition:.2s}
+.fiche-komoot:hover{background:var(--velo3)}
+
+/* CARTE */
+.carte-col{position:sticky;top:84px}
+.carte-wrap{background:var(--noir2);border:1px solid var(--bdr2);border-radius:10px;overflow:hidden}
+.carte-header{padding:.8rem 1rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.carte-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--velo)}
+.carte-count{font-size:10px;color:var(--blanc2);font-family:'Space Mono',monospace}
+#map{height:500px;width:100%}
+
+/* LEAFLET CUSTOM */
+.leaflet-popup-content-wrapper{background:var(--noir2);border:1px solid var(--bdr2);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.leaflet-popup-content{color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:12px;margin:10px 14px}
+.leaflet-popup-tip{background:var(--noir2)}
+.popup-title{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--velo);margin-bottom:4px}
+.popup-stats{font-size:11px;color:var(--blanc2)}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal.hidden{display:none}
+.modal-inner{background:var(--noir2);border:1px solid var(--bdr2);border-radius:10px;max-width:860px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--velo),transparent)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:32px;height:32px;border-radius:4px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2}
+.modal-close:hover{border-color:var(--velo);color:var(--velo)}
+.modal-cover{width:100%;height:280px;object-fit:cover;border-radius:8px 8px 0 0}
+.modal-cover-placeholder{height:180px;background:var(--noir3);display:flex;align-items:center;justify-content:center;border-radius:8px 8px 0 0}
+.modal-content{padding:1.5rem}
+.modal-titre{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--blanc);margin-bottom:.3rem}
+.modal-lieu{font-size:12px;color:var(--velo);font-family:'Space Mono',monospace;margin-bottom:1.2rem}
+.modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;background:var(--noir3);border-radius:6px;padding:1rem;border:1px solid var(--bdr);margin-bottom:1.5rem}
+.ms-item{text-align:center}
+.ms-val{font-family:'Space Mono',monospace;font-size:20px;color:var(--blanc);line-height:1}
+.ms-val span{font-size:11px;color:var(--blanc2)}
+.ms-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+.modal-section-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--velo);text-transform:uppercase;margin-bottom:.8rem;margin-top:1.2rem}
+.modal-desc{font-size:13px;color:var(--blanc2);line-height:1.8;margin-bottom:1.2rem}
+
+/* GALERIE PHOTOS */
+.galerie{display:flex;flex-direction:column;gap:1rem}
+.galerie-item{border-radius:8px;overflow:hidden;border:1px solid var(--bdr)}
+.galerie-item img{width:100%;max-height:320px;object-fit:cover;display:block}
+.galerie-legende{padding:.7rem 1rem;background:var(--noir3);font-size:12px;color:var(--blanc2);line-height:1.6;border-top:1px solid var(--bdr)}
+.galerie-legende strong{color:var(--velo);font-family:'Space Mono',monospace;font-size:10px;display:block;margin-bottom:2px}
+
+.modal-komoot{display:inline-flex;align-items:center;gap:8px;margin-top:1rem;background:var(--velo3);border:1px solid var(--bdr2);color:var(--velo);padding:8px 16px;border-radius:6px;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;transition:.2s}
+.modal-komoot:hover{background:rgba(79,195,247,.2)}
+
+/* EMPTY */
+.empty{text-align:center;padding:3rem;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:12px}
+
+/* STATUSBAR */
+.statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;margin-top:2rem}
+
+@media(max-width:900px){
+  .content-split{grid-template-columns:1fr}
+  .carte-col{position:relative;top:0}
+  #map{height:320px}
+  .fiche-inner{flex-direction:column}
+  .fiche-img{width:100%;height:180px}
+  .modal-stats{grid-template-columns:repeat(2,1fr)}
+  .fiche-stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-ic">
+        <svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L7.5 9H11l3 5 3-5h2l-4 8.5"/><path d="M8 17.5l4-8 2 3"/></svg>
+      </div>
+      <div class="logo-text">
+        <h1>Vélo Électrique</h1>
+        <span>Mes Trajets & Aventures</span>
+      </div>
+    </div>
+    <a href="index.html" class="abtn">← Accueil</a>
+  </div>
+</header>
+
+<div class="hero-band">
+  <div class="hero-in">
+    <div class="hero-tag">🚴 VAE · Belgique & Alsace</div>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-n" id="stat-trajets">0</div><div class="h-stat-l">Trajets</div></div>
+      <div class="h-stat"><div class="h-stat-n" id="stat-km">0</div><div class="h-stat-l">km total</div></div>
+      <div class="h-stat"><div class="h-stat-n" id="stat-dplus">0</div><div class="h-stat-l">D+ total</div></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- FILTRES -->
+  <div class="filters">
+    <span class="filter-label">RÉGION :</span>
+    <button class="fbtn active" onclick="filterBy('all')">Tous</button>
+    <button class="fbtn" onclick="filterBy('Belgique')">🇧🇪 Belgique</button>
+    <button class="fbtn" onclick="filterBy('Alsace')">🇫🇷 Alsace</button>
+  </div>
+
+  <!-- CONTENU CÔTE À CÔTE -->
+  <div class="content-split">
+
+    <!-- FICHES -->
+    <div class="fiches-col">
+      <div class="stitle">🚴 Trajets</div>
+      <div class="fiches-grid" id="fichesGrid"></div>
+    </div>
+
+    <!-- CARTE -->
+    <div class="carte-col">
+      <div class="stitle">🗺️ Carte</div>
+      <div class="carte-wrap">
+        <div class="carte-header">
+          <span class="carte-title">TRAJETS SUR LA CARTE</span>
+          <span class="carte-count" id="carteCount">0 trajet(s)</span>
+        </div>
+        <div id="map"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal hidden" id="modal">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalCover"></div>
+    <div class="modal-content">
+      <div class="modal-titre" id="mTitre"></div>
+      <div class="modal-lieu" id="mLieu"></div>
+      <div class="modal-stats" id="mStats"></div>
+      <div class="modal-section-title">Description & Coups de cœur</div>
+      <div class="modal-desc" id="mDesc"></div>
+      <div id="mGalerie"></div>
+      <div id="mKomoot"></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span>🚴 VAE · Saint-Léger & Oderen</span>
+  <span id="sclock"></span>
+</div>
+
+<script>
+// ================================================
+// DONNÉES — Ajoute tes trajets ici !
+// ================================================
+// STRUCTURE D'UN TRAJET :
+// {
+//   id: (numéro unique),
+//   titre: "Nom du trajet",
+//   region: "Belgique" ou "Alsace",
+//   lieu: "Ville / zone",
+//   date: "JJ/MM/AAAA",
+//   distance: 42,          ← en km
+//   dplus: 380,            ← dénivelé positif en m
+//   duree: "2h15",         ← durée
+//   vitesse: 18.5,         ← vitesse moyenne km/h
+//   coords: [lat, lng],    ← coordonnées GPS du départ (pour la carte)
+//   photo: "",             ← URL photo de couverture GitHub ou ""
+//   description: "...",    ← texte libre, coups de cœur
+//   komoot: "",            ← URL du trajet sur Komoot ou ""
+//   galerie: [             ← tableau de photos avec légendes
+//     { photo: "URL", lieu: "Nom du lieu", description: "Ce qui s'est passé ici" },
+//   ],
+// }
+// ================================================
+
+const TRAJETS = [
+  {
+    id: 1,
+    titre: "Boucle des Collines",
+    region: "Belgique",
+    lieu: "Saint-Léger / Arlon",
+    date: "15/03/2026",
+    distance: 38,
+    dplus: 420,
+    duree: "2h10",
+    vitesse: 17.5,
+    coords: [49.6167, 5.6500],
+    photo: "",
+    description: "Belle boucle au départ de Saint-Léger à travers les collines de l'Ardenne belge. Sentiers forestiers et petites routes de campagne. Un régal au printemps avec les premiers bourgeons.",
+    komoot: "",
+    galerie: [
+      {
+        photo: "",
+        lieu: "Forêt de Saint-Léger",
+        description: "Descente magnifique à travers les pins, sol encore humide du matin. Attention aux racines."
+      },
+    ],
+  },
+  {
+    id: 2,
+    titre: "Tour du Lac de Kruth",
+    region: "Alsace",
+    lieu: "Oderen / Kruth",
+    date: "22/03/2026",
+    distance: 28,
+    dplus: 650,
+    duree: "2h30",
+    vitesse: 11.2,
+    coords: [47.9167, 6.9833],
+    photo: "",
+    description: "Tour complet du lac de Kruth-Wildenstein avec montée vers le Markstein. Vue imprenable depuis les crêtes. Effort soutenu mais récompensé par le panorama sur les Vosges.",
+    komoot: "",
+    galerie: [
+      {
+        photo: "",
+        lieu: "Lac de Kruth",
+        description: "Eau turquoise en début de matinée, lumière parfaite. Presque personne à cette heure-là."
+      },
+      {
+        photo: "",
+        lieu: "Route du Markstein",
+        description: "Lacets avec vue sur la vallée de la Thur. Le VAE est vraiment utile ici, pente à 12%."
+      },
+    ],
+  },
+];
+
+// ================================================
+// ÉTAT
+// ================================================
+let filtreRegion = 'all';
+let trajetsFiltres = [...TRAJETS];
+let map, markers = [];
+
+// ================================================
+// FILTRES
+// ================================================
+function filterBy(region) {
+  filtreRegion = region;
+  document.querySelectorAll('.fbtn').forEach(b => {
+    const onclick = b.getAttribute('onclick') || '';
+    const isAll = onclick.includes("'all'") && region === 'all';
+    const isReg = onclick.includes(`'${region}'`) && region !== 'all';
+    b.classList.toggle('active', isAll || isReg);
+  });
+  trajetsFiltres = region === 'all' ? [...TRAJETS] : TRAJETS.filter(t => t.region === region);
+  renderFiches();
+  updateMapMarkers();
+  updateStats();
+}
+
+// ================================================
+// RENDER FICHES
+// ================================================
+function regionBadge(r) {
+  return r === 'Belgique'
+    ? `<span class="fiche-region region-belgique">🇧🇪 ${r}</span>`
+    : `<span class="fiche-region region-alsace">🇫🇷 ${r}</span>`;
+}
+
+function renderFiches() {
+  const grid = document.getElementById('fichesGrid');
+  if (trajetsFiltres.length === 0) {
+    grid.innerHTML = `<div class="empty">Aucun trajet pour cette région</div>`;
+    return;
+  }
+  grid.innerHTML = trajetsFiltres.map(t => `
+    <div class="fiche" onclick="openModal(${t.id})">
+      <div class="fiche-inner">
+        <div class="fiche-img">
+          ${t.photo
+            ? `<img src="${t.photo}" alt="${t.titre}" loading="lazy">`
+            : `<div class="fiche-img-placeholder">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Photo à venir</span>
+              </div>`
+          }
+          ${regionBadge(t.region)}
+        </div>
+        <div class="fiche-body">
+          <div class="fiche-titre">${t.titre}</div>
+          <div class="fiche-lieu">📍 ${t.lieu}</div>
+          <div class="fiche-stats">
+            <div class="stat-item"><div class="stat-val">${t.distance}<span style="font-size:9px"> km</span></div><div class="stat-lbl">Distance</div></div>
+            <div class="stat-item"><div class="stat-val">${t.dplus}<span style="font-size:9px"> m</span></div><div class="stat-lbl">D+</div></div>
+            <div class="stat-item"><div class="stat-val">${t.duree}</div><div class="stat-lbl">Durée</div></div>
+            <div class="stat-item"><div class="stat-val">${t.vitesse}<span style="font-size:9px"> km/h</span></div><div class="stat-lbl">Moy.</div></div>
+          </div>
+          <div class="fiche-desc">${t.description.substring(0, 100)}${t.description.length > 100 ? '…' : ''}</div>
+          <div class="fiche-bottom">
+            <span class="fiche-date">${t.date}</span>
+            ${t.komoot ? `<a href="${t.komoot}" target="_blank" class="fiche-komoot" onclick="event.stopPropagation()">Komoot →</a>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ================================================
+// CARTE LEAFLET
+// ================================================
+function initMap() {
+  map = L.map('map', { zoomControl: true, scrollWheelZoom: true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    maxZoom: 19,
+  }).addTo(map);
+  map.setView([48.8, 6.3], 7);
+  updateMapMarkers();
+}
+
+function updateMapMarkers() {
+  // Supprimer anciens marqueurs
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  document.getElementById('carteCount').textContent = trajetsFiltres.length + ' trajet(s)';
+
+  if (trajetsFiltres.length === 0) return;
+
+  const bounds = [];
+  trajetsFiltres.forEach(t => {
+    const couleur = t.region === 'Belgique' ? '#4fc3f7' : '#ffb400';
+    const icon = L.divIcon({
+      html: `<div style="width:14px;height:14px;border-radius:50%;background:${couleur};border:2px solid #fff;box-shadow:0 0 8px ${couleur}88"></div>`,
+      className: '',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+    });
+    const marker = L.marker(t.coords, { icon })
+      .addTo(map)
+      .bindPopup(`
+        <div class="popup-title">${t.titre}</div>
+        <div class="popup-stats">📍 ${t.lieu}<br>🚴 ${t.distance} km · D+ ${t.dplus}m · ${t.duree}</div>
+      `);
+    marker.on('click', () => openModal(t.id));
+    markers.push(marker);
+    bounds.push(t.coords);
+  });
+
+  if (bounds.length === 1) {
+    map.setView(bounds[0], 11);
+  } else {
+    map.fitBounds(bounds, { padding: [30, 30] });
+  }
+}
+
+// ================================================
+// MODAL
+// ================================================
+function openModal(id) {
+  const t = TRAJETS.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('mTitre').textContent = t.titre;
+  document.getElementById('mLieu').textContent = '📍 ' + t.lieu + ' · ' + t.date;
+
+  document.getElementById('modalCover').innerHTML = t.photo
+    ? `<img class="modal-cover" src="${t.photo}" alt="${t.titre}">`
+    : `<div class="modal-cover-placeholder"><svg viewBox="0 0 24 24" width="48" height="48" stroke="rgba(79,195,247,.2)" fill="none" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>`;
+
+  document.getElementById('mStats').innerHTML = `
+    <div class="ms-item"><div class="ms-val">${t.distance}<span> km</span></div><div class="ms-lbl">Distance</div></div>
+    <div class="ms-item"><div class="ms-val">${t.dplus}<span> m</span></div><div class="ms-lbl">Dénivelé +</div></div>
+    <div class="ms-item"><div class="ms-val">${t.duree}</div><div class="ms-lbl">Durée</div></div>
+    <div class="ms-item"><div class="ms-val">${t.vitesse}<span> km/h</span></div><div class="ms-lbl">Vitesse moy.</div></div>
+  `;
+
+  document.getElementById('mDesc').textContent = t.description;
+
+  // Galerie photos
+  const galerieEl = document.getElementById('mGalerie');
+  if (t.galerie && t.galerie.length > 0) {
+    const photosAvecImg = t.galerie.filter(g => g.photo);
+    if (photosAvecImg.length > 0) {
+      galerieEl.innerHTML = `
+        <div class="modal-section-title">📸 Photos du trajet</div>
+        <div class="galerie">
+          ${t.galerie.map(g => `
+            <div class="galerie-item">
+              ${g.photo ? `<img src="${g.photo}" alt="${g.lieu}" loading="lazy">` : ''}
+              <div class="galerie-legende">
+                <strong>📍 ${g.lieu}</strong>
+                ${g.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      // Afficher juste les légendes sans photos
+      galerieEl.innerHTML = `
+        <div class="modal-section-title">📍 Points remarquables</div>
+        <div class="galerie">
+          ${t.galerie.map(g => `
+            <div class="galerie-item">
+              <div class="galerie-legende">
+                <strong>📍 ${g.lieu}</strong>
+                ${g.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  } else {
+    galerieEl.innerHTML = '';
+  }
+
+  document.getElementById('mKomoot').innerHTML = t.komoot
+    ? `<a href="${t.komoot}" target="_blank" class="modal-komoot">🗺️ Voir sur Komoot →</a>`
+    : '';
+
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ================================================
+// STATS
+// ================================================
+function updateStats() {
+  document.getElementById('stat-trajets').textContent = TRAJETS.length;
+  const km = TRAJETS.reduce((s, t) => s + t.distance, 0);
+  document.getElementById('stat-km').textContent = km;
+  const dplus = TRAJETS.reduce((s, t) => s + t.dplus, 0);
+  document.getElementById('stat-dplus').textContent = dplus;
+}
+
+// ================================================
+// INIT
+// ================================================
+renderFiches();
+updateStats();
+initMap();
+setInterval(() => {
+  document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE');
+}, 1000);
+</script>
+</body>
+</html>
