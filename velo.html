@@ -508,14 +508,30 @@ function openModal(id) {
  document.getElementById('mKomoot').innerHTML = t.komoot
   ? `
     <div class="modal-section-title">🗺️ Trajet Komoot</div>
-    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--bdr2);margin-bottom:1rem">
-      <iframe 
-        src="${t.komoot.replace('/fr-fr/tour/', '/fr-fr/tour/').replace(/\?.*$/, '')}/embed"
-        width="100%" height="380" frameborder="0" scrolling="no"
-        style="display:block">
-      </iframe>
+    <div style="background:var(--noir3);border:1px solid var(--bdr2);border-radius:8px;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc)">${t.distance} <span style="font-size:11px;color:var(--blanc2)">km</span></div>
+          <div style="font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px">Distance</div>
+        </div>
+        <div style="width:1px;height:30px;background:var(--bdr)"></div>
+        <div style="text-align:center">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc)">${t.dplus} <span style="font-size:11px;color:var(--blanc2)">m</span></div>
+          <div style="font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px">D+</div>
+        </div>
+        <div style="width:1px;height:30px;background:var(--bdr)"></div>
+        <div style="text-align:center">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc)">${t.duree}</div>
+          <div style="font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px">Durée</div>
+        </div>
+        <div style="width:1px;height:30px;background:var(--bdr)"></div>
+        <div style="text-align:center">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;color:var(--blanc)">${t.vitesse} <span style="font-size:11px;color:var(--blanc2)">km/h</span></div>
+          <div style="font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1px">Moy.</div>
+        </div>
+      </div>
+      <a href="${t.komoot}" target="_blank" class="modal-komoot" style="flex-shrink:0">🗺️ Voir sur Komoot →</a>
     </div>
-    <a href="${t.komoot}" target="_blank" class="modal-komoot">🗺️ Ouvrir sur Komoot →</a>
   `
   : '';
   document.getElementById('modal').classList.remove('hidden');
