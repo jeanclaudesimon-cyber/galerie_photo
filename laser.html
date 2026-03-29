@@ -167,7 +167,17 @@ td.mat{font-weight:600;color:var(--blanc)}
 .pdf-btn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:4px;font-size:11px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px;display:none;align-items:center;gap:6px}
 .pdf-btn:hover{border-color:#555;color:var(--blanc)}
 .pdf-btn.visible{display:flex}
-
+/* CONSEILS & AMÉLIORATIONS */
+.conseils-section{margin-top:3rem}
+.conseil-card{background:var(--noir2);border:1px solid rgba(255,200,0,0.2);border-left:3px solid #ffc107;border-radius:8px;padding:1rem 1.2rem;margin-bottom:1rem;position:relative}
+.conseil-card-header{display:flex;align-items:center;gap:10px;margin-bottom:.6rem;flex-wrap:wrap}
+.conseil-mat{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--blanc)}
+.conseil-ep{font-size:11px;color:var(--laser);font-family:'Space Mono',monospace}
+.conseil-note{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:2px solid;flex-shrink:0}
+.conseil-params{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);background:var(--noir3);border-radius:4px;padding:3px 8px;border:1px solid var(--bdr)}
+.conseil-texte{font-size:12px;color:var(--blanc2);line-height:1.7;white-space:pre-line}
+.conseil-icone{font-size:16px;flex-shrink:0}
+.conseil-empty{text-align:center;padding:2rem;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:12px}
 </style>
 </head>
 <body>
@@ -243,6 +253,11 @@ td.mat{font-weight:600;color:var(--blanc)}
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+  </div>
+<!-- CONSEILS & AMÉLIORATIONS -->
+  <div class="conseils-section">
+    <div class="stitle">💡 Conseils & Améliorations</div>
+    <div id="conseilsWrap"></div>
   </div>
 
 </main>
@@ -344,6 +359,7 @@ const ESSAIS = [
     vitesse: 500,
     passes: 1,
     note:1,
+    conseils:""
     marqueterie: false,
     photo: "https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/Loup pochoir.jpg",
     commentaire: "La découpe est presque bonne il faut ajouter 5% de puissance.",
@@ -456,6 +472,7 @@ const ESSAIS = [
     vitesse: 900,
     passes: 1,
     note: 3,
+    conseils: "Contraste : augmenter fortement le contraste de la photo avant envoi. L'ardoise ne gère pas bien les nuances de gris subtiles.\nIntervalle de ligne : descendre à 0.080 pour un blanc plus dense et uniforme (au lieu de 0.100).\nMode image : essayer Jarvis plutôt que Stucki pour un rendu plus fondu et moins pointillé.",
     marqueterie: false,
     photo: "",
     commentaire: "Gravure photo en mode image stucki réglage du mode image 254 Dpi,surbalayage 2.5%, bidirectionnel, intervalle de ligne 0.100.",
@@ -596,6 +613,7 @@ function applyFilter() {
   });
   renderGrid();
   renderTable();
+  renderConseils();
   updateStats();
 }
 
@@ -684,6 +702,35 @@ function renderTable() {
       <td><span class="note-badge ${noteClass(e.note)}" style="position:relative;top:0;right:0;display:inline-flex;width:26px;height:26px;font-size:11px">${e.note}</span></td>
       <td style="font-size:11px;color:var(--blanc2);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.commentaire}</td>
     </tr>
+  `}).join('');
+}
+// ================================================
+// RENDER CONSEILS
+// ================================================
+function renderConseils() {
+  const wrap = document.getElementById('conseilsWrap');
+  // Essais filtrés avec note <= 3 ET qui ont un conseil renseigné
+  const aAmeliorer = essaisFiltres.filter(e => e.note <= 3 && e.conseils && e.conseils.trim() !== '');
+
+  if (aAmeliorer.length === 0) {
+    wrap.innerHTML = `<div class="conseil-empty">Aucun conseil pour ce filtre — ou tous les essais sont réussis 🎉</div>`;
+    return;
+  }
+
+  wrap.innerHTML = aAmeliorer.map(e => {
+    const dec = e.decalage || '—';
+    return `
+    <div class="conseil-card">
+      <div class="conseil-card-header">
+        <span class="conseil-icone">💡</span>
+        <span class="conseil-mat">${e.materiau}</span>
+        <span class="conseil-ep">${e.epaisseur}</span>
+        <span class="conseil-note ${noteClass(e.note)}">${e.note}</span>
+        <span class="conseil-params">${e.type.join(' / ')} · ${e.puissance}% · ${e.vitesse}mm/m · ${e.passes}x · ${dec}</span>
+        ${e.marqueterie ? '<span style="font-size:10px;color:#c8941a;font-family:\'Space Mono\',monospace">◆ Marqueterie</span>' : ''}
+      </div>
+      <div class="conseil-texte">${e.conseils}</div>
+    </div>
   `}).join('');
 }
 
@@ -859,6 +906,49 @@ function exportPDF() {
     doc.text('Sculpfun S9 — ' + dateStr, 14, doc.internal.pageSize.height - 6);
     doc.text('Page ' + i + ' / ' + pageCount, doc.internal.pageSize.width - 14, doc.internal.pageSize.height - 6, { align: 'right' });
   }
+// Page conseils & améliorations
+  const conseilsPDF = essaisFiltres.filter(e => e.note <= 3 && e.conseils && e.conseils.trim() !== '');
+  if (conseilsPDF.length > 0) {
+    doc.addPage();
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(0);
+    doc.text('Conseils & Améliorations', 14, 16);
+
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.4);
+    doc.line(14, 19, 283, 19);
+
+    let yPos = 26;
+    conseilsPDF.forEach((e, idx) => {
+      const dec = e.decalage || '—';
+      // Titre de la carte
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(0);
+      doc.text(`${e.materiau} — ${e.epaisseur} — ${e.type.join(' / ')} · ${e.puissance}% · ${e.vitesse}mm/m · ${e.passes}x · ${dec} — Note : ${e.note}/5`, 14, yPos);
+      yPos += 5;
+
+      // Texte du conseil (multiligne)
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(40);
+      const lignes = doc.splitTextToSize(e.conseils, 255);
+      lignes.forEach(ligne => {
+        if (yPos > 190) { doc.addPage(); yPos = 16; }
+        doc.text(ligne, 18, yPos);
+        yPos += 5;
+      });
+
+      // Séparateur entre conseils
+      if (idx < conseilsPDF.length - 1) {
+        doc.setDrawColor(180);
+        doc.setLineWidth(0.2);
+        doc.line(14, yPos + 1, 283, yPos + 1);
+        yPos += 6;
+      }
+    });
+  }
 
   doc.save('sculpfun-s9-essais-' + dateStr.replace(/\//g,'-') + '.pdf');
 }
@@ -877,6 +967,7 @@ function updateStats() {
 // ================================================
 renderGrid();
 renderTable();
+renderConseils();
 updateStats();
 setInterval(() => {
   document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE');
