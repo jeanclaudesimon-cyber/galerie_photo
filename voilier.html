@@ -110,7 +110,10 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 /* VUE VOYAGE */
 #vueVoyage{display:none;position:relative;z-index:2}
 .voyage-hero{position:relative;height:70vh;min-height:480px;overflow:hidden;display:flex;align-items:flex-end}
-.voyage-hero-bg{position:absolute;inset:0;background:var(--noir2)}
+.voyage-hero-bg{position:absolute;top:0;
+  right:0;
+  width:50%;
+  height:100%;background:var(--noir2)}
 .voyage-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:contrast(1.1) saturate(.7)}
 .voyage-hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,1) 0%,rgba(4,8,15,.6) 35%,transparent 80%)}
 .voyage-hero-content{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 2rem 3rem;width:100%}
