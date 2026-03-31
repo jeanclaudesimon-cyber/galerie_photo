@@ -301,7 +301,7 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 <!-- NAV TABS (voyage) -->
 <nav class="nav-tabs" id="navVoyage" style="display:none">
   <div class="nav-tabs-in">
-    <button class="ntab" onclick="navScrollTo('#voyages')">← Liste des voyages</button>
+    <button class="ntab" onclick="afficherAccueil('#voyages')">← Liste des voyages</button>
     <button class="ntab active" onclick="navScrollTo('#vjournal')">📖 Journal de Bord</button>
     <button class="ntab" onclick="navScrollTo('#vcarte')">🗺️ Carte</button>
   </div>
@@ -765,6 +765,16 @@ function afficherAccueil() {
   voyageActif = null;
   window.scrollTo(0,0);
   if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
+  }
+ function afficherAccueilListeVoyage() {
+  document.getElementById('pageAccueil').style.display = 'block';
+  document.getElementById('vueVoyage').style.display = 'none';
+  document.getElementById('navAccueil').style.display = 'block';
+  document.getElementById('navVoyage').style.display = 'none';
+  voyageActif = null;
+  window.scrollTo(0,0);
+  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
+navScrollTo('#voyages');
 }
 
 // ================================================
