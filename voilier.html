@@ -89,7 +89,10 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .voyage-card:hover{border-color:var(--or);transform:translateY(-3px);box-shadow:0 8px 30px rgba(200,168,75,.1)}
 .voyage-card.empty{cursor:default;opacity:.35}
 .voyage-card.empty:hover{transform:none;border-color:var(--bdr);box-shadow:none}
-.voyage-bg{position:absolute;inset:0}
+.voyage-bg{position:absolute;  top:0;
+  right:0;
+  width:50%;
+  height:100%;}
 .voyage-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) contrast(1.05);transition:.3s}
 .voyage-card:hover .voyage-bg img{filter:saturate(.85)}
 .voyage-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,.95) 0%,rgba(4,8,15,.5) 50%,transparent 100%)}
