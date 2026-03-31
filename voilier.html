@@ -602,7 +602,8 @@ const VOYAGES = [
 
   // ── VOYAGES 2 à 20 — À REMPLIR ───────────────
   { id:2,  
-    titre:'Sortie des Pirates ',  
+    titre:'Sortie des Pirates ',
+    couleurRoute: '#e63946',  // ← ajouter ce champ  
     soustitre:'Soejangh · Printemps 2025', 
     lieu:'Markermeer · IJsselmeer', 
     periode:'Mai-2025', 
@@ -904,7 +905,7 @@ function initMapVoyage() {
       L.marker(p.coords, { icon }).addTo(mapVoyageInstance)
         .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
     });
-    L.polyline(voyageActif.route, { color:'#ff3d00', weight:2.5, opacity:.8,  }).addTo(mapVoyageInstance);
+    L.polyline(voyageActif.route, { color: voyageActif.couleurRoute || '#e63946',  }).addTo(mapVoyageInstance);
     mapVoyageInstance.fitBounds(voyageActif.route, { padding:[40,40] });
   }, 100);
 }
