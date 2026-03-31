@@ -608,12 +608,13 @@ const VOYAGES = [
     periode:'Mai-2025', 
     duree:'4 Jours', 
     miles:'—', 
-    ports:'—', 
+    ports:'4', 
     vitMax:'—', 
-    photo:'', 
-    carteImg:'', 
-    ports_carte:[], 
-    route:[], 
+    photo:'BASE + mai4.webp',
+    carteImg:'BASE + mai4.webp', 
+    ports_carte:[{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
+                 { nom:'Enkhuizen',    coords:[52.703,5.289], desc:'Jour 1 · 29 Mai' },], 
+    route:[[52.46190475269141, 5.041577506466986], [52.46475795891167, 5.0502974837849735],[52.46580612484835, 5.070872699405512],[52.49074299685535, 5.087830268520516],[52.71514872315348, 5.3216395952118],[52.705729835935635, 5.300789037547641],[52.703,5.289]],
     journal: [
   {
     id: 1, jour: 1, date: '29 mai 2025', day: '29', month: 'MAI',
@@ -903,7 +904,7 @@ function initMapVoyage() {
       L.marker(p.coords, { icon }).addTo(mapVoyageInstance)
         .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
     });
-    L.polyline(voyageActif.route, { color:'#c8a84b', weight:2.5, opacity:.8, dashArray:'6,4' }).addTo(mapVoyageInstance);
+    L.polyline(voyageActif.route, { color:'#ff3d00', weight:2.5, opacity:.8,  }).addTo(mapVoyageInstance);
     mapVoyageInstance.fitBounds(voyageActif.route, { padding:[40,40] });
   }, 100);
 }
