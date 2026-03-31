@@ -3,224 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Soejangh — Journal de Bord</title>
+<title>Soejangh — Voilier & Voyages</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root {
-  --noir: #04080f;
-  --noir2: #0a1220;
-  --noir3: #0f1a2e;
-  --noir4: #162035;
-  --blanc: #e8e0d0;
-  --blanc2: #a09880;
-  --or: #c8a84b;
-  --or2: #e8c870;
-  --or3: rgba(200,168,75,0.15);
-  --or4: rgba(200,168,75,0.06);
-  --bleu: #1a3a5c;
-  --bleu2: #2a5a8c;
-  --bleu3: rgba(26,58,92,0.6);
-  --bdr: rgba(200,168,75,0.12);
-  --bdr2: rgba(200,168,75,0.3);
-  --rouge: #8b2020;
+:root{
+  --noir:#04080f;--noir2:#0a1220;--noir3:#0f1a2e;
+  --blanc:#e8e0d0;--blanc2:#a09880;
+  --or:#c8a84b;--or2:#e8c870;--or3:rgba(200,168,75,0.15);--or4:rgba(200,168,75,0.06);
+  --bleu:#1a3a5c;--bdr:rgba(200,168,75,0.12);--bdr2:rgba(200,168,75,0.3);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Crimson Pro',serif;background:var(--noir);color:var(--blanc);min-height:100vh;overflow-x:hidden;cursor:default}
-body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(200,168,75,0.02) 60px,rgba(200,168,75,0.02) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(200,168,75,0.02) 60px,rgba(200,168,75,0.02) 61px);pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(26,58,92,0.3) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(200,168,75,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
-.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+body{font-family:'Crimson Pro',serif;background:var(--noir);color:var(--blanc);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(200,168,75,0.015) 60px,rgba(200,168,75,0.015) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(200,168,75,0.015) 60px,rgba(200,168,75,0.015) 61px);pointer-events:none;z-index:0}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.3;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
 
 /* HEADER */
-header{background:linear-gradient(180deg,rgba(4,8,15,0.98) 0%,rgba(10,18,32,0.95) 100%);border-bottom:1px solid var(--bdr2);padding:0 2rem;position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
+header{background:linear-gradient(180deg,rgba(4,8,15,.98),rgba(10,18,32,.95));border-bottom:1px solid var(--bdr2);padding:0 2rem;position:sticky;top:0;z-index:300;backdrop-filter:blur(12px)}
 header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--or),transparent)}
 .hdr{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{display:flex;align-items:center;gap:16px}
-.logo-ic{width:44px;height:44px;border:1px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;background:var(--or4)}
+.logo{display:flex;align-items:center;gap:16px;cursor:pointer}
+.logo-ic{width:44px;height:44px;border:1px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--or4)}
 .logo-ic svg{width:24px;height:24px;stroke:var(--or);fill:none;stroke-width:1.5}
 .logo-text h1{font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;color:var(--or);text-transform:uppercase;font-weight:600}
-.logo-text span{font-size:11px;color:var(--blanc2);letter-spacing:3px;font-family:'Space Mono',monospace;font-style:italic}
+.logo-text span{font-size:11px;color:var(--blanc2);letter-spacing:3px;font-family:'Space Mono',monospace}
 .abtn{background:transparent;color:var(--blanc2);border:1px solid var(--bdr);padding:6px 16px;border-radius:3px;font-size:11px;font-family:'Space Mono',monospace;text-decoration:none;letter-spacing:1px;transition:.2s}
 .abtn:hover{border-color:var(--or);color:var(--or)}
 
+/* NAV TABS */
+.nav-tabs{background:var(--noir2);border-bottom:1px solid var(--bdr);position:sticky;top:68px;z-index:200}
+.nav-tabs-in{max-width:1400px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.nav-tabs-in::-webkit-scrollbar{display:none}
+.ntab{padding:13px 22px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--blanc2);text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.ntab:hover,.ntab.active{color:var(--or);border-bottom-color:var(--or)}
+
 /* HERO */
-.hero{position:relative;height:92vh;min-height:600px;overflow:hidden;display:flex;align-items:flex-end}
+.hero{position:relative;height:88vh;min-height:560px;overflow:hidden;display:flex;align-items:flex-end}
 .hero-bg{position:absolute;inset:0;background:var(--noir2)}
-.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.55;filter:contrast(1.1) saturate(0.7)}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,1) 0%,rgba(4,8,15,0.7) 30%,rgba(4,8,15,0.1) 70%,transparent 100%)}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:contrast(1.1) saturate(0.7)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,1) 0%,rgba(4,8,15,.65) 35%,rgba(4,8,15,.1) 70%,transparent 100%)}
 .hero-content{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 2rem 4rem;width:100%}
 .hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:12px}
 .hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--or)}
-.hero-title{font-family:'Cinzel',serif;font-size:clamp(3rem,8vw,7rem);color:var(--blanc);line-height:.9;font-weight:700;margin-bottom:.5rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(3rem,8vw,6.5rem);color:var(--blanc);line-height:.9;font-weight:700;margin-bottom:.5rem}
 .hero-title span{color:var(--or);display:block}
-.hero-subtitle{font-family:'Crimson Pro',serif;font-size:clamp(1rem,2vw,1.4rem);color:var(--blanc2);font-style:italic;margin-bottom:2rem;max-width:600px;line-height:1.6}
+.hero-sub{font-size:clamp(.95rem,1.8vw,1.3rem);color:var(--blanc2);font-style:italic;margin-bottom:2rem;max-width:580px;line-height:1.6}
 .hero-stats{display:flex;gap:2.5rem;flex-wrap:wrap}
-.hs{text-align:left}
 .hs-n{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--or);line-height:1}
 .hs-l{font-size:11px;color:var(--blanc2);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-family:'Space Mono',monospace}
-.hero-divider{width:1px;height:50px;background:var(--bdr2);align-self:center}
-.hero-scroll{position:absolute;bottom:2rem;right:2rem;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--blanc2);font-size:10px;font-family:'Space Mono',monospace;letter-spacing:2px;animation:float 2s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-
-/* NAV TABS */
-.nav-tabs{background:var(--noir2);border-bottom:1px solid var(--bdr);position:sticky;top:68px;z-index:150}
-.nav-tabs-in{max-width:1400px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
-.nav-tabs-in::-webkit-scrollbar{display:none}
-.ntab{padding:14px 24px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--blanc2);text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
-.ntab:hover,.ntab.active{color:var(--or);border-bottom-color:var(--or)}
+.hero-div{width:1px;height:50px;background:var(--bdr2);align-self:center}
 
 /* SECTIONS */
 section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 2rem}
-.section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:12px}
-.section-label::before{content:'';width:30px;height:1px;background:var(--or)}
-.section-title{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--blanc);margin-bottom:.3rem}
-.section-sub{font-size:1.1rem;color:var(--blanc2);font-style:italic;margin-bottom:3rem}
+.slabel{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:12px}
+.slabel::before{content:'';width:30px;height:1px;background:var(--or)}
+.stitle{font-family:'Cinzel',serif;font-size:clamp(1.5rem,3.5vw,2.2rem);color:var(--blanc);margin-bottom:.3rem}
+.ssub{font-size:1.05rem;color:var(--blanc2);font-style:italic;margin-bottom:2.5rem}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr2),transparent);margin:0 2rem}
 
 /* BATEAU */
 .bateau-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
-.bateau-photo-wrap{position:relative;border-radius:4px;overflow:hidden}
-.bateau-photo-wrap img{width:100%;height:auto;object-fit:cover;filter:contrast(1.05) saturate(0.85)}
-.bateau-photo-wrap::after{content:'';position:absolute;inset:0;border:1px solid var(--bdr2);pointer-events:none}
-.bateau-nom-overlay{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;background:linear-gradient(0deg,rgba(4,8,15,.95),transparent);font-family:'Cinzel',serif;font-size:1.4rem;color:var(--or);letter-spacing:3px}
-.bateau-info{display:flex;flex-direction:column;gap:1.5rem}
-.bateau-histoire{font-size:1.05rem;line-height:1.8;color:var(--blanc2);font-style:italic;border-left:2px solid var(--or);padding-left:1.2rem;margin-bottom:1rem}
-.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bdr);border:1px solid var(--bdr)}
-.spec-item{padding:.8rem 1rem;background:var(--noir2)}
-.spec-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:3px}
-.spec-val{font-size:.95rem;color:var(--blanc)}
-.equipage{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem}
-.equip-card{flex:1;min-width:140px;background:var(--noir3);border:1px solid var(--bdr);border-radius:4px;overflow:hidden;text-align:center}
-.equip-card img{width:100%;height:auto;object-fit:cover;filter:grayscale(20%)}
-.equip-card-body{padding:.8rem}
-.equip-nom{font-family:'Cinzel',serif;font-size:.9rem;color:var(--or);margin-bottom:2px}
-.equip-role{font-size:.8rem;color:var(--blanc2);font-style:italic}
-.compas-img{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid var(--or);float:right;margin:0 0 1rem 1.5rem;filter:grayscale(30%)}
+.bateau-photo{position:relative;border-radius:4px;overflow:hidden}
+.bateau-photo img{width:100%;height:auto;object-fit:cover;filter:contrast(1.05) saturate(.85)}
+.bateau-photo::after{content:'';position:absolute;inset:0;border:1px solid var(--bdr2);pointer-events:none}
+.bateau-nom{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;background:linear-gradient(0deg,rgba(4,8,15,.95),transparent);font-family:'Cinzel',serif;font-size:1.4rem;color:var(--or);letter-spacing:3px}
+.bateau-info{display:flex;flex-direction:column;gap:1.2rem}
+.bhistoire{font-size:1.05rem;line-height:1.8;color:var(--blanc2);font-style:italic;border-left:2px solid var(--or);padding-left:1.2rem}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bdr);border:1px solid var(--bdr)}
+.spec{padding:.7rem 1rem;background:var(--noir2)}
+.spec-l{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:3px}
+.spec-v{font-size:.92rem;color:var(--blanc)}
+.equipage{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:.5rem}
+.equip{flex:1;min-width:130px;background:var(--noir3);border:1px solid var(--bdr);border-radius:4px;overflow:hidden;text-align:center}
+.equip img{width:100%;height:auto;object-fit:cover;filter:grayscale(20%)}
+.equip-body{padding:.7rem}
+.equip-nom{font-family:'Cinzel',serif;font-size:.88rem;color:var(--or);margin-bottom:2px}
+.equip-role{font-size:.78rem;color:var(--blanc2);font-style:italic}
+.compas{width:90px;height:90px;object-fit:cover;border-radius:50%;border:2px solid var(--or);float:right;margin:0 0 1rem 1.5rem;filter:grayscale(30%)}
 
-/* JOURNAL */
-.journal-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
-.fbtn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 16px;border-radius:3px;font-size:10px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px}
+/* GRILLE VOYAGES */
+.voyages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+.voyage-card{position:relative;border-radius:6px;overflow:hidden;cursor:pointer;border:1px solid var(--bdr);transition:.3s;min-height:220px;background:var(--noir2);display:flex;flex-direction:column;justify-content:flex-end}
+.voyage-card:hover{border-color:var(--or);transform:translateY(-3px);box-shadow:0 8px 30px rgba(200,168,75,.1)}
+.voyage-card.empty{cursor:default;opacity:.35}
+.voyage-card.empty:hover{transform:none;border-color:var(--bdr);box-shadow:none}
+.voyage-bg{position:absolute;inset:0}
+.voyage-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) contrast(1.05);transition:.3s}
+.voyage-card:hover .voyage-bg img{filter:saturate(.85)}
+.voyage-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,.95) 0%,rgba(4,8,15,.5) 50%,transparent 100%)}
+.voyage-content{position:relative;z-index:2;padding:1.2rem}
+.voyage-num{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);margin-bottom:.3rem}
+.voyage-titre{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--blanc);margin-bottom:.3rem}
+.voyage-lieu{font-size:.85rem;color:var(--blanc2);font-style:italic;margin-bottom:.5rem}
+.voyage-stats{display:flex;gap:1rem;flex-wrap:wrap}
+.vstat{font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2)}
+.vstat span{color:var(--or)}
+.voyage-empty-label{position:relative;z-index:2;padding:1.2rem;font-family:'Space Mono',monospace;font-size:10px;color:rgba(200,168,75,.3);letter-spacing:2px}
+.voyage-arrow{position:absolute;bottom:1.2rem;right:1.2rem;z-index:2;width:32px;height:32px;border-radius:50%;background:var(--or3);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--or);font-size:14px;transition:.2s}
+.voyage-card:hover .voyage-arrow{background:var(--or);color:var(--noir)}
+
+/* VUE VOYAGE */
+#vueVoyage{display:none;position:relative;z-index:2}
+.voyage-hero{position:relative;height:70vh;min-height:480px;overflow:hidden;display:flex;align-items:flex-end}
+.voyage-hero-bg{position:absolute;inset:0;background:var(--noir2)}
+.voyage-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:contrast(1.1) saturate(.7)}
+.voyage-hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,15,1) 0%,rgba(4,8,15,.6) 35%,transparent 80%)}
+.voyage-hero-content{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 2rem 3rem;width:100%}
+.back-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:1.5rem;color:var(--blanc2);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;border:1px solid var(--bdr);padding:6px 14px;border-radius:3px;background:rgba(4,8,15,.6);transition:.2s}
+.back-btn:hover{border-color:var(--or);color:var(--or)}
+.vhero-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--or);margin-bottom:.8rem;display:flex;align-items:center;gap:10px}
+.vhero-eyebrow::before{content:'';width:30px;height:1px;background:var(--or)}
+.vhero-title{font-family:'Cinzel',serif;font-size:clamp(2rem,6vw,5rem);color:var(--blanc);line-height:.95;font-weight:700;margin-bottom:.4rem}
+.vhero-title span{color:var(--or);display:block}
+.vhero-sub{font-size:clamp(.9rem,1.5vw,1.2rem);color:var(--blanc2);font-style:italic;margin-bottom:1.5rem}
+.vhero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.vsn{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--or);line-height:1}
+.vsl{font-size:10px;color:var(--blanc2);letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-family:'Space Mono',monospace}
+.vdiv{width:1px;height:40px;background:var(--bdr2);align-self:center}
+
+/* JOURNAL VOYAGE */
+.jcontrols{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
+.fbtn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 14px;border-radius:3px;font-size:10px;font-family:'Space Mono',monospace;cursor:pointer;transition:.2s;letter-spacing:1px}
 .fbtn:hover,.fbtn.active{background:var(--or3);border-color:var(--or);color:var(--or)}
 .fbtn.active{font-weight:700}
-.journal-entries{display:flex;flex-direction:column;gap:0}
-.entry{display:grid;grid-template-columns:120px 1fr;gap:0;position:relative;cursor:pointer}
-.entry::before{content:'';position:absolute;left:119px;top:0;bottom:0;width:1px;background:var(--bdr);z-index:0}
-.entry:last-child::before{height:50px}
-.entry-date-col{padding:1.5rem 1.5rem 1.5rem 0;text-align:right;position:relative}
-.entry-date-col::after{content:'';position:absolute;right:-6px;top:2rem;width:11px;height:11px;border-radius:50%;background:var(--or4);border:1px solid var(--or);z-index:1}
-.entry-day{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--or);line-height:1}
-.entry-month{font-size:.75rem;color:var(--blanc2);font-family:'Space Mono',monospace;letter-spacing:1px;text-transform:uppercase}
-.entry-jour{font-size:.8rem;color:var(--or);font-family:'Space Mono',monospace;opacity:.7}
-.entry-content{padding:1.5rem 0 2rem 2rem;border-bottom:1px solid rgba(200,168,75,0.06)}
-.entry:hover .entry-content{background:rgba(200,168,75,0.02)}
-.entry-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap}
-.entry-route{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--blanc)}
-.entry-route span{color:var(--or);margin:0 6px}
-.entry-badges{display:flex;gap:6px;flex-wrap:wrap}
-.badge-vent{background:rgba(26,58,92,.8);border:1px solid rgba(42,90,140,.6);color:#7ab8e8;padding:2px 8px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace;letter-spacing:1px}
-.badge-voile{background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);color:var(--or);padding:2px 8px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace;letter-spacing:1px}
-.badge-repos{background:rgba(50,80,50,.5);border:1px solid rgba(80,140,80,.3);color:#8bc87a;padding:2px 8px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace;letter-spacing:1px}
-.entry-stats-mini{display:flex;gap:1.5rem;margin-bottom:.8rem;flex-wrap:wrap}
-.esm{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2)}
+.journal-entries{display:flex;flex-direction:column}
+.entry{display:grid;grid-template-columns:110px 1fr;position:relative;cursor:pointer}
+.entry::before{content:'';position:absolute;left:109px;top:0;bottom:0;width:1px;background:var(--bdr)}
+.entry:last-child::before{height:48px}
+.entry-datecol{padding:1.4rem 1.4rem 1.4rem 0;text-align:right;position:relative}
+.entry-datecol::after{content:'';position:absolute;right:-6px;top:1.8rem;width:11px;height:11px;border-radius:50%;background:var(--or4);border:1px solid var(--or);z-index:1}
+.eday{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--or);line-height:1}
+.emonth{font-size:.72rem;color:var(--blanc2);font-family:'Space Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.ejour{font-size:.75rem;color:var(--or);font-family:'Space Mono',monospace;opacity:.6}
+.entry-body{padding:1.4rem 0 2rem 2rem;border-bottom:1px solid rgba(200,168,75,.05)}
+.entry:hover .entry-body{background:rgba(200,168,75,.015)}
+.eroute{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--blanc);margin-bottom:.5rem}
+.eroute span{color:var(--or);margin:0 6px}
+.ebadges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.6rem}
+.badge-vent{background:rgba(26,58,92,.8);border:1px solid rgba(42,90,140,.5);color:#7ab8e8;padding:2px 7px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace}
+.badge-voile{background:var(--or4);border:1px solid var(--bdr2);color:var(--or);padding:2px 7px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace}
+.badge-repos{background:rgba(50,80,50,.5);border:1px solid rgba(80,140,80,.3);color:#8bc87a;padding:2px 7px;border-radius:2px;font-size:9px;font-family:'Space Mono',monospace}
+.estats{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:.7rem}
+.esm{font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2)}
 .esm span{color:var(--or)}
-.entry-resume{font-size:1rem;color:var(--blanc2);line-height:1.7;max-width:800px}
-.entry-img{margin-top:1rem;border-radius:4px;overflow:hidden;max-width:600px;position:relative}
-.entry-img img{width:100%;height:auto;object-fit:cover;display:block;filter:saturate(0.8) contrast(1.05)}
-.entry-img::after{content:'';position:absolute;inset:0;border:1px solid var(--bdr);pointer-events:none}
-.entry-expand{margin-top:.8rem;font-family:'Space Mono',monospace;font-size:9px;color:var(--or);letter-spacing:2px;opacity:.6}
-.entry:hover .entry-expand{opacity:1}
+.eresume{font-size:.98rem;color:var(--blanc2);line-height:1.7;max-width:780px}
+.eimg{margin-top:.8rem;border-radius:4px;overflow:hidden;max-width:580px;border:1px solid var(--bdr)}
+.eimg img{width:100%;height:auto;display:block;filter:saturate(.8)}
+.emore{margin-top:.6rem;font-family:'Space Mono',monospace;font-size:9px;color:var(--or);letter-spacing:2px;opacity:.5}
+.entry:hover .emore{opacity:1}
 
-/* MODAL */
+/* MODAL JOURNAL */
 .modal{position:fixed;inset:0;background:rgba(4,8,15,.96);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)}
 .modal.hidden{display:none}
-.modal-inner{background:var(--noir2);border:1px solid var(--bdr2);border-radius:4px;max-width:900px;width:100%;max-height:92vh;overflow-y:auto;position:relative}
+.modal-inner{background:var(--noir2);border:1px solid var(--bdr2);border-radius:4px;max-width:880px;width:100%;max-height:92vh;overflow-y:auto;position:relative}
 .modal-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--or),transparent)}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:34px;height:34px;border-radius:3px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2;font-family:serif}
-.modal-close:hover{border-color:var(--or);color:var(--or)}
-.modal-img-cover{width:100%;height:auto;object-fit:cover;display:block}
-.modal-img-placeholder{height:200px;background:var(--noir3);display:flex;align-items:center;justify-content:center}
-.modal-body{padding:2rem}
-.modal-date{font-family:'Space Mono',monospace;font-size:10px;color:var(--or);letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem}
-.modal-title{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--blanc);margin-bottom:.3rem}
-.modal-subtitle{font-size:1rem;color:var(--blanc2);font-style:italic;margin-bottom:1.5rem}
-.modal-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;background:var(--noir3);border:1px solid var(--bdr);border-radius:3px;padding:1rem;margin-bottom:1.5rem}
-.msg-item{text-align:center}
-.msg-val{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--or)}
-.msg-val span{font-size:.75rem;color:var(--blanc2)}
-.msg-lbl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px;font-family:'Space Mono',monospace}
-.modal-section{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin:1.2rem 0 .6rem;display:flex;align-items:center;gap:8px}
-.modal-section::after{content:'';flex:1;height:1px;background:var(--bdr)}
-.modal-text{font-size:1rem;color:var(--blanc2);line-height:1.9}
-.modal-text p{margin-bottom:.8rem}
-.modal-text ul{padding-left:1.5rem;margin-bottom:.8rem}
-.modal-text li{margin-bottom:.4rem}
+.mclose{position:absolute;top:14px;right:14px;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:34px;height:34px;border-radius:3px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2}
+.mclose:hover{border-color:var(--or);color:var(--or)}
+.mcover{width:100%;height:auto;display:block}
+.mcover-placeholder{height:180px;background:var(--noir3);display:flex;align-items:center;justify-content:center}
+.mbody{padding:1.8rem}
+.mdate{font-family:'Space Mono',monospace;font-size:10px;color:var(--or);letter-spacing:3px;text-transform:uppercase;margin-bottom:.4rem}
+.mtitle{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--blanc);margin-bottom:.2rem}
+.msub{font-size:.98rem;color:var(--blanc2);font-style:italic;margin-bottom:1.2rem}
+.mstats{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;background:var(--noir3);border:1px solid var(--bdr);border-radius:3px;padding:.9rem;margin-bottom:1.2rem}
+.msi{text-align:center}
+.msv{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--or)}
+.msv span{font-size:.7rem;color:var(--blanc2)}
+.msl{font-size:9px;color:var(--blanc2);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px;font-family:'Space Mono',monospace}
+.msect{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin:1rem 0 .5rem;display:flex;align-items:center;gap:8px}
+.msect::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.mtext{font-size:.98rem;color:var(--blanc2);line-height:1.9}
+.mtext p{margin-bottom:.7rem}
+.mtext ul{padding-left:1.4rem;margin-bottom:.7rem}
+.mtext li{margin-bottom:.3rem}
 
-/* CARTE */
-.carte-section{background:var(--noir2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
-.carte-wrap{position:relative}
-#map{height:480px;width:100%}
-.carte-legend{position:absolute;bottom:1rem;left:1rem;z-index:400;background:rgba(4,8,15,.92);border:1px solid var(--bdr2);border-radius:3px;padding:.8rem 1rem;font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2)}
-.legend-item{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* CARTE VOYAGE */
+.carte-section-voyage{background:var(--noir2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);position:relative;z-index:2}
+#mapVoyage{height:500px;width:100%}
+.carte-legend{position:absolute;bottom:1rem;left:1rem;z-index:400;background:rgba(4,8,15,.9);border:1px solid var(--bdr2);border-radius:3px;padding:.7rem 1rem;font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2)}
+.legend-item{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* MÉDIAS — YouTube embed */
+/* MÉDIAS */
 .medias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
 .media-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;transition:.2s}
 .media-card:hover{border-color:var(--or);transform:translateY(-2px)}
 .media-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
 .media-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.media-body{padding:.9rem}
+.media-body{padding:.85rem}
 .media-type{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:.3rem}
-.media-titre{font-family:'Cinzel',serif;font-size:.95rem;color:var(--blanc);margin-bottom:.2rem}
-.media-desc{font-size:.85rem;color:var(--blanc2);font-style:italic}
+.media-titre{font-family:'Cinzel',serif;font-size:.92rem;color:var(--blanc);margin-bottom:.2rem}
+.media-desc{font-size:.82rem;color:var(--blanc2);font-style:italic}
 
 /* ALBUMS FLICKR */
-.albums-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem}
+.albums-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem}
 .album-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;cursor:pointer;transition:.2s}
 .album-card:hover{border-color:var(--or);transform:translateY(-2px)}
-.album-thumb{height:160px;background:var(--noir3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.album-thumb{height:150px;background:var(--noir3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .album-thumb-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--noir3),var(--bleu));opacity:.8}
-.album-icon{font-size:3rem;position:relative;z-index:1}
-.album-body{padding:1rem}
-.album-titre{font-family:'Cinzel',serif;font-size:1rem;color:var(--or);margin-bottom:.3rem}
-.album-desc{font-size:.85rem;color:var(--blanc2);font-style:italic;margin-bottom:.6rem}
-
-/* FLICKR VIEWER */
-.flickr-viewer{margin-top:2rem;display:none}
-.flickr-viewer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;padding:1rem;background:var(--noir2);border:1px solid var(--bdr2);border-radius:3px}
-.flickr-viewer-titre{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--or)}
-.flickr-viewer-count{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);margin-top:3px}
-.flickr-close-btn{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:6px 14px;border-radius:3px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;transition:.2s}
-.flickr-close-btn:hover{border-color:var(--or);color:var(--or)}
-.flickr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
+.album-icon{font-size:2.8rem;position:relative;z-index:1}
+.album-body{padding:.9rem}
+.album-titre{font-family:'Cinzel',serif;font-size:.95rem;color:var(--or);margin-bottom:.2rem}
+.album-desc{font-size:.82rem;color:var(--blanc2);font-style:italic;margin-bottom:.5rem}
+.flickr-viewer{margin-top:1.5rem;display:none}
+.flickr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.8rem;padding:.9rem 1.1rem;background:var(--noir2);border:1px solid var(--bdr2);border-radius:3px}
+.flickr-titre{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--or)}
+.flickr-count{font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);margin-top:2px}
+.flickr-close{background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);padding:5px 12px;border-radius:3px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;transition:.2s}
+.flickr-close:hover{border-color:var(--or);color:var(--or)}
+.flickr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px}
 .flickr-thumb{cursor:pointer;overflow:hidden;border-radius:3px;border:1px solid var(--bdr);aspect-ratio:1;background:var(--noir3)}
-.flickr-thumb img{width:100%;height:100%;object-fit:cover;transition:.3s;filter:saturate(0.7);display:block}
-.flickr-thumb:hover img{filter:saturate(1);transform:scale(1.05)}
+.flickr-thumb img{width:100%;height:100%;object-fit:cover;transition:.3s;filter:saturate(.65);display:block}
+.flickr-thumb:hover img{filter:saturate(1);transform:scale(1.06)}
 .flickr-loading{color:var(--blanc2);font-family:'Space Mono',monospace;font-size:11px;padding:2rem;grid-column:1/-1;text-align:center}
 
 /* DESSINS */
-.dessins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem}
+.dessins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem}
 .dessin-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;transition:.2s;cursor:pointer}
 .dessin-card:hover{border-color:var(--or);transform:translateY(-2px)}
-.dessin-card img{width:100%;height:220px;object-fit:contain;background:var(--noir3);padding:.5rem;display:block;transition:.2s;filter:contrast(0.95)}
+.dessin-card img{width:100%;height:210px;object-fit:contain;background:var(--noir3);padding:.5rem;display:block;filter:contrast(.95)}
 .dessin-card:hover img{filter:contrast(1.05)}
-.dessin-card-label{padding:.6rem .8rem;font-size:.85rem;color:var(--blanc2);font-style:italic;font-family:'Crimson Pro',serif}
+.dessin-label{padding:.55rem .8rem;font-size:.82rem;color:var(--blanc2);font-style:italic;font-family:'Crimson Pro',serif}
 
 /* LIGHTBOX */
 .lightbox{position:fixed;inset:0;background:rgba(4,8,15,.97);z-index:2000;display:flex;align-items:center;justify-content:center;padding:2rem}
 .lightbox.hidden{display:none}
 .lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border:1px solid var(--bdr2)}
-.lightbox-close{position:absolute;top:1rem;right:1rem;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:36px;height:36px;border-radius:3px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
-.lightbox-close:hover{color:var(--or);border-color:var(--or)}
-.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(4,8,15,.85);border:1px solid var(--bdr2);color:var(--or);width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:.2s}
-.lightbox-nav:hover{background:var(--or3);border-color:var(--or)}
-.lightbox-prev{left:1rem}
-.lightbox-next{right:1rem}
+.lb-close{position:absolute;top:1rem;right:1rem;background:var(--noir3);border:1px solid var(--bdr);color:var(--blanc2);width:36px;height:36px;border-radius:3px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
+.lb-close:hover{color:var(--or);border-color:var(--or)}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(4,8,15,.85);border:1px solid var(--bdr2);color:var(--or);width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:.2s}
+.lb-nav:hover{background:var(--or3)}
+.lb-prev{left:1rem}
+.lb-next{right:1rem}
 
 /* STATUSBAR */
-.statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:8px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(200,168,75,.4);font-family:'Space Mono',monospace}
+.statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:8px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(200,168,75,.4);font-family:'Space Mono',monospace;position:relative;z-index:2}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:var(--noir)}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
@@ -228,10 +247,10 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 @media(max-width:900px){
   .bateau-grid{grid-template-columns:1fr}
   .entry{grid-template-columns:80px 1fr}
-  .modal-stats-grid{grid-template-columns:repeat(2,1fr)}
-  .hero-stats{gap:1.5rem}
-  .hero-divider{display:none}
+  .mstats{grid-template-columns:repeat(2,1fr)}
   section{padding:2.5rem 1rem}
+  .hero-stats,.vhero-stats{gap:1.2rem}
+  .hero-div,.vdiv{display:none}
   .medias-grid{grid-template-columns:1fr}
 }
 </style>
@@ -239,190 +258,235 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 <body>
 <div class="grain"></div>
 
+<!-- HEADER -->
 <header>
   <div class="hdr">
-    <div class="logo">
+    <div class="logo" onclick="afficherAccueil()">
       <div class="logo-ic">
         <svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10"/><path d="M3 20h18"/><path d="M12 4v3"/></svg>
       </div>
       <div class="logo-text">
         <h1>Soejangh</h1>
-        <span>Vindo 40 · Journal de Bord</span>
+        <span>Vindo 40 · Voyages & Journal de Bord</span>
       </div>
     </div>
     <a href="index.html" class="abtn">← Accueil</a>
   </div>
 </header>
 
-<div class="hero">
-  <div class="hero-bg">
-    <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-voilier2.webp" alt="Soejangh en mer">
-  </div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">Journal de Bord · Été 2025</div>
-    <h2 class="hero-title">Soejangh<span>Cap au Nord</span></h2>
-    <p class="hero-subtitle">18 jours de navigation sur le Markermeer, l'IJsselmeer et la Waddenzee. Vlieland, Terschelling, Hindeloopen... Une épopée à bord du Vindo 40.</p>
-    <div class="hero-stats">
-      <div class="hs"><div class="hs-n">18</div><div class="hs-l">Jours</div></div>
-      <div class="hero-divider"></div>
-      <div class="hs"><div class="hs-n">~280</div><div class="hs-l">Milles nautiques</div></div>
-      <div class="hero-divider"></div>
-      <div class="hs"><div class="hs-n">7</div><div class="hs-l">Ports visités</div></div>
-      <div class="hero-divider"></div>
-      <div class="hs"><div class="hs-n">9kts</div><div class="hs-l">Vitesse max</div></div>
-    </div>
-  </div>
-  <div class="hero-scroll">⬇ Défiler</div>
-</div>
-
-<nav class="nav-tabs">
+<!-- NAV TABS (accueil) -->
+<nav class="nav-tabs" id="navAccueil">
   <div class="nav-tabs-in">
-    <button class="ntab active" onclick="scrollTo('#bateau')">⚓ Le Bateau</button>
-    <button class="ntab" onclick="scrollTo('#journal')">📖 Journal de Bord</button>
-    <button class="ntab" onclick="scrollTo('#carte')">🗺️ Carte</button>
-    <button class="ntab" onclick="scrollTo('#medias')">🎵 Musiques & Vidéos</button>
-    <button class="ntab" onclick="scrollTo('#albums')">📸 Albums Photos</button>
-    <button class="ntab" onclick="scrollTo('#dessins')">✏️ Dessins</button>
+    <button class="ntab active" onclick="navScrollTo('#bateau')">⚓ Le Bateau</button>
+    <button class="ntab" onclick="navScrollTo('#voyages')">⛵ Voyages</button>
+    <button class="ntab" onclick="navScrollTo('#albums')">📸 Albums Photos</button>
+    <button class="ntab" onclick="navScrollTo('#medias')">🎵 Musiques & Vidéos</button>
+    <button class="ntab" onclick="navScrollTo('#dessins')">✏️ Dessins</button>
   </div>
 </nav>
 
-<!-- BATEAU -->
-<section id="bateau">
-  <div class="section-label">⚓ Vindo 40</div>
-  <h2 class="section-title">Le Soejangh</h2>
-  <p class="section-sub">Un voilier suédois avec une âme</p>
-  <div class="bateau-grid">
-    <div>
-      <div class="bateau-photo-wrap">
-        <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-voilier1.webp" alt="Soejangh à quai Monnickendam">
-        <div class="bateau-nom-overlay">S O E J A N G H</div>
-      </div>
+<!-- NAV TABS (voyage) -->
+<nav class="nav-tabs" id="navVoyage" style="display:none">
+  <div class="nav-tabs-in">
+    <button class="ntab" onclick="afficherAccueil()">← Liste des voyages</button>
+    <button class="ntab active" onclick="navScrollTo('#vjournal')">📖 Journal de Bord</button>
+    <button class="ntab" onclick="navScrollTo('#vcarte')">🗺️ Carte</button>
+  </div>
+</nav>
+
+<!-- ================================================ -->
+<!-- PAGE ACCUEIL -->
+<!-- ================================================ -->
+<div id="pageAccueil">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg">
+      <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-voilier2.webp" alt="Soejangh en mer">
     </div>
-    <div class="bateau-info">
-      <img class="compas-img" src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-compas.webp" alt="Compas magnétique Silva">
-      <p class="bateau-histoire">Le nom <em>Soejangh</em> — variante de Soyang — vient du coréen : <em>"pure lumière du soleil"</em>. Un nom qui lui va bien, à ce voilier construit en Suède et qui glisse sur les eaux grises du Nord comme une lumière dorée.</p>
-      <p class="bateau-histoire">Construit entre 1970 et 1982 par le chantier suédois Nötesunds Varv AB, le Vindo 40 est l'œuvre du designer Carl Andersson. Longue quille, intérieur en bois, pont en teck — une époque où les voiliers étaient faits pour durer. Le Soejangh a été acheté d'occasion à Monnickendam, qui reste son port d'attache. Voiles neuves, panneaux solaires sur le taud et le roof, moteur Mitsubishi.</p>
-      <p style="font-size:.85rem;color:var(--blanc2);font-style:italic;margin-bottom:1rem">⚠️ Note du capitaine : avec sa longue quille, les manœuvres en marche arrière et par vent de travers au port demandent de l'attention. Le pas d'hélice crée une tendance à dériver à bâbord.</p>
-      <div class="specs-grid">
-        <div class="spec-item"><div class="spec-lbl">Type</div><div class="spec-val">Vindo 40 · Sloop</div></div>
-        <div class="spec-item"><div class="spec-lbl">Constructeur</div><div class="spec-val">Nötesunds Varv AB, Suède</div></div>
-        <div class="spec-item"><div class="spec-lbl">Designer</div><div class="spec-val">Carl Andersson</div></div>
-        <div class="spec-item"><div class="spec-lbl">Longueur</div><div class="spec-val">9,43 m</div></div>
-        <div class="spec-item"><div class="spec-lbl">Largeur</div><div class="spec-val">2,95 m</div></div>
-        <div class="spec-item"><div class="spec-lbl">Tirant d'eau</div><div class="spec-val">1,40 m</div></div>
-        <div class="spec-item"><div class="spec-lbl">Déplacement</div><div class="spec-val">5 200 kg</div></div>
-        <div class="spec-item"><div class="spec-lbl">Surface voilure</div><div class="spec-val">39,67 m²</div></div>
-        <div class="spec-item"><div class="spec-lbl">Moteur</div><div class="spec-val">Mitsubishi diesel ~25 cv</div></div>
-        <div class="spec-item"><div class="spec-lbl">Vitesse de coque</div><div class="spec-val">6,65 nœuds</div></div>
-        <div class="spec-item"><div class="spec-lbl">Port d'attache</div><div class="spec-val">Monnickendam, NL</div></div>
-        <div class="spec-item"><div class="spec-lbl">Voiles</div><div class="spec-val">GV + Génois (neuves)</div></div>
-        <div class="spec-item"><div class="spec-lbl">Instruments</div><div class="spec-val">Sondeur, Loch, Compas magnétique Silva, Sextant</div></div>
-        <div class="spec-item"><div class="spec-lbl">Équipement</div><div class="spec-val">Radeau de survie, Panneaux solaires, Annexe</div></div>
-      </div>
-      <div class="equipage">
-        <div class="equip-card">
-          <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-mat.webp" alt="Gilles">
-          <div class="equip-card-body"><div class="equip-nom">Gilles</div><div class="equip-role">Capitaine · Chef cuisinier</div></div>
-        </div>
-        <div class="equip-card">
-          <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-montage-jc.webp" alt="JC">
-          <div class="equip-card-body"><div class="equip-nom">Jean-Claude</div><div class="equip-role">Équipier · VAE · Dessinateur</div></div>
-        </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Vindo 40 · Port d'attache Monnickendam</div>
+      <h2 class="hero-title">Soejangh<span>Voilier & Voyages</span></h2>
+      <p class="hero-sub">Un Vindo 40 suédois sur les eaux du Markermeer, l'IJsselmeer et la Waddenzee. Journal de bord, albums photos, musiques et dessins à bord.</p>
+      <div class="hero-stats">
+        <div><div class="hs-n" id="statVoyages">0</div><div class="hs-l">Voyages</div></div>
+        <div class="hero-div"></div>
+        <div><div class="hs-n">9,43m</div><div class="hs-l">Longueur</div></div>
+        <div class="hero-div"></div>
+        <div><div class="hs-n">1970</div><div class="hs-l">Année</div></div>
+        <div class="hero-div"></div>
+        <div><div class="hs-n">Suède</div><div class="hs-l">Origine</div></div>
       </div>
     </div>
   </div>
-</section>
 
-<div class="divider"></div>
-
-<!-- JOURNAL -->
-<section id="journal">
-  <div class="section-label">📖 Été 2025</div>
-  <h2 class="section-title">Journal de Bord</h2>
-  <p class="section-sub">Du 26 juillet au 12 août 2025 · Markermeer, IJsselmeer & Waddenzee</p>
-  <div class="journal-controls">
-    <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);letter-spacing:2px">FILTRER :</span>
-    <button class="fbtn active" onclick="filtreJournal('all',this)">Tout</button>
-    <button class="fbtn" onclick="filtreJournal('navigation',this)">⛵ Navigation</button>
-    <button class="fbtn" onclick="filtreJournal('repos',this)">🏖️ Escale</button>
-  </div>
-  <div class="journal-entries" id="journalEntries"></div>
-</section>
-
-<div class="divider"></div>
-
-<!-- CARTE -->
-<div id="carte" class="carte-section">
-  <section style="padding-bottom:0">
-    <div class="section-label">🗺️ Navigation</div>
-    <h2 class="section-title">La Route du Soejangh</h2>
-    <p class="section-sub">Markermeer · IJsselmeer · Waddenzee · Été 2025</p>
-  </section>
-  <div class="carte-wrap">
-    <div id="map"></div>
-    <div class="carte-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#c8a84b"></div> Port visité</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a8bc4;border-radius:0;height:2px;width:20px"></div> Route navigée</div>
-    </div>
-  </div>
-  <section style="padding-top:1.5rem">
-    <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-carte.webp" alt="Carte nautique Markermeer" style="max-width:100%;border-radius:3px;border:1px solid var(--bdr2);opacity:.85">
-  </section>
-</div>
-
-<div class="divider"></div>
-
-<!-- MUSIQUES & VIDÉOS -->
-<section id="medias">
-  <div class="section-label">🎵 Sons & Images</div>
-  <h2 class="section-title">Musiques & Vidéos</h2>
-  <p class="section-sub">L'ambiance sonore du Soejangh — les vidéos se lisent directement ici</p>
-  <div class="medias-grid" id="mediasGrid"></div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ALBUMS FLICKR -->
-<section id="albums">
-  <div class="section-label">📸 Albums</div>
-  <h2 class="section-title">Albums Photos</h2>
-  <p class="section-sub">Cliquez sur un album pour parcourir les photos directement dans la page</p>
-  <div class="albums-grid" id="albumsGrid"></div>
-  <!-- VISIONNEUSE FLICKR -->
-  <div class="flickr-viewer" id="flickrViewer">
-    <div class="flickr-viewer-header">
+  <!-- BATEAU -->
+  <section id="bateau">
+    <div class="slabel">⚓ Vindo 40</div>
+    <h2 class="stitle">Le Soejangh</h2>
+    <p class="ssub">Un voilier suédois avec une âme</p>
+    <div class="bateau-grid">
       <div>
-        <div class="flickr-viewer-titre" id="flickrTitre"></div>
-        <div class="flickr-viewer-count" id="flickrCount">Chargement...</div>
+        <div class="bateau-photo">
+          <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-voilier1.webp" alt="Soejangh à quai">
+          <div class="bateau-nom">S O E J A N G H</div>
+        </div>
       </div>
-      <button class="flickr-close-btn" onclick="fermerFlickr()">✕ Fermer l'album</button>
+      <div class="bateau-info">
+        <img class="compas" src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-compas.webp" alt="Compas Silva">
+        <p class="bhistoire">Le nom <em>Soejangh</em> — variante de Soyang — vient du coréen : <em>"pure lumière du soleil"</em>. Un nom qui lui va bien, à ce voilier construit en Suède qui glisse sur les eaux grises du Nord comme une lumière dorée.</p>
+        <p class="bhistoire">Construit entre 1970 et 1982 par Nötesunds Varv AB, Suède, sur les plans de Carl Andersson. Longue quille, intérieur en bois, pont en teck. Acheté d'occasion à Monnickendam, son port d'attache. Voiles neuves, panneaux solaires, moteur Mitsubishi.</p>
+        <p style="font-size:.83rem;color:var(--blanc2);font-style:italic">⚠️ Note : longue quille — manœuvres en marche arrière délicates. Tendance à dériver à bâbord due au pas d'hélice.</p>
+        <div class="specs">
+          <div class="spec"><div class="spec-l">Type</div><div class="spec-v">Vindo 40 · Sloop</div></div>
+          <div class="spec"><div class="spec-l">Constructeur</div><div class="spec-v">Nötesunds Varv AB, Suède</div></div>
+          <div class="spec"><div class="spec-l">Designer</div><div class="spec-v">Carl Andersson</div></div>
+          <div class="spec"><div class="spec-l">Longueur</div><div class="spec-v">9,43 m</div></div>
+          <div class="spec"><div class="spec-l">Largeur</div><div class="spec-v">2,95 m</div></div>
+          <div class="spec"><div class="spec-l">Tirant d'eau</div><div class="spec-v">1,40 m</div></div>
+          <div class="spec"><div class="spec-l">Déplacement</div><div class="spec-v">5 200 kg</div></div>
+          <div class="spec"><div class="spec-l">Surface voilure</div><div class="spec-v">39,67 m²</div></div>
+          <div class="spec"><div class="spec-l">Moteur</div><div class="spec-v">Mitsubishi diesel ~25 cv</div></div>
+          <div class="spec"><div class="spec-l">Vitesse de coque</div><div class="spec-v">6,65 nœuds</div></div>
+          <div class="spec"><div class="spec-l">Port d'attache</div><div class="spec-v">Monnickendam, NL</div></div>
+          <div class="spec"><div class="spec-l">Voiles</div><div class="spec-v">GV + Génois (neuves)</div></div>
+          <div class="spec"><div class="spec-l">Instruments</div><div class="spec-v">Sondeur · Loch · Compas Silva · Sextant</div></div>
+          <div class="spec"><div class="spec-l">Équipement</div><div class="spec-v">Radeau survie · Panneaux solaires · Annexe</div></div>
+        </div>
+        <div class="equipage">
+          <div class="equip">
+            <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-mat.webp" alt="Gilles">
+            <div class="equip-body"><div class="equip-nom">Gilles</div><div class="equip-role">Capitaine · Chef cuisinier</div></div>
+          </div>
+          <div class="equip">
+            <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-montage-jc.webp" alt="JC">
+            <div class="equip-body"><div class="equip-nom">Jean-Claude</div><div class="equip-role">Équipier · VAE · Dessinateur</div></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flickr-grid" id="flickrGrid">
-      <div class="flickr-loading">Chargement des photos...</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- VOYAGES -->
+  <section id="voyages">
+    <div class="slabel">⛵ Carnets de voyage</div>
+    <h2 class="stitle">Nos Voyages</h2>
+    <p class="ssub">Cliquez sur un voyage pour ouvrir le journal de bord</p>
+    <div class="voyages-grid" id="voyagesGrid"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ALBUMS FLICKR -->
+  <section id="albums">
+    <div class="slabel">📸 Albums</div>
+    <h2 class="stitle">Albums Photos</h2>
+    <p class="ssub">Cliquez sur un album pour parcourir les photos directement ici</p>
+    <div class="albums-grid" id="albumsGrid"></div>
+    <div class="flickr-viewer" id="flickrViewer">
+      <div class="flickr-header">
+        <div>
+          <div class="flickr-titre" id="flickrTitre"></div>
+          <div class="flickr-count" id="flickrCount">Chargement...</div>
+        </div>
+        <button class="flickr-close" onclick="fermerFlickr()">✕ Fermer</button>
+      </div>
+      <div class="flickr-grid" id="flickrGrid">
+        <div class="flickr-loading">Chargement...</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MUSIQUES & VIDÉOS -->
+  <section id="medias">
+    <div class="slabel">🎵 Sons & Images</div>
+    <h2 class="stitle">Musiques & Vidéos</h2>
+    <p class="ssub">Les vidéos se lisent directement dans la page</p>
+    <div class="medias-grid" id="mediasGrid"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DESSINS -->
+  <section id="dessins">
+    <div class="slabel">✏️ Carnet de croquis</div>
+    <h2 class="stitle">Dessins à Bord</h2>
+    <p class="ssub">Portraits, scènes de vie et impressions du voyage — crayon sur papier</p>
+    <div class="dessins-grid" id="dessinsGrid"></div>
+  </section>
+
+</div><!-- fin pageAccueil -->
+
+<!-- ================================================ -->
+<!-- VUE VOYAGE DYNAMIQUE -->
+<!-- ================================================ -->
+<div id="vueVoyage">
+  <!-- Hero voyage -->
+  <div class="voyage-hero" id="vHero">
+    <div class="voyage-hero-bg" id="vHeroBg">
+      <img id="vHeroImg" src="" alt="">
+    </div>
+    <div class="voyage-hero-overlay"></div>
+    <div class="voyage-hero-content">
+      <div class="back-btn" onclick="afficherAccueil()">← Retour aux voyages</div>
+      <div class="vhero-eyebrow" id="vEyebrow"></div>
+      <h2 class="vhero-title" id="vTitle"></h2>
+      <p class="vhero-sub" id="vSub"></p>
+      <div class="vhero-stats" id="vStats"></div>
     </div>
   </div>
-</section>
 
-<div class="divider"></div>
+  <!-- Journal de bord voyage -->
+  <section id="vjournal">
+    <div class="slabel">📖 Journal de Bord</div>
+    <h2 class="stitle" id="vJournalTitre"></h2>
+    <p class="ssub" id="vJournalSub"></p>
+    <div class="jcontrols">
+      <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);letter-spacing:2px">FILTRER :</span>
+      <button class="fbtn active" onclick="filtreJournal('all',this)">Tout</button>
+      <button class="fbtn" onclick="filtreJournal('navigation',this)">⛵ Navigation</button>
+      <button class="fbtn" onclick="filtreJournal('repos',this)">🏖️ Escale</button>
+    </div>
+    <div class="journal-entries" id="journalEntries"></div>
+  </section>
 
-<!-- DESSINS -->
-<section id="dessins">
-  <div class="section-label">✏️ Carnet de croquis</div>
-  <h2 class="section-title">Dessins à Bord</h2>
-  <p class="section-sub">Portraits, scènes de vie et impressions du voyage — crayon sur papier</p>
-  <div class="dessins-grid" id="dessinsGrid"></div>
-</section>
+  <div class="divider" style="position:relative;z-index:2"></div>
+
+  <!-- Carte voyage -->
+  <div id="vcarte" class="carte-section-voyage">
+    <section style="padding-bottom:0;position:relative;z-index:2">
+      <div class="slabel">🗺️ Navigation</div>
+      <h2 class="stitle" id="vCarteTitre"></h2>
+      <p class="ssub" id="vCarteSub"></p>
+    </section>
+    <div style="position:relative">
+      <div id="mapVoyage"></div>
+      <div class="carte-legend">
+        <div class="legend-item"><div class="ldot" style="background:#c8a84b"></div> Port visité</div>
+        <div class="legend-item"><div class="ldot" style="background:#4a8bc4;border-radius:0;height:2px;width:20px"></div> Route</div>
+      </div>
+    </div>
+    <section style="padding-top:1.5rem;position:relative;z-index:2">
+      <img id="vCarteImg" src="" alt="" style="max-width:100%;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:none">
+    </section>
+  </div>
+
+</div><!-- fin vueVoyage -->
 
 <!-- MODAL JOURNAL -->
 <div class="modal hidden" id="modal">
   <div class="modal-inner">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div id="modalCover"></div>
-    <div class="modal-body">
-      <div class="modal-date" id="mDate"></div>
-      <div class="modal-title" id="mTitle"></div>
-      <div class="modal-subtitle" id="mSub"></div>
+    <button class="mclose" onclick="closeModal()">×</button>
+    <div id="mCover"></div>
+    <div class="mbody">
+      <div class="mdate" id="mDate"></div>
+      <div class="mtitle" id="mTitle"></div>
+      <div class="msub" id="mSub"></div>
       <div id="mStats"></div>
       <div id="mContent"></div>
     </div>
@@ -431,14 +495,14 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 
 <!-- LIGHTBOX -->
 <div class="lightbox hidden" id="lightbox">
-  <button class="lightbox-close" onclick="closeLightbox()">×</button>
-  <button class="lightbox-nav lightbox-prev" onclick="flickrNav(-1)">‹</button>
-  <img id="lightboxImg" src="" alt="">
-  <button class="lightbox-nav lightbox-next" onclick="flickrNav(1)">›</button>
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <button class="lb-nav lb-prev" onclick="flickrNav(-1)">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-nav lb-next" onclick="flickrNav(1)">›</button>
 </div>
 
 <div class="statusbar">
-  <span>⚓ Soejangh · Vindo 40 · Port d'attache : Monnickendam, Pays-Bas</span>
+  <span>⚓ Soejangh · Vindo 40 · Monnickendam, Pays-Bas</span>
   <span id="sclock"></span>
 </div>
 
@@ -446,123 +510,118 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 const BASE = 'https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/';
 
 // ================================================
-// DONNÉES JOURNAL
+// DONNÉES : 20 EMPLACEMENTS DE VOYAGES
+// Remplis les suivants au fur et à mesure !
 // ================================================
-const JOURNAL = [
+const VOYAGES = [
+  // ── VOYAGE 1 ─────────────────────────────────
   {
-    id:1, jour:1, date:'27 juillet 2025', day:'27', month:'JUIL',
-    type:'navigation', de:'Monnickendam', a:'Enkhuizen',
-    vent:'NNW 13 nœuds', voile:'GV + Génois',
-    distance:'19 NM', duree:'5h00', vitesseMoy:'3,8 kts', vitesseMax:'6 kts',
-    resume:"Départ de Monnickendam à 12h00. Route au près avec 5 virements de bord. Gîte constante entre 15 et 20°. Port d'Enkhuizen saturé mais amarrage réussi.",
-    texte:`Départ Monnickendam sous un vent de NNW à environ 13 nœuds. Route au près, 5 virements de bord pour maintenir le cap vers Enkhuizen.\n\nGîte constante entre 15 et 20°, avec des pointes jusqu'à 30°. Vitesse moyenne 5 nœuds.\n\nArrivée Enkhuizen — port saturé. Amarrage réussi près de la capitainerie.\n\nDîner à bord : poulet avec riz complet et sauce tomate aux légumes rôtis. Thé à la menthe, suivi d'un Irish coffee pour le capitaine.\n\nIncident d'amarrage : intervention extérieure sur l'amarre avant → léger contact avec le quai. Leçon : toujours maintenir le contrôle des amarres.`,
-    photo: BASE + 'soeyangh-montage6.webp',
-  },
-  {
-    id:2, jour:2, date:'28 juillet 2025', day:'28', month:'JUIL',
-    type:'navigation', de:'Enkhuizen', a:'Urk',
-    vent:'Variable 15-25 nœuds', voile:'GV seule (génois affalé)',
-    distance:'~22 NM', duree:'~3h30', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Départ à 10h00. Roulis important → génois affalé. GV seule. JC fait 57 km à vélo via Lelystad. Retrouvailles à Urk, fish & chips bien mérité.",
-    texte:`Départ Enkhuizen à 10h00. Navigation au vent arrière avec GV et génois. Fort roulis → affalage du génois. Mer croisée, vagues importantes. Arrivée Urk à 13h30.\n\n— Section vélo (JC) —\nDépart Enkhuizen à 10h30. Vent arrière favorable puis vent de face très fort après le pont. 57 km parcourus, 8 km d'autonomie restante. Cormoran, canards, moutons sur les digues.\n\nFin de journée : fish & chips bien mérité pour les deux équipiers réunis.`,
-    photo: '',
-  },
-  {
-    id:3, jour:3, date:'29 juillet 2025', day:'29', month:'JUIL',
-    type:'navigation', de:'Urk', a:'Stavoren',
-    vent:'N-NO force 5 Bft', voile:'Navigation au près',
-    distance:'28 NM', duree:'6h50', vitesseMoy:'~4 kts', vitesseMax:'—',
-    resume:"Matinée à Urk — visite du phare. Vent force 5, vagues 0,8-1,4 m. Amarrage à couple dans le vieux port de Stavoren. Coucher de soleil splendide, ambiance jazz.",
-    texte:`Matinée à Urk. Visite de la ville et du phare. Pause café au pavillon de la plage.\n\nAnecdote : plaisancier voisin cherche une vis — boîte à vis de Gilles sauve la mise !\n\nNavigation Urk → Stavoren : vent N-NO force 5, mer avec moutons, creux 0,8-1,4 m. Vent régulier.\n\nAmarrage vieux port de Stavoren, à couple.\n\nDîner du chef : pâtes complètes sauce tomate, anchois, crème légère et tomates cerises. Splendide coucher de soleil, ambiance jazz.`,
-    photo: '',
-  },
-  {
-    id:4, jour:4, date:'30 juillet 2025', day:'30', month:'JUIL',
-    type:'repos', de:'Stavoren', a:'Stavoren',
-    vent:"Fort à l'aube", voile:'— Journée de congé —',
-    distance:'—', duree:'—', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Pluie violente et vent fort à l'aube. Jour de congé. Tour à vélo, petites réparations, apéro en terrasse et dîner au Stadsboerderij De Koebrug.",
-    texte:`Météo défavorable à 7h30 — décision sage de rester à quai.\n\nPetit tour à vélo dans Stavoren. Apéritivo en terrasse du Spijslokaal De Visserman (JC maintient son suivi de poids).\n\nPetites réparations à bord. Mini-vélo de Gilles sorti.\n\nDîner au Stadsboerderij De Koebrug (Schans 31, Stavoren) — ancienne ferme de ville reconvertie.`,
-    photo: '',
-  },
-  {
-    id:5, jour:0, date:'26 juillet 2025', day:'26', month:'JUIL',
-    type:'repos', de:'Monnickendam', a:'Monnickendam',
-    vent:'—', voile:'— Arrivée & exploration —',
-    distance:'—', duree:'—', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Jour d'arrivée à Monnickendam. Balade sur le port, vélo dans la ville, restaurant Joan menu 3 plats. Découverte de l'ambiance hollandaise.",
-    texte:`Arrivée à Monnickendam. Installation à bord, découverte du port et de la ville.\n\nBalade à vélo. Vieille ville avec ses maisons typiques hollandaises, canaux et bateaux.\n\nDîner au restaurant Joan — menu 3 plats. Belle entrée en matière pour ce voyage.`,
-    photo: BASE + 'soeyangh-montage1.webp',
-  },
-  {
-    id:6, jour:12, date:'6 août 2025', day:'06', month:'AOÛT',
-    type:'navigation', de:'Harlingen', a:'Vlieland',
-    vent:'18 kts, rafales 30 kts', voile:'2 ris sur la GV',
-    distance:'19,32 NM', duree:'4h19', vitesseMoy:'5,7 kts', vitesseMax:'9 kts',
-    resume:"Sortie épique ! Mer formée, vagues 3m en mer du Nord. 2 ris dès la sortie. Pointes à 9 nœuds, rafales à 30 nœuds. Leçon de barre dans la houle par le capitaine.",
-    texte:`Départ Harlingen à 9h00. Sortie délicate par vent défavorable sur la hanche bâbord. Plusieurs tentatives. Contact avec un Vindo allemand (même cap, départ différé — craint le vent).\n\nVent fort à la sortie → 2 ris immédiatement. 5 premiers NM au moteur, puis près serré avec nombreux virements.\n\nMer du Nord au Richel : vagues ~3m. Leçon du capitaine :\n• Prendre les vagues à 30-45° (en biais)\n• Pression continue et douce, pas de coups secs\n• Travailler avec la houle, vitesse minimale pour la stabilité\n• Accepter la gîte naturelle\n\nPointes 9 nœuds. Rafales 30 nœuds.\n\nArrivée Vlieland — même place que l'année précédente. 12 km vélo pour le décrassage.\n\nAnecdote : rencontre fortuite avec Sven au départ de Vlieland.`,
+    id: 1,
+    titre: 'Cap au Nord',
+    soustitre: 'Soejangh · Été 2025',
+    lieu: 'Markermeer · IJsselmeer · Waddenzee',
+    periode: 'Juillet – Août 2025',
+    duree: '18 jours',
+    miles: '~280 NM',
+    ports: '7 ports',
+    vitMax: '9 kts',
     photo: BASE + 'soeyangh-montage4-depart.webp',
+    carteImg: BASE + 'soeyangh-carte.webp',
+    ports_carte: [
+      { nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
+      { nom:'Enkhuizen',    coords:[52.703,5.289], desc:'Jour 1 · 27 juillet' },
+      { nom:'Urk',          coords:[52.664,5.604], desc:'Jour 2-3 · Fish & chips' },
+      { nom:'Stavoren',     coords:[52.880,5.367], desc:'Jour 3-4 · Vieux port' },
+      { nom:'Harlingen',    coords:[53.175,5.421], desc:'Jour 12 · Départ épique' },
+      { nom:'Vlieland',     coords:[53.257,4.972], desc:'Jour 12 · Mer formée 3m' },
+      { nom:'Hindeloopen',  coords:[52.940,5.395], desc:'Jour 14-15 · Régate péniches' },
+      { nom:'Medemblik',    coords:[52.769,5.103], desc:'Jour 16-17 · Tram à vapeur' },
+      { nom:'Hoorn',        coords:[52.643,5.061], desc:'Jour 18 · Retour' },
+    ],
+    route: [[52.461,5.035],[52.703,5.289],[52.664,5.604],[52.880,5.367],[53.175,5.421],[53.257,4.972],[52.940,5.395],[52.769,5.103],[52.643,5.061]],
+    journal: [
+      { id:1, jour:0, date:'26 juillet 2025', day:'26', month:'JUIL', type:'repos', de:'Monnickendam', a:'Monnickendam', vent:'—', voile:'— Arrivée —', distance:'—', duree:'—', vitMoy:'—', vitMax:'—',
+        resume:"Arrivée à Monnickendam. Découverte du port, balade à vélo, restaurant Joan menu 3 plats.",
+        texte:`Arrivée à Monnickendam. Installation à bord, découverte du port et de la vieille ville hollandaise.\n\nBalade à vélo dans les ruelles et le long des canaux.\n\nDîner au restaurant Joan — menu 3 plats. Belle entrée en matière pour ce voyage.`,
+        photo: BASE + 'soeyangh-montage1.webp' },
+      { id:2, jour:1, date:'27 juillet 2025', day:'27', month:'JUIL', type:'navigation', de:'Monnickendam', a:'Enkhuizen', vent:'NNW 13 nœuds', voile:'GV + Génois', distance:'19 NM', duree:'5h00', vitMoy:'3,8 kts', vitMax:'6 kts',
+        resume:"Route au près, 5 virements de bord, gîte 15-20°. Port d'Enkhuizen saturé mais amarrage réussi. Dîner à bord : poulet riz légumes rôtis.",
+        texte:`Départ Monnickendam 12h00. Vent NNW 13 nœuds. Route au près, 5 virements de bord.\n\nGîte constante 15-20°, pointes à 30°. Vitesse moyenne 5 nœuds.\n\nArrivée Enkhuizen — port saturé. Amarrage près de la capitainerie.\n\nDîner : poulet, riz complet, sauce tomate aux légumes rôtis. Irish coffee pour le capitaine.\n\nIncident amarrage : intervention extérieure → léger contact quai. Leçon : toujours maîtriser ses amarres.`,
+        photo: BASE + 'soeyangh-montage6.webp' },
+      { id:3, jour:2, date:'28 juillet 2025', day:'28', month:'JUIL', type:'navigation', de:'Enkhuizen', a:'Urk', vent:'Variable 15-25 kts', voile:'GV seule', distance:'~22 NM', duree:'~3h30', vitMoy:'—', vitMax:'—',
+        resume:"Roulis fort → génois affalé, GV seule. JC à vélo : 57 km via Lelystad. Retrouvailles à Urk, fish & chips mérité.",
+        texte:`Départ Enkhuizen 10h00. Vent arrière, GV + génois. Fort roulis → affalage génois. GV seule.\n\nMer croisée, vagues importantes. Arrivée Urk 13h30.\n\n— Section vélo (JC) —\n57 km via Lelystad. Vent arrière favorable puis vent de face après le pont. 8 km d'autonomie restante. Cormoran, canards, moutons sur les digues.\n\nFish & chips bien mérités pour les deux équipiers.`,
+        photo: '' },
+      { id:4, jour:3, date:'29 juillet 2025', day:'29', month:'JUIL', type:'navigation', de:'Urk', a:'Stavoren', vent:'N-NO force 5 Bft', voile:'Au près', distance:'28 NM', duree:'6h50', vitMoy:'~4 kts', vitMax:'—',
+        resume:"Matinée visite Urk et phare. Force 5, creux 0,8-1,4 m. Amarrage à couple Stavoren. Coucher de soleil splendide, ambiance jazz.",
+        texte:`Matinée Urk. Visite phare, pause café au pavillon de plage.\n\nAnecdote : plaisancier voisin cherche une vis — boîte à vis de Gilles sauve la situation !\n\nNavigation Urk → Stavoren : force 5, moutons sur les vagues, creux 0,8-1,4 m.\n\nAmarrage vieux port Stavoren, à couple.\n\nDîner Gilles : pâtes, sauce tomate, anchois, crème, tomates cerises. Coucher de soleil splendide. Jazz.`,
+        photo: '' },
+      { id:5, jour:4, date:'30 juillet 2025', day:'30', month:'JUIL', type:'repos', de:'Stavoren', a:'Stavoren', vent:'Fort à l\'aube', voile:'— Congé —', distance:'—', duree:'—', vitMoy:'—', vitMax:'—',
+        resume:"Pluie violente à l'aube → jour de congé. Vélo, réparations, apéro en terrasse, dîner au Stadsboerderij De Koebrug.",
+        texte:`Pluie violente et vent fort à 7h30 → décision sage de rester à quai.\n\nVélo dans Stavoren. Apéritivo terrasse du Spijslokaal De Visserman.\n\nPetites réparations à bord. Mini-vélo de Gilles sorti.\n\nDîner au Stadsboerderij De Koebrug (Schans 31) — ancienne ferme de ville, belle adresse.`,
+        photo: '' },
+      { id:6, jour:12, date:'6 août 2025', day:'06', month:'AOÛT', type:'navigation', de:'Harlingen', a:'Vlieland', vent:'18 kts, rafales 30 kts', voile:'2 ris GV', distance:'19,32 NM', duree:'4h19', vitMoy:'5,7 kts', vitMax:'9 kts',
+        resume:"Sortie épique ! Vagues 3m mer du Nord, 2 ris, pointes 9 nœuds, rafales 30 nœuds. Leçon de barre dans la houle.",
+        texte:`Départ Harlingen 9h00. Sortie délicate — vent défavorable bâbord, longue quille. Plusieurs tentatives. Vindo allemand même cap (départ différé).\n\n2 ris immédiatement à la sortie. 5 premiers NM moteur.\n\nMer du Nord Richel : vagues ~3m. Leçon du capitaine :\n• Prendre les vagues à 30-45° (biais)\n• Pression continue et douce, pas de coups secs\n• Vitesse minimale pour la stabilité\n• Accepter la gîte naturelle\n\n9 nœuds en pointe. 30 nœuds rafales. Arrivée Vlieland — même place qu'avant. 12 km vélo décrassage.\n\nAnecdote : rencontre fortuite avec Sven.`,
+        photo: BASE + 'soeyangh-montage4-depart.webp' },
+      { id:7, jour:14, date:'8 août 2025', day:'08', month:'AOÛT', type:'navigation', de:'Vlieland', a:'Hindeloopen', vent:'~17 nœuds', voile:'GV + Génois / moteur', distance:'48 NM', duree:'14h', vitMoy:'~3,4 kts', vitMax:'—',
+        resume:"48 NM en 14h ! Plan C après Texel complet. Navigation de nuit, mer d'huile, nuit à l'ancre. Réveil au milieu d'une régate de péniches !",
+        texte:`Départ Vlieland 9h00. Mer du Nord → Texel. Waddenhaven complet.\n\nPlan C : Hindeloopen sur conseil d'un ami. Attente ponts et écluses.\n\nIJsselmeer : vent tombe → mer d'huile → moteur.\n\nNavigation de nuit : coucher de soleil puis lever de lune.\n\nArrivée Hindeloopen : plus de place → nuit à l'ancre.\n\nAu matin : réveil au milieu d'une course de péniches à voile ! Place obtenue grâce à Victor.`,
+        photo: '' },
+      { id:8, jour:15, date:'9 août 2025', day:'09', month:'AOÛT', type:'repos', de:'Hindeloopen', a:'Hindeloopen', vent:'—', voile:'— Régate & Victor —', distance:'—', duree:'—', vitMoy:'—', vitMax:'—',
+        resume:"Régate de vieux gréements à fond plat. Retrouvailles avec Victor. Gilles à la fête, JC à bord : guitare et tri des photos.",
+        texte:`Grâce à Victor, excellente place près du centre historique.\n\nRégate de péniches à fond plat — patrimoine vivant hollandais (fond plat, dérives latérales, voiles brun-rouille). Autrefois marchandes de tourbe, sable, fromage.\n\nRetrouvailles Victor arrivé en camping-car. Courses pour le repas du soir.\n\nGilles et Victor : à la fête. JC à bord : guitare et tri des photos.`,
+        photo: BASE + 'soeyangh-montage-gil.webp' },
+      { id:9, jour:16, date:'10 août 2025', day:'10', month:'AOÛT', type:'navigation', de:'Hindeloopen', a:'Medemblik', vent:'Trou d\'air IJsselmeer', voile:'GV + Génois', distance:'~30 NM', duree:'~4h', vitMoy:'—', vitMax:'—',
+        resume:"Café d'adieu avec Victor. Trou d'air imprévu rallonge d'une heure. Dîner au restaurant La Grotta.",
+        texte:`Café avec Victor — aide à remettre les vélos. Bon vent prédit, 2h annoncées.\n\nTrou d'air au milieu de l'IJsselmeer (visible sur Arome HD) → +1h.\n\nAmarrage Medemblik. Tour vélo dans la ville.\n\nSouper La Grotta, rue principale.`,
+        photo: '' },
+      { id:10, jour:17, date:'11 août 2025', day:'11', month:'AOÛT', type:'repos', de:'Medemblik', a:'Medemblik', vent:'Chaleur', voile:'— Jour de ville —', distance:'—', duree:'—', vitMoy:'—', vitMax:'—',
+        resume:"Vélo : moulin, tram à vapeur, jardin botanique. Chaleur → bateau repositionné. Chili con carne revisité.",
+        texte:`Exploration vélo : moulin, gare du tram à vapeur, jardin botanique.\n\nChaleur dans le cockpit → repositionnement dans le box pour l'air.\n\nChili con carne revisité : légumes frais du marché, haricots rouges d'un magasin polonais.`,
+        photo: '' },
+      { id:11, jour:18, date:'12 août 2025', day:'12', month:'AOÛT', type:'navigation', de:'Medemblik', a:'Hoorn', vent:'Arrière puis travers', voile:'GV (drisse coincée)', distance:'~20 NM', duree:'~4h', vitMoy:'—', vitMax:'—',
+        resume:"Drisse GV coincée dans le feu de hune. JC : 50 km route du Zuiderzee, dépannage par une vieille dame. Gilles arrive bien après JC qui a la place.",
+        texte:`— Vélo (JC) —\nDépart 11h. 50 km vers Hoorn. Incident Andijk : vieille dame néerlandaise providentielle pour l'eau. Route du Zuiderzee longeant l'eau.\n\n— Bateau (Gilles) —\nDrisse GV s'enroule dans le feu de hune. Opération difficile.\n\nTrois virements vers écluses Enkhuizen, vent tombe. Houle. Empannages au grand largue.\n\nVent travers passé le cap → meilleure avancée. Gilles arrive après JC qui a déjà la place.`,
+        photo: '' },
+    ],
   },
-  {
-    id:7, jour:14, date:'8 août 2025', day:'08', month:'AOÛT',
-    type:'navigation', de:'Vlieland', a:'Hindeloopen',
-    vent:'~17 nœuds', voile:'GV + Génois puis moteur',
-    distance:'48 NM', duree:'14h', vitesseMoy:'~3,4 kts', vitesseMax:'—',
-    resume:"La plus longue nav — 48 NM en 14h. Vlieland → Texel (complet) → Plan C Hindeloopen. Navigation de nuit, coucher de soleil et lever de lune. Nuit à l'ancre, réveil au milieu d'une régate de péniches !",
-    texte:`Départ Vlieland 9h00. Route Texel par la mer du Nord — belle navigation au près.\n\nTexel Waddenhaven complet. Plan B Den Oever abandonné. Message d'un ami → Plan C Hindeloopen.\n\nAttente ponts et écluses. Dans l'IJsselmeer : vent tombe complètement. Mer d'huile. Moteur.\n\nNavigation de nuit : magnifique coucher de soleil puis lever de lune.\n\nArrivée Hindeloopen : plus de place → nuit à l'ancre.\n\nPetit matin : réveil au milieu d'une course de péniches à voile ! Place finalement obtenue grâce à Victor.`,
-    photo: '',
-  },
-  {
-    id:8, jour:15, date:'9 août 2025', day:'09', month:'AOÛT',
-    type:'repos', de:'Hindeloopen', a:'Hindeloopen',
-    vent:'—', voile:'— Régate & retrouvailles —',
-    distance:'—', duree:'—', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Régate de vieux gréements à Hindeloopen. Retrouvailles avec Victor. Gilles profite des festivités, JC reste à bord — guitare et tri des photos.",
-    texte:`Grâce à Victor, excellente place à la marina près du centre historique.\n\nRégate de péniches à fond plat (dérives latérales, voiles brun-rouille) — patrimoine vivant hollandais.\n\nRetrouvailles avec Victor arrivé en camping-car. Courses pour le repas du soir.\n\nSoirée : Gilles et Victor à la fête. JC à bord avec la guitare et le tri des photos.`,
-    photo: BASE + 'soeyangh-montage-gil.webp',
-  },
-  {
-    id:9, jour:16, date:'10 août 2025', day:'10', month:'AOÛT',
-    type:'navigation', de:'Hindeloopen', a:'Medemblik',
-    vent:"Trou d'air au milieu IJsselmeer", voile:'GV + Génois',
-    distance:'~30 NM', duree:"~3h (+ 1h trou d'air)", vitesseMoy:'—', vitesseMax:'—',
-    resume:"Café d'adieu avec Victor. 2h annoncées mais trou d'air imprévu rallonge d'une heure. Dîner à La Grotta, Medemblik.",
-    texte:`Café avec Victor qui aide à remettre les vélos à bord. Il prédit bon vent, 2h de navigation.\n\nRéalité : trou d'air au milieu de l'IJsselmeer — visible sur Arome HD — rallonge d'une heure.\n\nAmarrage Medemblik. Tour à vélo dans la ville.\n\nSouper au restaurant La Grotta, rue principale.`,
-    photo: '',
-  },
-  {
-    id:10, jour:17, date:'11 août 2025', day:'11', month:'AOÛT',
-    type:'repos', de:'Medemblik', a:'Medemblik',
-    vent:'Chaleur intense', voile:'— Jour de ville —',
-    distance:'—', duree:'—', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Vélo : moulin, tram à vapeur, jardin botanique. Chaleur → bateau repositionné. Chili con carne revisité avec légumes du marché.",
-    texte:`Exploration à vélo : moulin, gare du tram à vapeur et jardin botanique.\n\nChaleur intense dans le cockpit → bateau repositionné dans le box pour l'air.\n\nSouper : chili con carne revisité, légumes frais du marché et haricots rouges d'un magasin polonais.`,
-    photo: '',
-  },
-  {
-    id:11, jour:18, date:'12 août 2025', day:'12', month:'AOÛT',
-    type:'navigation', de:'Medemblik', a:'Hoorn',
-    vent:'Vent arrière puis travers', voile:'GV (drisse coincée au départ)',
-    distance:'~20 NM', duree:'~4h', vitesseMoy:'—', vitesseMax:'—',
-    resume:"Drisse GV coincée dans le feu de hune au départ. JC : 50 km vélo sur la route du Zuiderzee, dépannage par une vieille dame hollandaise. Gilles arrive bien après JC qui a déjà la place.",
-    texte:`— Section vélo (JC) —\nDépart 11h, 50 km vers Hoorn. Incident Andijk : manque d'eau et de pompe. Une vieille dame néerlandaise fait signe de la suivre — providentiellement secourable ! Route du Zuiderzee longeant l'eau.\n\n— Section bateau (Gilles) —\nDrisse GV s'enroule autour du mât dans le feu de hune. Opération difficile avec vent et vagues.\n\nTrois virements vers les écluses d'Enkhuizen, vent tombe. Houle persistante. Gilles enchaîne les empannages au grand largue.\n\nVent travers passé le cap → meilleure avancée. Gilles arrive à Hoorn bien après JC qui a déjà réservé la place.`,
-    photo: '',
-  },
+
+  // ── VOYAGES 2 à 20 — À REMPLIR ───────────────
+  { id:2,  titre:'Voyage 2',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:3,  titre:'Voyage 3',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:4,  titre:'Voyage 4',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:5,  titre:'Voyage 5',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:6,  titre:'Voyage 6',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:7,  titre:'Voyage 7',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:8,  titre:'Voyage 8',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:9,  titre:'Voyage 9',  soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:10, titre:'Voyage 10', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:11, titre:'Voyage 11', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:12, titre:'Voyage 12', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:13, titre:'Voyage 13', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:14, titre:'Voyage 14', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:15, titre:'Voyage 15', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:16, titre:'Voyage 16', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:17, titre:'Voyage 17', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:18, titre:'Voyage 18', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:19, titre:'Voyage 19', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
+  { id:20, titre:'Voyage 20', soustitre:'À venir', lieu:'—', periode:'—', duree:'—', miles:'—', ports:'—', vitMax:'—', photo:'', carteImg:'', ports_carte:[], route:[], journal:[] },
 ];
 
 // ================================================
 // MÉDIAS YOUTUBE
 // ================================================
 const MEDIAS = [
-  { type:'Musique', titre:'Le Blues du Pirate 3', desc:'Composition Suno — ambiance pirate', ytId:'e_euJOyiQlU' },
-  { type:'Musique', titre:'Soeyangh Rhapsody 3', desc:'Composition Suno — hymne du voilier', ytId:'IDSDJDZCn5A' },
-  { type:'Musique', titre:'People of Soeyangh 3', desc:'Composition Suno', ytId:'yZktSOFMSo0' },
-  { type:'Musique', titre:'Le Blues du Pirate 4', desc:'Composition Suno — suite', ytId:'6VEnNZI7CgM' },
-  { type:'Chanson', titre:'Voyage avec Soejangh', desc:'Chanson du bord', ytId:'5TUMF9wquI4' },
-  { type:'Vidéo', titre:'La Force du Vent', desc:'Navigation en conditions', ytId:'CtJkAdIQmWg' },
-  { type:'Vidéo', titre:'Soeyangh', desc:'Le voilier en images', ytId:'DMXMHL035kY' },
-  { type:'Vidéo', titre:'Soejangh mai 2025', desc:'Sortie Pentecôte', ytId:'Uuly8U7d4dU' },
-  { type:'Vidéo', titre:'Vindo en folie', desc:'Sortie Pentecôte histoires drôles', ytId:'u2pGqU3JKcc' },
+  { type:'Musique', titre:'Le Blues du Pirate 3',  desc:'Composition Suno — ambiance pirate',     ytId:'e_euJOyiQlU' },
+  { type:'Musique', titre:'Soeyangh Rhapsody 3',   desc:'Composition Suno — hymne du voilier',    ytId:'IDSDJDZCn5A' },
+  { type:'Musique', titre:'People of Soeyangh 3',  desc:'Composition Suno',                       ytId:'yZktSOFMSo0' },
+  { type:'Musique', titre:'Le Blues du Pirate 4',  desc:'Composition Suno — suite',               ytId:'6VEnNZI7CgM' },
+  { type:'Chanson', titre:'Voyage avec Soejangh',  desc:'Chanson du bord',                        ytId:'5TUMF9wquI4' },
+  { type:'Vidéo',   titre:'La Force du Vent',      desc:'Navigation en conditions',               ytId:'CtJkAdIQmWg' },
+  { type:'Vidéo',   titre:'Soeyangh',              desc:'Le voilier en images',                   ytId:'DMXMHL035kY' },
+  { type:'Vidéo',   titre:'Soejangh mai 2025',     desc:'Sortie Pentecôte',                       ytId:'Uuly8U7d4dU' },
+  { type:'Vidéo',   titre:'Vindo en folie',        desc:'Sortie Pentecôte histoires drôles',      ytId:'u2pGqU3JKcc' }, 
 ];
 
 // ================================================
@@ -570,38 +629,134 @@ const MEDIAS = [
 // ================================================
 const FLICKR_API_KEY = '37a243d5b14bf833201965702402868c';
 const FLICKR_USER_ID = '21237428@N08';
-
 const ALBUMS_FLICKR = [
-  { titre:'Vindo 40 — Album général',     id:'72157716776300882', icon:'⛵', desc:'Collection complète' },
-  { titre:'Vindo Pentecôte 2025',         id:'72177720327453474', icon:'🌊', desc:'Week-end de Pentecôte' },
-  { titre:'Vindo — Urk',                  id:'72177720327522861', icon:'🏘️', desc:'Escale à Urk' },
-  { titre:'Vindo — Hindeloopen & Urk',    id:'72177720327520435', icon:'🗺️', desc:'Navigation été 2025' },
-  { titre:'Vindo — Hindeloopen',          id:'72177720327426875', icon:'🎌', desc:'Régate de péniches' },
-  { titre:'Vindo — Enkhuizen',            id:'72177720327591840', icon:'⚓', desc:"Port d'Enkhuizen" },
-  { titre:'Vindo — Urk & Enkhuizen',      id:'72177720327602308', icon:'🧭', desc:'Navigations croisées' },
-  { titre:'Monnickendam → Hindeloopen',   id:'72177720327453474', icon:'🌅', desc:'La grande traversée' },
+  { titre:'Vindo 40 — Album général',    id:'72157716776300882', icon:'⛵', desc:'Collection complète' },
+  { titre:'Vindo Pentecôte 2025',        id:'72177720327453474', icon:'🌊', desc:'Week-end de Pentecôte' },
+  { titre:'Vindo — Urk',                 id:'72177720327522861', icon:'🏘️', desc:'Escale à Urk' },
+  { titre:'Vindo — Hindeloopen & Urk',   id:'72177720327520435', icon:'🗺️', desc:'Navigation été 2025' },
+  { titre:'Vindo — Hindeloopen',         id:'72177720327426875', icon:'🎌', desc:'Régate de péniches' },
+  { titre:'Vindo — Enkhuizen',           id:'72177720327591840', icon:'⚓', desc:"Port d'Enkhuizen" },
+  { titre:'Vindo — Urk & Enkhuizen',     id:'72177720327602308', icon:'🧭', desc:'Navigations croisées' },
+  { titre:'Monnickendam → Hindeloopen',  id:'72177720327453474', icon:'🌅', desc:'La grande traversée' },
 ];
 
 // ================================================
 // DESSINS
 // ================================================
 const DESSINS = [
-  { img: BASE + 'soeyangh-dessin2-jc.webp', label: 'JC au cockpit — autoportrait crayon' },
-  { img: BASE + 'soeyangh-dessin3-gilles.webp', label: 'Gilles — style Jack Sparrow' },
-  { img: BASE + 'soeyangh-dessin4-rhum.webp', label: '"Tous les chemins mènent au Rhum"' },
-  { img: BASE + 'soeyangh-dessin5-alain.webp', label: 'Alain à la barre — pouce levé !' },
+  { img: BASE+'soeyangh-dessin2-jc.webp',    label:'JC au cockpit — autoportrait crayon' },
+  { img: BASE+'soeyangh-dessin3-gilles.webp', label:'Gilles — style Jack Sparrow' },
+  { img: BASE+'soeyangh-dessin4-rhum.webp',   label:'"Tous les chemins mènent au Rhum"' },
+  { img: BASE+'soeyangh-dessin5-alain.webp',  label:'Alain à la barre — pouce levé !' },
 ];
 
 // ================================================
-// ÉTAT FLICKR
+// ÉTAT
 // ================================================
+let voyageActif = null;
+let filtreType = 'all';
 let flickrPhotos = [];
 let flickrIndex = 0;
+let mapVoyageInstance = null;
+
+// ================================================
+// RENDER GRILLE VOYAGES
+// ================================================
+function renderVoyages() {
+  const nbRemplis = VOYAGES.filter(v => v.journal.length > 0).length;
+  document.getElementById('statVoyages').textContent = nbRemplis;
+  document.getElementById('voyagesGrid').innerHTML = VOYAGES.map(v => {
+    const rempli = v.journal.length > 0;
+    if (!rempli) return `
+      <div class="voyage-card empty">
+        <div class="voyage-bg"><div style="width:100%;height:100%;background:linear-gradient(135deg,var(--noir2),var(--noir3))"></div></div>
+        <div class="voyage-overlay"></div>
+        <div class="voyage-empty-label">VOYAGE ${v.id} — À VENIR</div>
+      </div>`;
+    return `
+      <div class="voyage-card" onclick="ouvrirVoyage(${v.id})">
+        <div class="voyage-bg">${v.photo ? `<img src="${v.photo}" alt="${v.titre}" loading="lazy">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--noir2),var(--bleu))"></div>`}</div>
+        <div class="voyage-overlay"></div>
+        <div class="voyage-content">
+          <div class="voyage-num">Voyage ${v.id} · ${v.periode}</div>
+          <div class="voyage-titre">${v.titre}</div>
+          <div class="voyage-lieu">${v.lieu}</div>
+          <div class="voyage-stats">
+            <span class="vstat">📏 <span>${v.miles}</span></span>
+            <span class="vstat">⏱ <span>${v.duree}</span></span>
+            <span class="vstat">⚓ <span>${v.ports}</span></span>
+          </div>
+        </div>
+        <div class="voyage-arrow">→</div>
+      </div>`;
+  }).join('');
+}
+
+// ================================================
+// OUVRIR UN VOYAGE
+// ================================================
+function ouvrirVoyage(id) {
+  voyageActif = VOYAGES.find(v => v.id === id);
+  if (!voyageActif || voyageActif.journal.length === 0) return;
+
+  // Cacher accueil, montrer voyage
+  document.getElementById('pageAccueil').style.display = 'none';
+  document.getElementById('vueVoyage').style.display = 'block';
+  document.getElementById('navAccueil').style.display = 'none';
+  document.getElementById('navVoyage').style.display = 'block';
+  window.scrollTo(0,0);
+
+  // Hero
+  document.getElementById('vEyebrow').textContent = voyageActif.soustitre + ' · ' + voyageActif.periode;
+  const vt = document.getElementById('vTitle');
+  vt.innerHTML = `${voyageActif.titre}<span>${voyageActif.lieu}</span>`;
+  document.getElementById('vSub').textContent = `${voyageActif.duree} · ${voyageActif.miles} · Vitesse max ${voyageActif.vitMax}`;
+  document.getElementById('vStats').innerHTML = `
+    <div><div class="vsn">${voyageActif.duree}</div><div class="vsl">Durée</div></div>
+    <div class="vdiv"></div>
+    <div><div class="vsn">${voyageActif.miles}</div><div class="vsl">Distance</div></div>
+    <div class="vdiv"></div>
+    <div><div class="vsn">${voyageActif.ports}</div><div class="vsl">Ports</div></div>
+    <div class="vdiv"></div>
+    <div><div class="vsn">${voyageActif.vitMax}</div><div class="vsl">Vit. max</div></div>
+  `;
+  const hi = document.getElementById('vHeroImg');
+  if (voyageActif.photo) { hi.src = voyageActif.photo; hi.style.display='block'; }
+  else hi.style.display = 'none';
+
+  // Journal
+  document.getElementById('vJournalTitre').textContent = voyageActif.titre + ' — Journal de Bord';
+  document.getElementById('vJournalSub').textContent = voyageActif.periode + ' · ' + voyageActif.lieu;
+  filtreType = 'all';
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.fbtn')[0]?.classList.add('active');
+  renderJournal();
+
+  // Carte
+  document.getElementById('vCarteTitre').textContent = 'La Route — ' + voyageActif.titre;
+  document.getElementById('vCarteSub').textContent = voyageActif.lieu;
+  const ci = document.getElementById('vCarteImg');
+  if (voyageActif.carteImg) { ci.src = voyageActif.carteImg; ci.style.display='block'; }
+  else ci.style.display = 'none';
+  initMapVoyage();
+}
+
+// ================================================
+// RETOUR ACCUEIL
+// ================================================
+function afficherAccueil() {
+  document.getElementById('pageAccueil').style.display = 'block';
+  document.getElementById('vueVoyage').style.display = 'none';
+  document.getElementById('navAccueil').style.display = 'block';
+  document.getElementById('navVoyage').style.display = 'none';
+  voyageActif = null;
+  window.scrollTo(0,0);
+  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
+}
 
 // ================================================
 // JOURNAL
 // ================================================
-let filtreType = 'all';
 function filtreJournal(type, btn) {
   filtreType = type;
   document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
@@ -610,33 +765,31 @@ function filtreJournal(type, btn) {
 }
 
 function renderJournal() {
-  const container = document.getElementById('journalEntries');
-  const entries = filtreType === 'all' ? JOURNAL : JOURNAL.filter(e => e.type === filtreType);
-  const sorted = [...entries].sort((a, b) => a.jour - b.jour);
-  container.innerHTML = sorted.map(e => `
-    <div class="entry" onclick="openModal(${e.id})" data-type="${e.type}">
-      <div class="entry-date-col">
-        <div class="entry-jour">${e.jour > 0 ? 'Jour ' + e.jour : 'Arrivée'}</div>
-        <div class="entry-day">${e.day}</div>
-        <div class="entry-month">${e.month}</div>
+  if (!voyageActif) return;
+  const entries = filtreType === 'all' ? voyageActif.journal : voyageActif.journal.filter(e => e.type === filtreType);
+  const sorted = [...entries].sort((a,b) => a.jour - b.jour);
+  document.getElementById('journalEntries').innerHTML = sorted.map(e => `
+    <div class="entry" onclick="openModal(${e.id})">
+      <div class="entry-datecol">
+        <div class="ejour">${e.jour > 0 ? 'Jour '+e.jour : 'Arrivée'}</div>
+        <div class="eday">${e.day}</div>
+        <div class="emonth">${e.month}</div>
       </div>
-      <div class="entry-content">
-        <div class="entry-header">
-          <div class="entry-route">${e.de}${e.a !== e.de ? `<span>→</span>${e.a}` : ''}</div>
-          <div class="entry-badges">
-            ${e.type === 'navigation' ? `<span class="badge-vent">⛵ ${e.vent}</span>` : `<span class="badge-repos">🏖️ Escale</span>`}
-            ${e.voile !== '—' && e.type === 'navigation' ? `<span class="badge-voile">${e.voile}</span>` : ''}
-          </div>
+      <div class="entry-body">
+        <div class="eroute">${e.de}${e.a !== e.de ? `<span>→</span>${e.a}` : ''}</div>
+        <div class="ebadges">
+          ${e.type==='navigation' ? `<span class="badge-vent">⛵ ${e.vent}</span>` : `<span class="badge-repos">🏖️ Escale</span>`}
+          ${e.voile !== '—' && e.type==='navigation' ? `<span class="badge-voile">${e.voile}</span>` : ''}
         </div>
-        ${e.distance !== '—' ? `<div class="entry-stats-mini">
+        ${e.distance !== '—' ? `<div class="estats">
           <span class="esm">📏 <span>${e.distance}</span></span>
           <span class="esm">⏱ <span>${e.duree}</span></span>
-          <span class="esm">⚡ Moy. <span>${e.vitesseMoy}</span></span>
-          ${e.vitesseMax !== '—' ? `<span class="esm">🚀 Max <span>${e.vitesseMax}</span></span>` : ''}
+          <span class="esm">⚡ <span>${e.vitMoy}</span></span>
+          ${e.vitMax !== '—' ? `<span class="esm">🚀 <span>${e.vitMax}</span></span>` : ''}
         </div>` : ''}
-        <p class="entry-resume">${e.resume}</p>
-        ${e.photo ? `<div class="entry-img"><img src="${e.photo}" alt="Jour ${e.jour}" loading="lazy"></div>` : ''}
-        <div class="entry-expand">Lire le détail →</div>
+        <p class="eresume">${e.resume}</p>
+        ${e.photo ? `<div class="eimg"><img src="${e.photo}" loading="lazy"></div>` : ''}
+        <div class="emore">Lire le détail →</div>
       </div>
     </div>
   `).join('');
@@ -646,34 +799,70 @@ function renderJournal() {
 // MODAL JOURNAL
 // ================================================
 function openModal(id) {
-  const e = JOURNAL.find(x => x.id === id);
+  if (!voyageActif) return;
+  const e = voyageActif.journal.find(x => x.id === id);
   if (!e) return;
-  document.getElementById('mDate').textContent = `${e.jour > 0 ? 'Jour ' + e.jour + ' — ' : ''}${e.date}`;
-  document.getElementById('mTitle').textContent = e.de + (e.a !== e.de ? ' → ' + e.a : '');
-  document.getElementById('mSub').textContent = e.type === 'navigation' ? `${e.vent} · ${e.voile}` : "Journée d'escale";
-  document.getElementById('modalCover').innerHTML = e.photo
-    ? `<img class="modal-img-cover" src="${e.photo}" alt="Jour ${e.jour}">`
-    : `<div class="modal-img-placeholder"><svg viewBox="0 0 24 24" width="48" height="48" stroke="rgba(200,168,75,.2)" fill="none" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>`;
+  document.getElementById('mDate').textContent = `${e.jour > 0 ? 'Jour '+e.jour+' — ' : ''}${e.date}`;
+  document.getElementById('mTitle').textContent = e.de + (e.a !== e.de ? ' → '+e.a : '');
+  document.getElementById('mSub').textContent = e.type==='navigation' ? `${e.vent} · ${e.voile}` : "Journée d'escale";
+  document.getElementById('mCover').innerHTML = e.photo
+    ? `<img class="mcover" src="${e.photo}" alt="">`
+    : `<div class="mcover-placeholder"><svg viewBox="0 0 24 24" width="40" height="40" stroke="rgba(200,168,75,.2)" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>`;
   document.getElementById('mStats').innerHTML = e.distance !== '—' ? `
-    <div class="modal-stats-grid">
-      <div class="msg-item"><div class="msg-val">${e.distance}</div><div class="msg-lbl">Distance</div></div>
-      <div class="msg-item"><div class="msg-val">${e.duree}</div><div class="msg-lbl">Durée</div></div>
-      <div class="msg-item"><div class="msg-val">${e.vitesseMoy}</div><div class="msg-lbl">Vitesse moy.</div></div>
-      <div class="msg-item"><div class="msg-val">${e.vitesseMax !== '—' ? e.vitesseMax : '—'}</div><div class="msg-lbl">Vitesse max</div></div>
+    <div class="mstats">
+      <div class="msi"><div class="msv">${e.distance}</div><div class="msl">Distance</div></div>
+      <div class="msi"><div class="msv">${e.duree}</div><div class="msl">Durée</div></div>
+      <div class="msi"><div class="msv">${e.vitMoy}</div><div class="msl">Moy.</div></div>
+      <div class="msi"><div class="msv">${e.vitMax !== '—' ? e.vitMax : '—'}</div><div class="msl">Max</div></div>
     </div>` : '';
-  const paragraphs = e.texte.split('\n\n').map(p =>
+  const txt = e.texte.split('\n\n').map(p =>
     p.includes('\n•') || p.startsWith('•')
       ? `<ul>${p.split('\n').filter(l=>l.trim()).map(l=>`<li>${l.replace(/^•\s*/,'')}</li>`).join('')}</ul>`
       : `<p>${p.replace(/\n/g,'<br>')}</p>`
   ).join('');
-  document.getElementById('mContent').innerHTML = `<div class="modal-section">Compte-rendu de navigation</div><div class="modal-text">${paragraphs}</div>`;
+  document.getElementById('mContent').innerHTML = `<div class="msect">Compte-rendu</div><div class="mtext">${txt}</div>`;
   document.getElementById('modal').classList.remove('hidden');
 }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+document.getElementById('modal').addEventListener('click', e => { if (e.target===document.getElementById('modal')) closeModal(); });
 
 // ================================================
-// RENDER MÉDIAS — YouTube embed direct
+// CARTE OPENSTREETMAP + OPENSTREETMAP TILES
+// ================================================
+function initMapVoyage() {
+  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
+  if (!voyageActif || voyageActif.route.length === 0) return;
+  setTimeout(() => {
+    mapVoyageInstance = L.map('mapVoyage', { scrollWheelZoom: false });
+
+    // Fond OpenStreetMap standard (compatible OpenSeaMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 17
+    }).addTo(mapVoyageInstance);
+
+    // Couche OpenSeaMap par dessus
+    L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+      attribution: '© OpenSeaMap contributors',
+      maxZoom: 17,
+      opacity: 0.8
+    }).addTo(mapVoyageInstance);
+
+    const icon = L.divIcon({
+      html:`<div style="width:12px;height:12px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 8px rgba(200,168,75,.7)"></div>`,
+      className:'',iconSize:[12,12],iconAnchor:[6,6]
+    });
+    voyageActif.ports_carte.forEach(p => {
+      L.marker(p.coords, { icon }).addTo(mapVoyageInstance)
+        .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
+    });
+    L.polyline(voyageActif.route, { color:'#c8a84b', weight:2.5, opacity:.8, dashArray:'6,4' }).addTo(mapVoyageInstance);
+    mapVoyageInstance.fitBounds(voyageActif.route, { padding:[40,40] });
+  }, 100);
+}
+
+// ================================================
+// RENDER MÉDIAS
 // ================================================
 function renderMedias() {
   document.getElementById('mediasGrid').innerHTML = MEDIAS.map(m => `
@@ -691,10 +880,10 @@ function renderMedias() {
 }
 
 // ================================================
-// ALBUMS FLICKR — chargement API dans la page
+// ALBUMS FLICKR
 // ================================================
 function renderAlbums() {
-  document.getElementById('albumsGrid').innerHTML = ALBUMS_FLICKR.map((a, i) => `
+  document.getElementById('albumsGrid').innerHTML = ALBUMS_FLICKR.map((a,i) => `
     <div class="album-card" onclick="ouvrirAlbum(${i})">
       <div class="album-thumb">
         <div class="album-thumb-bg"></div>
@@ -703,8 +892,8 @@ function renderAlbums() {
       <div class="album-body">
         <div class="album-titre">${a.titre}</div>
         <div class="album-desc">${a.desc}</div>
-        <span style="display:inline-flex;align-items:center;gap:6px;margin-top:.6rem;background:var(--or3);border:1px solid var(--bdr2);color:var(--or);padding:5px 12px;border-radius:2px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px">
-          📷 Parcourir les photos
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--or3);border:1px solid var(--bdr2);color:var(--or);padding:4px 10px;border-radius:2px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px">
+          📷 Parcourir
         </span>
       </div>
     </div>
@@ -719,8 +908,7 @@ async function ouvrirAlbum(i) {
   document.getElementById('flickrCount').textContent = 'Chargement...';
   document.getElementById('flickrGrid').innerHTML = '<div class="flickr-loading">Chargement des photos...</div>';
   viewer.style.display = 'block';
-  viewer.scrollIntoView({ behavior: 'smooth' });
-
+  viewer.scrollIntoView({ behavior:'smooth' });
   try {
     const url = `https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${FLICKR_API_KEY}&photoset_id=${album.id}&user_id=${FLICKR_USER_ID}&format=json&nojsoncallback=1&extras=url_l,url_m,url_s,title&per_page=100`;
     const res = await fetch(url);
@@ -728,109 +916,54 @@ async function ouvrirAlbum(i) {
     if (data.stat !== 'ok') throw new Error('Flickr error');
     flickrPhotos = data.photoset.photo;
     document.getElementById('flickrCount').textContent = flickrPhotos.length + ' photo(s)';
-    document.getElementById('flickrGrid').innerHTML = flickrPhotos.map((p, idx) => `
+    document.getElementById('flickrGrid').innerHTML = flickrPhotos.map((p,idx) => `
       <div class="flickr-thumb" onclick="ouvrirFlickrPhoto(${idx})">
-        <img src="${p.url_s || p.url_m}" alt="${p.title}" loading="lazy">
-      </div>
-    `).join('');
+        <img src="${p.url_s||p.url_m}" alt="${p.title}" loading="lazy">
+      </div>`).join('');
   } catch(e) {
-    document.getElementById('flickrGrid').innerHTML = '<div class="flickr-loading">Impossible de charger les photos — vérifiez l\'ID de l\'album.</div>';
+    document.getElementById('flickrGrid').innerHTML = '<div class="flickr-loading">Impossible de charger — vérifiez l\'ID de l\'album.</div>';
   }
 }
-
-function fermerFlickr() {
-  document.getElementById('flickrViewer').style.display = 'none';
-  flickrPhotos = [];
-}
-
-function ouvrirFlickrPhoto(index) {
-  flickrIndex = index;
-  document.getElementById('lightboxImg').src = flickrPhotos[index].url_l || flickrPhotos[index].url_m;
-  document.getElementById('lightbox').classList.remove('hidden');
-}
-
-function flickrNav(dir) {
-  if (!flickrPhotos.length) return;
-  flickrIndex = (flickrIndex + dir + flickrPhotos.length) % flickrPhotos.length;
-  document.getElementById('lightboxImg').src = flickrPhotos[flickrIndex].url_l || flickrPhotos[flickrIndex].url_m;
-}
+function fermerFlickr() { document.getElementById('flickrViewer').style.display='none'; flickrPhotos=[]; }
+function ouvrirFlickrPhoto(i) { flickrIndex=i; document.getElementById('lbImg').src=flickrPhotos[i].url_l||flickrPhotos[i].url_m; document.getElementById('lightbox').classList.remove('hidden'); }
+function flickrNav(dir) { if(!flickrPhotos.length) return; flickrIndex=(flickrIndex+dir+flickrPhotos.length)%flickrPhotos.length; document.getElementById('lbImg').src=flickrPhotos[flickrIndex].url_l||flickrPhotos[flickrIndex].url_m; }
 
 // ================================================
 // DESSINS + LIGHTBOX
 // ================================================
 function renderDessins() {
   document.getElementById('dessinsGrid').innerHTML = DESSINS.map(d => `
-    <div class="dessin-card" onclick="ouvrirLightboxDessin('${d.img}')">
+    <div class="dessin-card" onclick="ouvrirLb('${d.img}')">
       <img src="${d.img}" alt="${d.label}" loading="lazy">
-      <div class="dessin-card-label">${d.label}</div>
-    </div>
-  `).join('');
+      <div class="dessin-label">${d.label}</div>
+    </div>`).join('');
 }
-
-function ouvrirLightboxDessin(src) {
-  flickrPhotos = [];
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.remove('hidden');
-}
+function ouvrirLb(src) { flickrPhotos=[]; document.getElementById('lbImg').src=src; document.getElementById('lightbox').classList.remove('hidden'); }
 function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
-document.getElementById('lightbox').addEventListener('click', e => {
-  if (e.target === document.getElementById('lightbox')) closeLightbox();
-});
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target===document.getElementById('lightbox')) closeLightbox(); });
 
 // ================================================
-// CARTE LEAFLET
+// NAV SCROLL (renommé pour éviter conflit avec window.scrollTo)
 // ================================================
-function initMap() {
-  const map = L.map('map', { scrollWheelZoom: false });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap © CARTO', maxZoom: 13
-  }).addTo(map);
-  const ports = [
-    { nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
-    { nom:'Enkhuizen',    coords:[52.703,5.289], desc:'Jour 1 · 27 juillet' },
-    { nom:'Urk',          coords:[52.664,5.604], desc:'Jour 2-3 · Fish & chips' },
-    { nom:'Stavoren',     coords:[52.880,5.367], desc:'Jour 3-4 · Vieux port' },
-    { nom:'Harlingen',    coords:[53.175,5.421], desc:'Jour 12 · Départ épique' },
-    { nom:'Vlieland',     coords:[53.257,4.972], desc:'Jour 12 · Mer formée 3m' },
-    { nom:'Hindeloopen',  coords:[52.940,5.395], desc:'Jour 14-15 · Régate péniches' },
-    { nom:'Medemblik',    coords:[52.769,5.103], desc:'Jour 16-17 · Tram à vapeur' },
-    { nom:'Hoorn',        coords:[52.643,5.061], desc:'Jour 18 · Retour' },
-  ];
-  const icon = L.divIcon({
-    html:`<div style="width:12px;height:12px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 8px rgba(200,168,75,.6)"></div>`,
-    className:'',iconSize:[12,12],iconAnchor:[6,6]
-  });
-  ports.forEach(p => {
-    L.marker(p.coords, { icon }).addTo(map)
-      .bindPopup(`<div style="font-family:'Space Mono',monospace;font-size:11px;color:#e8e0d0;background:#0a1220;padding:4px 0"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#a09880">${p.desc}</span></div>`);
-  });
-  const route = [[52.461,5.035],[52.703,5.289],[52.664,5.604],[52.880,5.367],[53.175,5.421],[53.257,4.972],[52.940,5.395],[52.769,5.103],[52.643,5.061]];
-  L.polyline(route, { color:'#c8a84b', weight:2, opacity:.7, dashArray:'6,4' }).addTo(map);
-  map.fitBounds(route, { padding:[30,30] });
-}
+function navScrollTo(id) { document.querySelector(id)?.scrollIntoView({ behavior:'smooth' }); }
 
 // ================================================
-// UTILS
+// KEYBOARD
 // ================================================
-function scrollTo(id) { document.querySelector(id)?.scrollIntoView({ behavior:'smooth' }); }
-
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeLightbox(); }
-  if (e.key === 'ArrowLeft') flickrNav(-1);
-  if (e.key === 'ArrowRight') flickrNav(1);
+  if (e.key==='Escape') { closeModal(); closeLightbox(); }
+  if (e.key==='ArrowLeft') flickrNav(-1);
+  if (e.key==='ArrowRight') flickrNav(1);
 });
 
 // ================================================
 // INIT
 // ================================================
-renderJournal();
+renderVoyages();
 renderMedias();
 renderAlbums();
 renderDessins();
-initMap();
-setInterval(() => {
-  document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE');
-}, 1000);
+setInterval(() => { document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE'); }, 1000);
 </script>
 </body>
 </html>
