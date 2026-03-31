@@ -203,6 +203,8 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .media-titre{font-family:'Cinzel',serif;font-size:.92rem;color:var(--blanc);margin-bottom:.2rem}
 .media-desc{font-size:.82rem;color:var(--blanc2);font-style:italic}
 
+
+  
 /* ALBUMS FLICKR */
 .albums-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem}
 .album-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;cursor:pointer;transition:.2s}
@@ -225,6 +227,8 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .flickr-thumb:hover img{filter:saturate(1);transform:scale(1.06)}
 .flickr-loading{color:var(--blanc2);font-family:'Space Mono',monospace;font-size:11px;padding:2rem;grid-column:1/-1;text-align:center}
 
+
+  
 /* DESSINS */
 .dessins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem}
 .dessin-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;transition:.2s;cursor:pointer}
@@ -391,7 +395,7 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 
   <!-- ALBUMS FLICKR -->
   <section id="albums">
-    <div class="slabel">📸 Albums</div>
+    <div class="slabel">📸 Albums</div><br>
     <h2 class="stitle">Albums Photos</h2>
     <p class="ssub">Cliquez sur un album pour parcourir les photos directement ici</p>
     <div class="albums-grid" id="albumsGrid"></div>
@@ -413,7 +417,7 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 
   <!-- MUSIQUES & VIDÉOS -->
   <section id="medias">
-    <div class="slabel">🎵 Sons & Images</div>
+    <div class="slabel">🎵 Sons & Images</div><br>
     <h2 class="stitle">Musiques & Vidéos</h2>
     <p class="ssub">Les vidéos se lisent directement dans la page</p>
     <div class="medias-grid" id="mediasGrid"></div>
@@ -423,7 +427,7 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 
   <!-- DESSINS -->
   <section id="dessins">
-    <div class="slabel">✏️ Carnet de croquis</div>
+    <div class="slabel">✏️ Carnet de croquis</div><br>
     <h2 class="stitle">Dessins à Bord</h2>
     <p class="ssub">Portraits, scènes de vie et impressions du voyage — crayon sur papier</p>
     <div class="dessins-grid" id="dessinsGrid"></div>
