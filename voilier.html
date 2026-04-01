@@ -616,7 +616,7 @@ const VOYAGES = [
     carteImg: BASE + 'mai4.webp', 
     ports_carte:[{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
                  { nom:'Enkhuizen',    coords:[52.703,5.289], desc:'Jour 1 · 29 Mai' },], 
-    route:[[52.460468, 5.04138], [52.460727, 5.041227],[52.465319, 5.047376],[52.468790, 5.088059],[52.486147, 5.086171],[52.490955, 5.092351],[52.513499,5.108812],
+    route:[[52.460468, 5.04138], [52.460727, 5.041227],[52.465319, 5.047376],[52.468790, 5.088059],[52.486147, 5.086171],[52.490955, 5.092351],[52.513499,5.108812]],
     journal: [
   {
     id: 1, jour: 1, date: '29 mai 2025', day: '29', month: 'MAI',
@@ -909,7 +909,7 @@ function initMapVoyage() {
       L.marker(p.coords, { icon }).addTo(mapVoyageInstance)
         .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
     });
-    L.polyline(voyageActif.route, { 
+  L.polyline(voyageActif.route, { 
   color: voyageActif.couleurRoute || '#e63946', 
   weight: 4, 
   opacity: .9,
