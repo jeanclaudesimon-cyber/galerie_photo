@@ -910,8 +910,8 @@ function initMapVoyage() {
         .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
     });
   L.polyline(voyageActif.route, { 
-  color: voyageActif.couleurRoute || '#e63946', 
-  weight: 4, 
+  color: voyageActif.couleurRoute || '#4169E1', 
+  weight: 6, 
   opacity: .9,
   dashArray: '2,6'
 }).addTo(mapVoyageInstance);
