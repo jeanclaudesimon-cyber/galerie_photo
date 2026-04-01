@@ -615,6 +615,9 @@ const VOYAGES = [
     photo: BASE + 'mai4.webp',
     carteImg: BASE + 'mai4.webp', 
     ports_carte:[{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
+                { nom:'WP3',    coords:[52.468790, 5.088059], desc:'Environ . Ile Marken' },
+                { nom:'WP7',    coords:[52.616046,5.195164], desc:'Milieu Markermeer' }, 
+                { nom:'WP10',    coords:[52.68921,5.29480], desc:'Arrivée . Ecluse' },
                  { nom:'Enkhuizen',    coords:[52.70482,5.30171], desc:'Jour 1 · 29 Mai' },], 
     route:[[52.460468, 5.04138], [52.460727, 5.041227],[52.465319, 5.047376],[52.468790, 5.088059],[52.486147, 5.086171],[52.490955, 5.092351],[52.513499,5.108812],[52.616046,5.195164],[52.670987,5.250283],[52.68554,5.28130],[52.68921,5.29480],[52.69155,5.29557],[52.69934,5.29560],[52.70455,5.30474],[52.70482,5.30171]],
     journal: [
@@ -910,8 +913,8 @@ function initMapVoyage() {
         .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
     });
   L.polyline(voyageActif.route, { 
-  color: voyageActif.couleurRoute || '#4169E1', 
-  weight: 6, 
+  color: voyageActif.couleurRoute || '#1a3a5c', 
+  weight: 5, 
   opacity: .9,
   dashArray: '2,6'
 }).addTo(mapVoyageInstance);
