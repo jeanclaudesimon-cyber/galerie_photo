@@ -82,6 +82,27 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .equip-nom{font-family:'Cinzel',serif;font-size:.88rem;color:var(--or);margin-bottom:2px}
 .equip-role{font-size:.78rem;color:var(--blanc2);font-style:italic}
 .compas{width:90px;height:90px;object-fit:cover;border-radius:50%;border:2px solid var(--or);float:right;margin:0 0 1rem 1.5rem;filter:grayscale(30%)}
+/*style bouton pdf*/
+.btn-cv{
+  display:inline-block;
+  margin-top:1rem;
+  padding:8px 16px;
+  border:1px solid var(--or);
+  color:var(--or);
+  font-family:'Space Mono', monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-radius:3px;
+  background:transparent;
+  transition:.25s;
+}
+
+.btn-cv:hover{
+  background:var(--or);
+  color:var(--noir);
+}
 
 /* GRILLE VOYAGES */
 .voyages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
@@ -351,6 +372,9 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
         <p class="bhistoire">Le nom <em>Soejangh</em> — variante de Soyang — vient du coréen : <em>"pure lumière du soleil"</em>. Un nom qui lui va bien, à ce voilier construit en Suède qui glisse sur les eaux grises du Nord comme une lumière dorée.</p>
         <p class="bhistoire">Construit entre 1970 et 1982 par Nötesunds Varv AB, Suède, sur les plans de Carl Andersson. Longue quille, intérieur en bois, pont en teck. Acheté d'occasion à Monnickendam, son port d'attache. Voiles neuves, panneaux solaires, moteur Mitsubishi.</p>
         <p style="font-size:.83rem;color:var(--blanc2);font-style:italic">⚠️ Note : longue quille — manœuvres en marche arrière délicates. Tendance à dériver à bâbord due au pas d'hélice.</p>
+        <div class="btn-cv" onclick="window.open('https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/PDF/CV_Gilles.pdf', '_blank')">
+  📄 Voir le CV du skipper
+</div>
         <div class="specs">
           <div class="spec"><div class="spec-l">Type</div><div class="spec-v">Vindo 40 · Sloop</div></div>
           <div class="spec"><div class="spec-l">Constructeur</div><div class="spec-v">Nötesunds Varv AB, Suède</div></div>
