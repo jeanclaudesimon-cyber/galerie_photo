@@ -83,6 +83,33 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .equip-role{font-size:.78rem;color:var(--blanc2);font-style:italic}
 .compas{width:90px;height:90px;object-fit:cover;border-radius:50%;border:2px solid var(--or);float:right;margin:0 0 1rem 1.5rem;filter:grayscale(30%)}
 
+/* BOUTON PDF*/
+.btn-cv-container{
+  margin:1.2rem 0;
+}
+
+.btn-cv{
+  display:inline-block;
+  padding:8px 16px;
+  border:1px solid var(--or);
+  color:var(--or);
+  font-family:'Space Mono', monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-radius:3px;
+  background:rgba(4,8,15,0.6);
+  transition:.25s;
+}
+
+.btn-cv:hover{
+  background:var(--or);
+  color:var(--noir);
+}
+
+
+
 /* GRILLE VOYAGES */
 .voyages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
 .voyage-card{position:relative;border-radius:6px;overflow:hidden;cursor:pointer;border:1px solid var(--bdr);transition:.3s;min-height:220px;background:var(--noir2);display:flex;flex-direction:column;justify-content:flex-end}
@@ -367,6 +394,10 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
           <div class="spec"><div class="spec-l">Instruments</div><div class="spec-v">Sondeur · Loch · Compas Silva · Sextant</div></div>
           <div class="spec"><div class="spec-l">Équipement</div><div class="spec-v">Radeau survie · Panneaux solaires · Annexe</div></div>
         </div>
+          <!-- 👇 AJOUTE ÇA ICI -->
+          <div class="btn-cv" onclick="ouvrirPdf()">
+  📄 CV du skipper
+</div>
         <div class="equipage">
           <div class="equip">
             <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/soeyangh-mat.webp" alt="Gilles">
@@ -1025,6 +1056,32 @@ renderMedias();
 renderAlbums();
 renderDessins();
 setInterval(() => { document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE'); }, 1000);
+</script>
+//===============================================
+// PDF
+//===============================================
+
+<div id="vuePdf" style="display:none; position:fixed; inset:0; background:var(--noir); z-index:9999;">
+  
+  <div style="padding:10px; text-align:right;">
+    <button onclick="fermerPdf()" class="btn-cv">✖ Fermer</button>
+  </div>
+
+  <iframe src="PDF/CV_Gilles.pdf" width="100%" height="90%" style="border:none;"></iframe>
+
+</div>
+//======================
+//SCRIPT PDF
+//======================
+
+<script>
+function ouvrirPdf(){
+  document.getElementById("vuePdf").style.display = "block";
+}
+
+function fermerPdf(){
+  document.getElementById("vuePdf").style.display = "none";
+}
 </script>
 </body>
 </html>
