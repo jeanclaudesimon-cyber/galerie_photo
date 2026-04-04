@@ -814,9 +814,11 @@ function ouvrirVoyage(id) {
   document.getElementById('vCarteSub').textContent = voyageActif.lieu;
   const carteZone = document.getElementById('vCartesImgs');
   const imgs = voyageActif.cartesImgs || (voyageActif.carteImg ? [voyageActif.carteImg] : []);
-  carteZone.innerHTML = imgs.map(src =>
-    `<img src="${src}" style="max-width:100%;max-height:400px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;margin-bottom:.8rem;display:block">`
-  ).join('');
+  carteZone.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">` +
+  imgs.map(src =>
+    `<img src="${src}" style="width:100%;height:250px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:block">`
+  ).join('') +
+`</div>`;
   initMapVoyage();
 }
 
