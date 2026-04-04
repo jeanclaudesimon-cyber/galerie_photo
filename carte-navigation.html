@@ -138,14 +138,16 @@ async function loadData(url){
   let points = rows.map(r=>{
     let c = r.split(",");
     return {
+      ordre:a[1],
+      type:b[1],
       name:c[1],
-      lat:parseFloat(c[2]),
-      lng:parseFloat(c[3]),
-      heure:c[5],
-      meteo:c[6],
-      vent:c[7],
-      mer:c[8],
-      note:c[9]
+      lat:parseFloat(d[1]),
+      lng:parseFloat(e[1]),
+      heure:f[1],
+      meteo:g[1],
+      vent:h[1],
+      mer:i[1],
+      note:j[1]
     };
   });
 
