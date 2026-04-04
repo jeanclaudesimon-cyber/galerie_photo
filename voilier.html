@@ -812,7 +812,7 @@ async function chargerDistances(sheetUrl) {
     const wps = text.trim().split('\n').slice(1).map(l => {
       const cols = l.split(',');
       const c = i => (cols[i] || '').replace(/^"|"$/g,'').trim();
-      return { nom: c(0), lat: parseFloat(c(2)), lon: parseFloat(c(3)) };
+      return { nom: c(1), lat: parseFloat(c(3)), lon: parseFloat(c(4)) }; 
     }).filter(w => w.nom && !isNaN(w.lat) && !isNaN(w.lon));
 
     if (wps.length < 2) {
