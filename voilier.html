@@ -828,14 +828,14 @@ async function chargerDistances(sheetUrl) {
       html += `<div class="dist-segment">
         <span class="dist-from-to">${wps[i-1].nom}<em>→</em>${wps[i].nom}</span>
         <span>
-          <span class="dist-nm">${d.toFixed(1)} NM</span>
+          <span class="dist-nm">${d.toFixed(2)} NM</span>
           <span class="dist-km">${(d*1.852).toFixed(0)} km</span>
         </span>
       </div>`;
     }
 
     segDiv.innerHTML = html;
-    totalNMEl.textContent = totalNM.toFixed(1);
+    totalNMEl.textContent = totalNM.toFixed(2);
     totalKMEl.textContent = '≈ ' + (totalNM * 1.852).toFixed(0) + ' km';
     wpCountEl.textContent = wps.length + ' waypoints';
 
