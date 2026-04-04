@@ -518,6 +518,7 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
     </div>
     <section style="padding-top:1.5rem;position:relative;z-index:2">
       <img id="vCarteImg" src="" alt="" style="max-width:100%;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:none">
+      <div id="vCartesImgs" style="max-width:100%;"></div>
     </section>
   </div>
 
@@ -646,6 +647,7 @@ const VOYAGES = [
     photo: BASE + 'mai4.webp',
     ports_carte:{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
     carteImg: BASE + 'Port_Enkuizen.webp',
+    cartesImgs: [BASE + 'soeyangh-alain-et-gilles.webp', BASE + 'soeyangh-dessin5-alain.webp',],
     ports_carte:[{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
                 { nom:'WP3',    coords:[52.468790, 5.088059], desc:'Environ . Ile Marken' },
                 { nom:'WP7',    coords:[52.616046,5.195164], desc:'Milieu Markermeer' }, 
@@ -807,13 +809,14 @@ function ouvrirVoyage(id) {
   document.querySelectorAll('.fbtn')[0]?.classList.add('active');
   renderJournal();
 
- 
-  // Carte
+ // Carte
   document.getElementById('vCarteTitre').textContent = 'La Route — ' + voyageActif.titre;
   document.getElementById('vCarteSub').textContent = voyageActif.lieu;
-  const ci = document.getElementById('vCarteImg');
-  if (voyageActif.carteImg) { ci.src = voyageActif.carteImg; ci.style.display='block'; }
-  else ci.style.display = 'none';
+  const carteZone = document.getElementById('vCartesImgs');
+  const imgs = voyageActif.cartesImgs || (voyageActif.carteImg ? [voyageActif.carteImg] : []);
+  carteZone.innerHTML = imgs.map(src =>
+    `<img src="${src}" style="max-width:100%;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;margin-bottom:.8rem;display:block">`
+  ).join('');
   initMapVoyage();
 }
 
@@ -1071,9 +1074,7 @@ setInterval(() => { document.getElementById('sclock').textContent = new Date().t
   <iframe src="PDF/CV_Gilles.pdf" width="100%" height="90%" style="border:none;"></iframe>
 
 </div>
-//======================
-//SCRIPT PDF
-//======================
+//pdf
 
 <script>
 function ouvrirPdf(){
