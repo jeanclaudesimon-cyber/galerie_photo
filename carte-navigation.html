@@ -179,9 +179,8 @@ async function loadData(url){
   line=L.polyline(latlngs,{color:"#c8a84b"}).addTo(map);
   map.fitBounds(line.getBounds());
 
-  document.getElementById("distance").innerHTML =
-    total/1.852 .toFixed(2) + " NM";
-}
+document.getElementById("distance").innerHTML =
+    (total / 1.852).toFixed(2) + " NM";
 
 function distance(a,b){
   let R=6371;
