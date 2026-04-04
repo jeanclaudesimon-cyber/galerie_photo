@@ -815,7 +815,7 @@ function ouvrirVoyage(id) {
   const imgs = voyageActif.cartesImgs || (voyageActif.carteImg ? [voyageActif.carteImg] : []);
   carteZone.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">` +
   imgs.map(src =>
-    `<img src="${src}" style="width:100%;height:280px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:block">`
+    `<img src="${src}" onclick="ouvrirLb('${src}')" style="width:100%;height:250px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:block;cursor:pointer">`
   ).join('') +
 `</div>`;
   initMapVoyage();
