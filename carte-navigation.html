@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Navigation — Carte des Voyages</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+body{
+  background:#04080f;
+  color:#e8e0d0;
+  font-family:'Crimson Pro',serif;
+  margin:0;
+}
+
+header{
+  padding:15px;
+  border-bottom:1px solid rgba(200,168,75,0.3);
+  text-align:center;
+}
+
+h1{
+  font-family:'Cinzel',serif;
+  color:#c8a84b;
+  letter-spacing:3px;
+}
+
+.controls{
+  padding:10px;
+  text-align:center;
+}
+
+select{
+  padding:6px;
+  background:#0f1a2e;
+  color:#e8e0d0;
+  border:1px solid #c8a84b;
+}
+
+#map{
+  height:500px;
+}
+
+#distance{
+  text-align:center;
+  padding:10px;
+  font-family:'Cinzel',serif;
+  color:#c8a84b;
+  font-size:20px;
+}
+
+#formWP{
+  display:none;
+  background:#0f1a2e;
+  padding:15px;
+  border-top:1px solid rgba(200,168,75,0.3);
+}
+
+#formWP input{
+  margin:5px;
+  padding:5px;
+  background:#04080f;
+  color:#e8e0d0;
+  border:1px solid #c8a84b;
+}
+
+button{
+  padding:6px 12px;
+  background:#c8a84b;
+  border:none;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carte de Navigation</h1>
+</header>
+
+<div class="controls">
+  <select id="voyageSelect"></select>
+</div>
+
+<div id="map"></div>
+<div id="distance"></div>
+
+<div id="formWP">
+  <h3>Ajouter un Waypoint</h3>
+  <input id="wpNom" placeholder="Nom"><br>
+  <input id="wpHeure" placeholder="Heure"><br>
+  <input id="wpMeteo" placeholder="Météo"><br>
+  <input id="wpVent" placeholder="Vent"><br>
+  <input id="wpMer" placeholder="Mer"><br>
+  <input id="wpNote" placeholder="Note"><br>
+  <button onclick="saveWP()">Valider</button>
+</div>
+
+<script>
+
+const voyages = {
+  "Sortie Pirates": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSh5ToLaV-2SvxI7zfwc2E_VL0bN6bh0CcqPo2iTbEfUEc9RuOF7EIuaSh4zpZNTiM-6nbw89_UN9bu/pub?gid=292992139&single=true&output=csv",
+  "Voyage 2": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSh5ToLaV-2SvxI7zfwc2E_VL0bN6bh0CcqPo2iTbEfUEc9RuOF7EIuaSh4zpZNTiM-6nbw89_UN9bu/pub?gid=379569382&single=true&output=csv"
+};
+
+let map = L.map('map').setView([52,5],7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let markers = [];
+let line;
+let lastClick = null;
+
+const select = document.getElementById("voyageSelect");
+
+for (let v in voyages){
+  let opt = document.createElement("option");
+  opt.value = voyages[v];
+  opt.text = v;
+  select.appendChild(opt);
+}
+
+select.onchange = () => loadData(select.value);
+loadData(select.value);
+
+async function loadData(url){
+
+  markers.forEach(m => map.removeLayer(m));
+  if(line) map.removeLayer(line);
+
+  let res = await fetch(url);
+  let text = await res.text();
+  let rows = text.split("\n").slice(1);
+
+  let points = rows.map(r=>{
+    let c = r.split(",");
+    return {
+      name:c[1],
+      lat:parseFloat(c[2]),
+      lng:parseFloat(c[3]),
+      heure:c[5],
+      meteo:c[6],
+      vent:c[7],
+      mer:c[8],
+      note:c[9]
+    };
+  });
+
+  let latlngs=[];
+  let total=0;
+
+  for(let i=0;i<points.length;i++){
+    let p=points[i];
+
+    let marker=L.marker([p.lat,p.lng]).addTo(map)
+      .bindPopup(`
+        <b>${p.name}</b><br>
+        🕒 ${p.heure}<br>
+        🌤️ ${p.meteo}<br>
+        🌬️ ${p.vent} kt<br>
+        🌊 ${p.mer}<br>
+        📝 ${p.note}
+      `);
+
+    markers.push(marker);
+    latlngs.push([p.lat,p.lng]);
+
+    if(i>0){
+      total+=distance(points[i-1],p);
+    }
+  }
+
+  line=L.polyline(latlngs,{color:"#c8a84b"}).addTo(map);
+  map.fitBounds(line.getBounds());
+
+  document.getElementById("distance").innerHTML =
+    total/1.852 .toFixed(2) + " NM";
+}
+
+function distance(a,b){
+  let R=6371;
+  let dLat=(b.lat-a.lat)*Math.PI/180;
+  let dLon=(b.lng-a.lng)*Math.PI/180;
+  let A=Math.sin(dLat/2)**2+
+  Math.cos(a.lat*Math.PI/180)*
+  Math.cos(b.lat*Math.PI/180)*
+  Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(A),Math.sqrt(1-A));
+}
+
+map.on("click",function(e){
+  lastClick=e.latlng;
+  document.getElementById("formWP").style.display="block";
+});
+
+function saveWP(){
+  let txt=`WP,${document.getElementById("wpNom").value},${lastClick.lat},${lastClick.lng},,${document.getElementById("wpHeure").value},${document.getElementById("wpMeteo").value},${document.getElementById("wpVent").value},${document.getElementById("wpMer").value},${document.getElementById("wpNote").value}`;
+  alert("Copie dans ton Google Sheet:\n\n"+txt);
+  document.getElementById("formWP").style.display="none";
+}
+
+</script>
+
+</body>
+</html>
