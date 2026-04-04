@@ -220,6 +220,26 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
 /* MÉDIAS */
+/* ===== BLOC DISTANCES NM ===== */
+#distancesBlock{background:var(--noir2);border:1px solid var(--bdr);border-radius:4px;padding:1.2rem 1.5rem;margin-bottom:2rem;position:relative;overflow:hidden}
+#distancesBlock::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--or),transparent)}
+#distancesBlock.hidden{display:none}
+.dist-titre{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.dist-titre::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.dist-segment{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(200,168,75,.05);font-size:.85rem}
+.dist-segment:last-child{border-bottom:none}
+.dist-from-to{color:var(--blanc2)}
+.dist-from-to em{color:var(--or);font-style:normal;margin:0 5px}
+.dist-nm{font-family:'Cinzel',serif;color:var(--or);font-size:1rem}
+.dist-km{font-family:'Space Mono',monospace;font-size:9px;color:rgba(200,168,75,.4);margin-left:8px}
+.dist-total-row{display:flex;align-items:baseline;gap:1rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bdr2);flex-wrap:wrap}
+.dist-total-nm{font-family:'Cinzel',serif;font-size:2rem;color:var(--or);line-height:1}
+.dist-total-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);letter-spacing:2px;text-transform:uppercase}
+.dist-total-km{font-family:'Space Mono',monospace;font-size:11px;color:rgba(200,168,75,.5);margin-left:.5rem}
+.dist-loading{color:var(--blanc2);font-family:'Space Mono',monospace;font-size:11px;padding:.5rem 0;font-style:italic}
+.dist-erreur{color:#e57373;font-family:'Space Mono',monospace;font-size:10px;padding:.5rem 0}
+/* ============================= */
+
 .medias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
 .media-card{background:var(--noir2);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;transition:.2s}
 .media-card:hover{border-color:var(--or);transform:translateY(-2px)}
@@ -490,6 +510,22 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
     <div class="slabel">📖 Journal de Bord</div>
     <h2 class="stitle" id="vJournalTitre"></h2>
     <p class="ssub" id="vJournalSub"></p>
+    
+    <!-- BLOC DISTANCES NM — alimenté automatiquement par le Google Sheet du voyage -->
+    <div id="distancesBlock" class="hidden">
+      <div class="dist-titre">⚓ Distances parcourues</div>
+      <div id="distSegments"></div>
+      <div class="dist-total-row">
+        <div>
+          <span class="dist-total-nm" id="distTotalNM">—</span>
+          <span class="dist-total-label"> milles nautiques</span>
+        </div>
+        <span class="dist-total-km" id="distTotalKM"></span>
+        <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:9px;color:rgba(200,168,75,.3)" id="distWpCount"></span>
+      </div>
+    </div>
+    <!-- FIN BLOC DISTANCES -->
+
     <div class="jcontrols">
       <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);letter-spacing:2px">FILTRER :</span>
       <button class="fbtn active" onclick="filtreJournal('all',this)">Tout</button>
@@ -648,11 +684,21 @@ const VOYAGES = [
     ports_carte:{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
     cartesImgs: [BASE + 'soeyangh-alain-et-gilles.webp', BASE + 'Port_Enkuizen.webp', BASE + 'soeyangh-dessin5-alain.webp',],
     ports_carte:[{ nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
+        carteImg: BASE + 'mai4.webp',
+    // ← Colle ici l'URL CSV de ton Google Sheet pour ce voyage (onglet Sortie des Pirates)
+    // sheetUrl: 'https://docs.google.com/spreadsheets/d/e/XXXXX/pub?gid=NUMERO_ONGLET&single=true&output=csv',
+    sheetUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzJFYKgORiyYT2T0lbx5lEQEYrSNccEhfMkPvbrYjKVX4hwH9tDTyijNw12MjNMzokc0KoNfsdHFqR/pubhtml?gid=0&single=true',
+    ports_carte: [
+      { nom:'Monnickendam', coords:[52.461,5.035], desc:"Port d'attache · Jour 0" },
                 { nom:'WP3',    coords:[52.468790, 5.088059], desc:'Environ . Ile Marken' },
                 { nom:'WP7',    coords:[52.616046,5.195164], desc:'Milieu Markermeer' }, 
                 { nom:'WP10',    coords:[52.68921,5.29480], desc:'Arrivée . Ecluse' },
                  { nom:'Enkhuizen',    coords:[52.703444,5.300313], desc:'Jour 1 · 29 Mai . Place au port' },], 
     route:[[52.460468, 5.04138], [52.460727, 5.041227],[52.465319, 5.047376],[52.468790, 5.088059],[52.486147, 5.086171],[52.490955, 5.092351],[52.513499,5.108812],[52.616046,5.195164],[52.670987,5.250283],[52.68554,5.28130],[52.68921,5.29480],[52.69155,5.29557],[52.69934,5.29560],[52.70455,5.30474],[52.705112,5.304818],[52.705743,5.303290],[52.705475,5.303047],[52.705091,5.302431],[52.703860,5.299775],[52.703444,5.300313]],
+          { nom:'WP10',   coords:[52.68921,5.29480],   desc:'Arrivée . Ecluse' },
+      { nom:'Enkhuizen', coords:[52.70482,5.30171], desc:'Jour 1 · 29 Mai' },
+    ],
+    route: [[52.460468,5.04138],[52.460727,5.041227],[52.465319,5.047376],[52.468790,5.088059],[52.486147,5.086171],[52.490955,5.092351],[52.513499,5.108812],[52.616046,5.195164],[52.670987,5.250283],[52.68554,5.28130],[52.68921,5.29480],[52.69155,5.29557],[52.69934,5.29560],[52.70455,5.30474],[52.70482,5.30171]],
     journal: [
   {
     id: 1, jour: 1, date: '29 mai 2025', day: '29', month: 'MAI',
@@ -738,6 +784,78 @@ let mapVoyageInstance = null;
 // ================================================
 // RENDER GRILLE VOYAGES
 // ================================================
+
+// ── HAVERSINE ────────────────────────────────────────
+function haversineNM(lat1, lon1, lat2, lon2) {
+  const R = 3440.065;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// ── CHARGEMENT DISTANCES DEPUIS GOOGLE SHEET ─────────
+async function chargerDistances(sheetUrl) {
+  const bloc     = document.getElementById('distancesBlock');
+  const segDiv   = document.getElementById('distSegments');
+  const totalNMEl= document.getElementById('distTotalNM');
+  const totalKMEl= document.getElementById('distTotalKM');
+  const wpCountEl= document.getElementById('distWpCount');
+
+  if (!sheetUrl) { bloc.classList.add('hidden'); return; }
+
+  bloc.classList.remove('hidden');
+  segDiv.innerHTML = '<div class="dist-loading">Chargement des waypoints...</div>';
+  totalNMEl.textContent = '—';
+  totalKMEl.textContent = '';
+
+  try {
+    const resp = await fetch(sheetUrl);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const text = await resp.text();
+
+    // Ignore la ligne d'en-têtes (ligne 1)
+    // Colonnes : A=Nom  B=Date  C=Latitude  D=Longitude  E=Météo  F=Etat mer
+    const wps = text.trim().split('\n').slice(1).map(l => {
+      const cols = l.split(',');
+      const c = i => (cols[i] || '').replace(/^"|"$/g,'').trim();
+      return { nom: c(0), lat: parseFloat(c(2)), lon: parseFloat(c(3)) };
+    }).filter(w => w.nom && !isNaN(w.lat) && !isNaN(w.lon));
+
+    if (wps.length < 2) {
+      segDiv.innerHTML = '<div class="dist-erreur">Moins de 2 waypoints valides dans le sheet.</div>';
+      return;
+    }
+
+    let totalNM = 0;
+    let html = '';
+    for (let i = 1; i < wps.length; i++) {
+      const d = haversineNM(wps[i-1].lat, wps[i-1].lon, wps[i].lat, wps[i].lon);
+      totalNM += d;
+      html += `<div class="dist-segment">
+        <span class="dist-from-to">${wps[i-1].nom}<em>→</em>${wps[i].nom}</span>
+        <span>
+          <span class="dist-nm">${d.toFixed(1)} NM</span>
+          <span class="dist-km">${(d*1.852).toFixed(0)} km</span>
+        </span>
+      </div>`;
+    }
+
+    segDiv.innerHTML = html;
+    totalNMEl.textContent = totalNM.toFixed(1);
+    totalKMEl.textContent = '≈ ' + (totalNM * 1.852).toFixed(0) + ' km';
+    wpCountEl.textContent = wps.length + ' waypoints';
+
+  } catch(e) {
+    console.error('Distances NM :', e);
+    segDiv.innerHTML = '<div class="dist-erreur">Impossible de charger. Vérifie que le Sheet est bien publié en CSV public.</div>';
+    totalNMEl.textContent = '—';
+  }
+}
+
+// ── GRILLE VOYAGES ────────────────────────────────────
 function renderVoyages() {
   const nbRemplis = VOYAGES.filter(v => v.journal.length > 0).length;
   document.getElementById('statVoyages').textContent = nbRemplis;
@@ -809,6 +927,9 @@ function ouvrirVoyage(id) {
   renderJournal();
 
  // Carte
+   // ← Chargement automatique des distances NM depuis le Google Sheet
+  chargerDistances(voyageActif.sheetUrl || '');
+
   document.getElementById('vCarteTitre').textContent = 'La Route — ' + voyageActif.titre;
   document.getElementById('vCarteSub').textContent = voyageActif.lieu;
   const carteZone = document.getElementById('vCartesImgs');
@@ -818,6 +939,9 @@ function ouvrirVoyage(id) {
     `<img src="${src}" onclick="ouvrirLb('${src}')" style="width:100%;height:250px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:block;cursor:pointer">`
   ).join('') +
 `</div>`;
+  const ci = document.getElementById('vCarteImg');
+  if (voyageActif.carteImg) { ci.src = voyageActif.carteImg; ci.style.display = 'block'; }
+  else ci.style.display = 'none';
   initMapVoyage();
 }
 
@@ -842,6 +966,8 @@ function afficherAccueil() {
   window.scrollTo(0,0);
   if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
 navScrollTo('#voyages');
+  afficherAccueil();
+  setTimeout(() => navScrollTo('#voyages'), 100);
 }
 
 // ================================================
