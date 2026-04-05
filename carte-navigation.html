@@ -303,7 +303,7 @@ async function chargerVoyage(url, nom) {
 
     // Colonnes CSV : Ordre, Type, Nom, Lat, Lng, Heure, Meteo, Vent, Mer, Note
     const points = text.trim().split('\n').slice(1).map(l => {
-      const c = r.split("\t");
+      const c = l.split("\t");
       const v = i => (c[i] || '').replace(/^"|"$/g, '').trim();
       return {
         ordre: v(0),
