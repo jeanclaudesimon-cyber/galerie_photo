@@ -301,11 +301,16 @@ async function chargerVoyage(url, nom) {
     const res = await fetch(url);
     const text = await res.text();
 
- const lignes = text.trim().split(/\r?\n/);
-const headers = lignes[0].split("\t").map(h => h.toLowerCase().trim());
+const lignes = text.trim().split(/\r?\n/);
+
+const headers = lignes[0].includes("\t") 
+  ? lignes[0].split("\t") 
+  : lignes[0].split(",");
+
+const headersClean = headers.map(h => h.toLowerCase().trim());
 
 function findIndex(names) {
-  return headers.findIndex(h => names.some(n => h.includes(n)));
+  return headersClean.findIndex(h => names.some(n => h.includes(n)));
 }
 
 const idx = {
@@ -321,7 +326,7 @@ const idx = {
 };
 
 const points = lignes.slice(1).map(l => {
-  const c = l.split("\t");
+  const c = l.includes("\t") ? l.split("\t") : l.split(",");
 
   return {
     type: idx.type >= 0 && c[idx.type] ? c[idx.type] : "WP",
