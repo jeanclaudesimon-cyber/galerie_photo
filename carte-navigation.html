@@ -301,22 +301,41 @@ async function chargerVoyage(url, nom) {
     const res = await fetch(url);
     const text = await res.text();
 
-    // Colonnes CSV : Ordre, Type, Nom, Lat, Lng, Heure, Meteo, Vent, Mer, Note
-    const points = text.trim().split('\n').slice(1).map(l => {
-      const c = l.split("\t");
-      const v = i => (c[i] || '').replace(/^"|"$/g, '').trim();
-     return {
-  type:  v(0),
-  nom:   v(1),
-  lat:   parseFloat(v(2)),
-  lng:   parseFloat(v(3)),
-  heure: v(4),
-  meteo: v(5),
-  vent:  v(6),
-  mer:   v(7),
-  note:  v(8)
+ const lignes = text.trim().split(/\r?\n/);
+const headers = lignes[0].split("\t").map(h => h.toLowerCase().trim());
+
+function findIndex(names) {
+  return headers.findIndex(h => names.some(n => h.includes(n)));
+}
+
+const idx = {
+  type: findIndex(["type"]),
+  nom: findIndex(["nom"]),
+  lat: findIndex(["lat"]),
+  lng: findIndex(["lng", "long"]),
+  heure: findIndex(["heure", "date"]),
+  meteo: findIndex(["meteo"]),
+  vent: findIndex(["vent"]),
+  mer: findIndex(["mer"]),
+  note: findIndex(["note"])
 };
-    }).filter(p => !isNaN(p.lat) && !isNaN(p.lng) && p.lat !== 0);
+
+const points = lignes.slice(1).map(l => {
+  const c = l.split("\t");
+
+  return {
+    type: idx.type >= 0 && c[idx.type] ? c[idx.type] : "WP",
+    nom: idx.nom >= 0 ? c[idx.nom] : "",
+    lat: parseFloat(c[idx.lat]),
+    lng: parseFloat(c[idx.lng]),
+    heure: idx.heure >= 0 ? c[idx.heure] : "",
+    meteo: idx.meteo >= 0 ? c[idx.meteo] : "",
+    vent: idx.vent >= 0 ? c[idx.vent] : "",
+    mer: idx.mer >= 0 ? c[idx.mer] : "",
+    note: idx.note >= 0 ? c[idx.note] : ""
+  };
+
+}).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
 
     if (points.length === 0) {
       document.getElementById('statNM').textContent = '—';
