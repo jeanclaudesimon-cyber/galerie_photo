@@ -382,6 +382,7 @@ console.log(text);
 
     // Tracé de la route
     polyline = L.polyline(latlngs, { color: '#c8a84b', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
+    map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
 for (let i = 0; i < latlngs.length - 1; i++) {
   const p1 = latlngs[i];
   const p2 = latlngs[i + 1];
@@ -392,8 +393,9 @@ for (let i = 0; i < latlngs.length - 1; i++) {
     icon: L.divIcon({
       html: `<div style="
         transform: rotate(${angle}deg);
-        font-size:12px;
+        font-size:14px;
         color:#c8a84b;
+        line-height:1;
       ">➤</div>`,
       className: ''
     })
