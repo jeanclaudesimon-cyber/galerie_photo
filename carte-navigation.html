@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Plugin flèches -->
+<script src="https://unpkg.com/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.min.js"></script>
 <style>
 :root{
   --noir:#04080f;--noir2:#0a1220;--noir3:#0f1a2e;
@@ -379,8 +381,45 @@ console.log(text);
     });
 
     // Tracé de la route
-    polyline = L.polyline(latlngs, { color: '#c8a84b', weight: 3, opacity: .85, dashArray: '4,6' }).addTo(map);
+    polyline = L.polyline(latlngs, { color: '#c8a84b', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
+    L.polylineDecorator(polyline, {
+  patterns: [
+    {
+      offset: "5%",
+      repeat: "15%",
+      symbol: L.Symbol.arrowHead({
+        pixelSize: 10,
+        polygon: true,
+        pathOptions: {
+          color: '#c8a84b',
+          fillOpacity: 1
+        }
+      })
+    }
+  ]
+}).addTo(map);
     map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
+    // bateau
+    const boatIcon = L.divIcon({
+  html: '🚤',
+  className: '',
+  iconSize: [20, 20],
+  iconAnchor: [10, 10]
+});
+
+const boatMarker = L.marker(latlngs[0], { icon: boatIcon }).addTo(map);
+//Animation
+let i = 0;
+
+function moveBoat() {
+  if (i < latlngs.length) {
+    boatMarker.setLatLng(latlngs[i]);
+    i++;
+    setTimeout(moveBoat, 500); // vitesse
+  }
+}
+
+moveBoat();
 
     const totalNM = totalKm / 1.852;
     document.getElementById('statNM').textContent = totalNM.toFixed(2);
