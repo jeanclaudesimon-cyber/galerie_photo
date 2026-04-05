@@ -398,6 +398,25 @@ console.log(text);
     }
   ]
 }).addTo(map);
+for (let i = 0; i < latlngs.length - 1; i++) {
+  const p1 = latlngs[i];
+  const p2 = latlngs[i + 1];
+
+  const angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI;
+
+  const arrow = L.marker(p1, {
+    icon: L.divIcon({
+      html: `<div style="
+        transform: rotate(${angle}deg);
+        font-size:12px;
+        color:#c8a84b;
+      ">➤</div>`,
+      className: ''
+    })
+  }).addTo(map);
+
+  markersLayer.push(arrow);
+}
     map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
     // bateau
     const boatIcon = L.divIcon({
