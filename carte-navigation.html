@@ -450,7 +450,7 @@ function saveWP() {
     className: '', iconSize: [10,10], iconAnchor: [5,5]
   });
   const m = L.marker([lastClick.lat, lastClick.lng], { icon }).addTo(map)
-    .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${nom}</strong><br><em style="color:#888">WP temporaire</em></div>`).openPopup();
+    .bindPopup(`<div style="font-family:monospace;font-size:14px"><strong style="color:#c8a84b">${nom}</strong><br><em style="color:#888">WP temporaire</em></div>`).openPopup();
   markersLayer.push(m);
 
   annulerWP();
