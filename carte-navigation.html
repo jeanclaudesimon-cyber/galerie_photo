@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Soejangh — Navigation</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" .rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Plugin flèches -->
-<script src="https://unpkg.com/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.min.js"></script>
 <style>
 :root{
   --noir:#04080f;--noir2:#0a1220;--noir3:#0f1a2e;
@@ -48,16 +46,8 @@ select:focus{border-color:var(--or)}
 .stat-div{width:1px;height:35px;background:var(--bdr2)}
 
 /* CARTE */
-
-.leaflet-popup-content {
-  font-size: 18px;
-}
-
-.leaflet-popup-content-wrapper {
-  min-width: 220px;
-}
-
-/* CARTE */
+.leaflet-popup-content{font-size:15px}
+.leaflet-popup-content-wrapper{min-width:220px}
 .carte-wrap{position:relative;z-index:2}
 #map{height:560px;width:100%}
 .carte-legend{position:absolute;bottom:1rem;left:1rem;z-index:400;background:rgba(4,8,15,.92);border:1px solid var(--bdr2);border-radius:3px;padding:.7rem 1rem;font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2)}
@@ -65,6 +55,11 @@ select:focus{border-color:var(--or)}
 .legend-item:last-child{margin-bottom:0}
 .ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .carte-hint{position:absolute;top:1rem;right:1rem;z-index:400;background:rgba(4,8,15,.85);border:1px solid var(--bdr);border-radius:3px;padding:.5rem .8rem;font-family:'Space Mono',monospace;font-size:9px;color:rgba(200,168,75,.6);letter-spacing:1px}
+
+/* EXPORT BTN */
+.export-bar{padding:10px 2rem;background:var(--noir2);border-bottom:1px solid var(--bdr);position:relative;z-index:2}
+.btn-export{padding:8px 18px;background:var(--or);border:none;color:var(--noir);cursor:pointer;border-radius:3px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;font-weight:700;transition:.2s}
+.btn-export:hover{background:var(--or2)}
 
 /* TABLEAU WP */
 .section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:2rem}
@@ -141,9 +136,6 @@ select:focus{border-color:var(--or)}
   </div>
 </header>
 
-
-
-
 <!-- SÉLECTEUR VOYAGE -->
 <div class="controls-bar">
   <span class="ctrl-label">Voyage</span>
@@ -163,18 +155,9 @@ select:focus{border-color:var(--or)}
   </div>
 </div>
 
-<!-- Bouton google sheet export csv -->
-<div style="margin:10px 0;">
-  <button onclick="exporterCSV()" style="
-    padding:8px 12px;
-    background:#c8a84b;
-    border:none;
-    color:white;
-    cursor:pointer;
-    border-radius:4px;
-  ">
-    Exporter vers Google Sheets
-  </button>
+<!-- EXPORT CSV -->
+<div class="export-bar">
+  <button class="btn-export" onclick="exporterCSV()">⬇ Exporter vers Google Sheets</button>
 </div>
 
 <!-- CARTE -->
@@ -281,6 +264,9 @@ const VOYAGES = {
   "Voyage 2": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSh5ToLaV-2SvxI7zfwc2E_VL0bN6bh0CcqPo2iTbEfUEc9RuOF7EIuaSh4zpZNTiM-6nbw89_UN9bu/pub?gid=292992139&single=true&output=csv"
 };
 
+// ── ÉTAT GLOBAL ────────────────────────────────────────
+// FIX 1 : points déclaré en global pour être accessible par exporterCSV()
+let points = [];
 
 // ── CARTE ─────────────────────────────────────────────
 let map = L.map('map').setView([52.5, 5.1], 9);
@@ -317,13 +303,35 @@ function haversine(a, b) {
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
 }
 
-// 👉 tout en haut de ton script
-let points = [];
+// ── EXPORT CSV (global, accessible depuis le bouton HTML) ─
+// FIX 2 : fonction déplacée hors de chargerVoyage()
+function exporterCSV() {
+  if (!points || points.length === 0) {
+    alert("Aucun point à exporter — chargez d'abord un voyage.");
+    return;
+  }
+  // Séparateur ";" pour compatibilité Google Sheets / Excel FR
+  let csv = "Type;Nom;Lat;Lng;Heure;Meteo;Vent;Mer;Note\n";
+  points.forEach(p => {
+    const esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    csv += `${esc(p.type)};${esc(p.nom)};${esc(p.lat)};${esc(p.lng)};${esc(p.heure)};${esc(p.meteo)};${esc(p.vent)};${esc(p.mer)};${esc(p.note)}\n`;
+  });
 
+  navigator.clipboard.writeText(csv).then(() => {
+    alert("✓ " + points.length + " waypoints copiés !\nColle dans Google Sheets avec Ctrl+V 👍");
+  }).catch(() => {
+    // Fallback : téléchargement direct
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'waypoints.csv'; a.click();
+    URL.revokeObjectURL(url);
+  });
+}
 
 // ── CHARGEMENT VOYAGE ─────────────────────────────────
 async function chargerVoyage(url, nom) {
-  // Nettoyer
+  // Nettoyer carte
   markersLayer.forEach(m => map.removeLayer(m));
   markersLayer = [];
   if (polyline) { map.removeLayer(polyline); polyline = null; }
@@ -332,58 +340,58 @@ async function chargerVoyage(url, nom) {
   document.getElementById('statNM').textContent = '…';
   document.getElementById('statKM').textContent = '…';
   document.getElementById('statWP').textContent = '…';
+  document.getElementById('wpBody').innerHTML = '';
 
   try {
     const res = await fetch(url);
     const text = await res.text();
 
-const lignes = text.trim().split(/\r?\n/);
+    const lignes = text.trim().split(/\r?\n/);
+    const sep = lignes[0].includes("\t") ? "\t" : ",";
+    const headers = lignes[0].split(sep);
+    const headersClean = headers.map(h => h.toLowerCase().trim().replace(/"/g,''));
 
-const headers = lignes[0].includes("\t") 
-  ? lignes[0].split("\t") 
-  : lignes[0].split(",");
+    function findIndex(names) {
+      return headersClean.findIndex(h => names.some(n => h.includes(n)));
+    }
 
-const headersClean = headers.map(h => h.toLowerCase().trim());
+    const idx = {
+      type:  findIndex(["type"]),
+      nom:   findIndex(["nom"]),
+      lat:   findIndex(["lat"]),
+      lng:   findIndex(["lng", "long"]),
+      heure: findIndex(["heure", "date"]),
+      meteo: findIndex(["meteo", "météo"]),
+      vent:  findIndex(["vent"]),
+      mer:   findIndex(["mer"]),
+      note:  findIndex(["note"])
+    };
 
-function findIndex(names) {
-  return headersClean.findIndex(h => names.some(n => h.includes(n)));
-}
-
-const idx = {
-  type: findIndex(["type"]),
-  nom: findIndex(["nom"]),
-  lat: findIndex(["lat"]),
-  lng: findIndex(["lng", "long"]),
-  heure: findIndex(["heure", "date"]),
-  meteo: findIndex(["meteo"]),
-  vent: findIndex(["vent"]),
-  mer: findIndex(["mer"]),
-  note: findIndex(["note"])
-};
-
- points = lignes.slice(1).map(l => {
-  const c = l.includes("\t") ? l.split("\t") : l.split(",");
-
-  return {
-    type: idx.type >= 0 && c[idx.type] ? c[idx.type] : "WP",
-    nom: idx.nom >= 0 ? c[idx.nom] : "",
-    lat: parseFloat(c[idx.lat]),
-    lng: parseFloat(c[idx.lng]),
-    heure: idx.heure >= 0 ? c[idx.heure] : "",
-    meteo: idx.meteo >= 0 ? c[idx.meteo] : "",
-    vent: idx.vent >= 0 ? c[idx.vent] : "",
-    mer: idx.mer >= 0 ? c[idx.mer] : "",
-    note: idx.note >= 0 ? c[idx.note] : ""
-  };
-
-}).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
+    // FIX 3 : ajout de p.ordre (index 1-based) pour le tableau
+    points = lignes.slice(1).map((l, i) => {
+      const c = l.split(sep).map(v => v.trim().replace(/^"|"$/g, ''));
+      return {
+        ordre: i + 1,
+        type:  idx.type  >= 0 && c[idx.type]  ? c[idx.type]  : "WP",
+        nom:   idx.nom   >= 0 ? c[idx.nom]   : "",
+        lat:   parseFloat(c[idx.lat]),
+        lng:   parseFloat(c[idx.lng]),
+        heure: idx.heure >= 0 ? c[idx.heure] : "",
+        meteo: idx.meteo >= 0 ? c[idx.meteo] : "",
+        vent:  idx.vent  >= 0 ? c[idx.vent]  : "",
+        mer:   idx.mer   >= 0 ? c[idx.mer]   : "",
+        note:  idx.note  >= 0 ? c[idx.note]  : ""
+      };
+    }).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
 
     if (points.length === 0) {
       document.getElementById('statNM').textContent = '—';
+      document.getElementById('statKM').textContent = '—';
+      document.getElementById('statWP').textContent = '0';
       return;
     }
-console.log(text);
-    // Marqueurs colorés selon type
+
+    // Marqueurs + tracé
     const latlngs = [];
     let totalKm = 0;
 
@@ -399,14 +407,14 @@ console.log(text);
       if (i > 0) totalKm += distSeg;
 
       const popup = `
-        <div style="font-family:monospace;font-size:15px;min-width:220px">
-          <strong style="color:#c8a84b;font-size:13px">${p.nom || p.type}</strong><br>
-          ${p.heure   ? `🕒 ${p.heure}<br>` : ''}
-          ${p.meteo   ? `🌤️ ${p.meteo}<br>` : ''}
-          ${p.vent    ? `🌬️ ${p.vent} kt<br>` : ''}
-          ${p.mer     ? `🌊 ${p.mer}<br>` : ''}
-          ${i > 0     ? `<span style="color:#c8a84b">📏 ${(distSeg/1.852).toFixed(2)} NM</span><br>` : ''}
-          ${p.note    ? `<em style="color:#0f0707">📝 ${p.note}</em>` : ''}
+        <div style="font-family:monospace;font-size:13px;min-width:200px;line-height:1.7">
+          <strong style="color:#c8a84b;font-size:14px">${p.nom || p.type}</strong><br>
+          ${p.heure  ? `🕒 ${p.heure}<br>` : ''}
+          ${p.meteo  ? `🌤️ ${p.meteo}<br>` : ''}
+          ${p.vent   ? `🌬️ ${p.vent} kt<br>` : ''}
+          ${p.mer    ? `🌊 ${p.mer}<br>` : ''}
+          ${i > 0    ? `<span style="color:#c8a84b">📏 ${(distSeg/1.852).toFixed(2)} NM</span><br>` : ''}
+          ${p.note   ? `<em style="color:#666">📝 ${p.note}</em>` : ''}
         </div>`;
 
       const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(popup);
@@ -414,38 +422,17 @@ console.log(text);
       latlngs.push([p.lat, p.lng]);
     });
 
-  //Export csv
-   function exporterCSV() {
-
-  if (!points || points.length === 0) {
-    alert("Aucun point à exporter");
-    return;
-  }
-
-  // 👉 IMPORTANT : séparateur ;
-  let csv = "Type;Nom;Lat;Lng;Heure;Meteo;Vent;Mer;Note\n";
-
- points.forEach(p => {
-  csv += `"${p.type ?? ""}";"${p.nom ?? ""}";"${p.lat ?? ""}";"${p.lng ?? ""}";"${p.heure ?? ""}";"${p.meteo ?? ""}";"${p.vent ?? ""}";"${p.mer ?? ""}";"${p.note ?? ""}"\n`;
-});
-
-  // Copier dans le presse-papiers
-  navigator.clipboard.writeText(csv).then(() => {
-    alert("Données copiées ! Colle dans Google Sheets 👍");
-  }).catch(() => {
-    alert("Erreur copie");
-  });
-
-  console.log(csv); // debug si besoin
-}
-
-    // Tracé de la route
+    // Tracé route
     polyline = L.polyline(latlngs, { color: '#3e35bd', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
     map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
 
+    // FIX 1 : mise à jour des stats dans le DOM
+    const totalNM = totalKm / 1.852;
+    document.getElementById('statNM').textContent = totalNM.toFixed(1);
+    document.getElementById('statKM').textContent = totalKm.toFixed(1);
+    document.getElementById('statWP').textContent = points.length;
 
-
-    // Tableau
+    // Tableau — FIX 3 : p.ordre existe maintenant
     const tbody = document.getElementById('wpBody');
     let cumNM = 0;
     tbody.innerHTML = points.map((p, i) => {
@@ -478,14 +465,19 @@ console.log(text);
 }
 
 // ── CLIC SUR LA CARTE → FORMULAIRE ───────────────────
+// FIX 4 : suppression du scrollIntoView qui décalait la carte
 map.on('click', function(e) {
+  // Stopper la propagation pour éviter les conflits
   lastClick = e.latlng;
   document.getElementById('wpCoords').textContent =
     lastClick.lat.toFixed(6) + ', ' + lastClick.lng.toFixed(6);
   document.getElementById('formWP').style.display = 'block';
   document.getElementById('formHint').style.display = 'none';
   document.getElementById('wpNom').focus();
-  document.getElementById('formWP').scrollIntoView({ behavior: 'smooth' });
+  // Scroll vers le formulaire SANS affecter la carte
+  setTimeout(() => {
+    document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
 });
 
 // ── SAUVEGARDER WP ────────────────────────────────────
@@ -498,18 +490,21 @@ function saveWP() {
   const mer   = document.getElementById('wpMer').value;
   const note  = document.getElementById('wpNote').value;
 
-  const ligne = `WP,${nom},${lastClick.lat.toFixed(6)},${lastClick.lng.toFixed(6)},${heure},${meteo},${vent},${mer},${note}`;
+  const ligne = `WP;${nom};${lastClick.lat.toFixed(6)};${lastClick.lng.toFixed(6)};${heure};${meteo};${vent};${mer};${note}`;
 
   document.getElementById('alerteCode').textContent = ligne;
   document.getElementById('alerte').classList.remove('hidden');
 
-  // Ajouter temporairement le marqueur sur la carte
+  // Copier automatiquement dans le presse-papiers
+  navigator.clipboard.writeText(ligne).catch(() => {});
+
+  // Marqueur temporaire
   const icon = L.divIcon({
     html: `<div style="width:10px;height:10px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 6px #c8a84b88"></div>`,
     className: '', iconSize: [10,10], iconAnchor: [5,5]
   });
   const m = L.marker([lastClick.lat, lastClick.lng], { icon }).addTo(map)
-    .bindPopup(`<div style="font-family:monospace;font-size:14px"><strong style="color:#c8a84b">${nom}</strong><br><em style="color:#888">WP temporaire</em></div>`).openPopup();
+    .bindPopup(`<div style="font-family:monospace;font-size:13px"><strong style="color:#c8a84b">${nom}</strong><br><em style="color:#888">WP temporaire</em></div>`).openPopup();
   markersLayer.push(m);
 
   annulerWP();
@@ -525,7 +520,9 @@ function annulerWP() {
   lastClick = null;
 }
 
-setInterval(() => { document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE'); }, 1000);
+setInterval(() => {
+  document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE');
+}, 1000);
 </script>
 </body>
 </html>
