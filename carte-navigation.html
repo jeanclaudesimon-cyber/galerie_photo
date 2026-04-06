@@ -167,6 +167,11 @@ select:focus{border-color:var(--or)}
     <div class="legend-item"><div class="ldot" style="background:#8bc87a"></div> Départ</div>
     <div class="legend-item"><div class="ldot" style="background:#c8a84b"></div> Waypoint</div>
     <div class="legend-item"><div class="ldot" style="background:#e57373"></div> Arrivée</div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(200,168,75,0.2);font-size:9px;color:rgba(200,168,75,0.5)">Tracés par jour :</div>
+    <div class="legend-item"><div style="width:18px;height:3px;background:#3e35bd;border-radius:2px"></div> Jour 1</div>
+    <div class="legend-item"><div style="width:18px;height:3px;background:#2a9d8f;border-radius:2px"></div> Jour 2</div>
+    <div class="legend-item"><div style="width:18px;height:3px;background:#e76f51;border-radius:2px"></div> Jour 3</div>
+    <div class="legend-item"><div style="width:18px;height:3px;background:#e9c46a;border-radius:2px"></div> Jour 4</div>
   </div>
   <div class="carte-hint">🖱️ Clic sur la carte → ajouter un WP</div>
 </div>
@@ -382,7 +387,7 @@ async function chargerVoyage(url, nom) {
         mer:   idx.mer   >= 0 ? c[idx.mer]   : "",
         note:  idx.note  >= 0 ? c[idx.note]  : ""
       };
-    }).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
+    }).filter(p => p.type === 'ESCALE' || (!isNaN(p.lat) && !isNaN(p.lng)));
 
     if (points.length === 0) {
       document.getElementById('statNM').textContent = '—';
@@ -391,72 +396,119 @@ async function chargerVoyage(url, nom) {
       return;
     }
 
-    // Marqueurs + tracé
-    const latlngs = [];
-    let totalKm = 0;
+    // ── TRONÇONS : découper aux lignes ESCALE ─────────────
+    const COULEURS = ['#3e35bd','#2a9d8f','#e76f51','#e9c46a','#8338ec','#06d6a0'];
+    // Séparer points en tronçons (ESCALE = coupure, pas de coordonnées requises)
+    const troncons = [];
+    let tronconEnCours = [];
+    let escales = []; // infos escales pour le tableau
+    points.forEach(p => {
+      if (p.type === 'ESCALE') {
+        if (tronconEnCours.length > 0) troncons.push(tronconEnCours);
+        tronconEnCours = [];
+        escales.push(p);
+      } else {
+        tronconEnCours.push(p);
+      }
+    });
+    if (tronconEnCours.length > 0) troncons.push(tronconEnCours);
 
-    points.forEach((p, i) => {
-      const couleur = p.type === 'DEP' ? '#8bc87a' : p.type === 'ARR' ? '#e57373' : '#c8a84b';
-      const taille  = (p.type === 'DEP' || p.type === 'ARR') ? 14 : 10;
-      const icon = L.divIcon({
-        html: `<div style="width:${taille}px;height:${taille}px;border-radius:50%;background:${couleur};border:2px solid ${couleur === '#c8a84b' ? '#e8c870' : '#fff'};box-shadow:0 0 6px ${couleur}88"></div>`,
-        className: '', iconSize: [taille, taille], iconAnchor: [taille/2, taille/2]
+    let totalKm = 0;
+    let allBounds = [];
+
+    troncons.forEach((troncon, ti) => {
+      const couleurRoute = COULEURS[ti % COULEURS.length];
+      const latlngs = [];
+
+      troncon.forEach((p, i) => {
+        const iPrev = i > 0 ? troncon[i-1] : null;
+        const couleur = p.type === 'DEP' ? '#8bc87a' : p.type === 'ARR' ? '#e57373' : '#c8a84b';
+        const taille  = (p.type === 'DEP' || p.type === 'ARR') ? 14 : 10;
+        const icon = L.divIcon({
+          html: '<div style="width:'+taille+'px;height:'+taille+'px;border-radius:50%;background:'+couleur+';border:2px solid '+(couleur === '#c8a84b' ? '#e8c870' : '#fff')+';box-shadow:0 0 6px '+couleur+'88"></div>',
+          className: '', iconSize: [taille, taille], iconAnchor: [taille/2, taille/2]
+        });
+
+        const distSeg = iPrev ? haversine(iPrev, p) : 0;
+        if (iPrev) totalKm += distSeg;
+
+        const jourLabel = troncons.length > 1 ? ' · Jour '+(ti+1) : '';
+        const popup = '<div style="font-family:monospace;font-size:13px;min-width:200px;line-height:1.7">'
+          + '<strong style="color:'+couleurRoute+';font-size:14px">'+(p.nom || p.type)+jourLabel+'</strong><br>'
+          + (p.heure ? '🕒 '+p.heure+'<br>' : '')
+          + (p.meteo ? '🌤️ '+p.meteo+'<br>' : '')
+          + (p.vent  ? '🌬️ '+p.vent+' kt<br>' : '')
+          + (p.mer   ? '🌊 '+p.mer+'<br>' : '')
+          + (iPrev   ? '<span style="color:#c8a84b">📏 '+(distSeg/1.852).toFixed(2)+' NM</span><br>' : '')
+          + (p.note  ? '<em style="color:#666">📝 '+p.note+'</em>' : '')
+          + '</div>';
+
+        const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(popup);
+        markersLayer.push(marker);
+        latlngs.push([p.lat, p.lng]);
+        allBounds.push([p.lat, p.lng]);
       });
 
-      const distSeg = i > 0 ? haversine(points[i-1], p) : 0;
-      if (i > 0) totalKm += distSeg;
-
-      const popup = `
-        <div style="font-family:monospace;font-size:13px;min-width:200px;line-height:1.7">
-          <strong style="color:#c8a84b;font-size:14px">${p.nom || p.type}</strong><br>
-          ${p.heure  ? `🕒 ${p.heure}<br>` : ''}
-          ${p.meteo  ? `🌤️ ${p.meteo}<br>` : ''}
-          ${p.vent   ? `🌬️ ${p.vent} kt<br>` : ''}
-          ${p.mer    ? `🌊 ${p.mer}<br>` : ''}
-          ${i > 0    ? `<span style="color:#c8a84b">📏 ${(distSeg/1.852).toFixed(2)} NM</span><br>` : ''}
-          ${p.note   ? `<em style="color:#666">📝 ${p.note}</em>` : ''}
-        </div>`;
-
-      const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(popup);
-      markersLayer.push(marker);
-      latlngs.push([p.lat, p.lng]);
+      if (latlngs.length > 1) {
+        const pl = L.polyline(latlngs, { color: couleurRoute, weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
+        markersLayer.push(pl);
+        polyline = pl; // garde référence au dernier
+      }
     });
 
-    // Tracé route
-    polyline = L.polyline(latlngs, { color: '#3e35bd', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
-    map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
+    if (allBounds.length > 0) map.fitBounds(allBounds, { padding: [40, 40] });
 
-    // FIX 1 : mise à jour des stats dans le DOM
+    // Stats
     const totalNM = totalKm / 1.852;
     document.getElementById('statNM').textContent = totalNM.toFixed(1);
     document.getElementById('statKM').textContent = totalKm.toFixed(1);
-    document.getElementById('statWP').textContent = points.length;
+    // Compter seulement les vrais WP (pas les ESCALE)
+    document.getElementById('statWP').textContent = points.filter(p => p.type !== 'ESCALE').length;
 
-    // Tableau — FIX 3 : p.ordre existe maintenant
+    // ── TABLEAU avec séparateurs d'escale ─────────────────
     const tbody = document.getElementById('wpBody');
-    let cumNM = 0;
-    tbody.innerHTML = points.map((p, i) => {
-      const distSeg = i > 0 ? haversine(points[i-1], p) / 1.852 : 0;
-      if (i > 0) cumNM += distSeg;
+    let tableRows = '';
+    let jourNum = 1;
+    let prevPoint = null;
+
+    points.forEach((p, i) => {
+      if (p.type === 'ESCALE') {
+        // Ligne séparateur escale
+        tableRows += '<tr style="background:rgba(200,168,75,0.08)">'
+          + '<td colspan="11" style="padding:.5rem .8rem;font-family:Space Mono,monospace;font-size:10px;'
+          + 'color:var(--or);letter-spacing:2px;border-bottom:1px solid var(--bdr2);border-top:1px solid var(--bdr2)">'
+          + '⚓ &nbsp;ESCALE — ' + (p.nom || ('Nuit ' + jourNum))
+          + ' &nbsp;·&nbsp; Jour ' + jourNum + ' terminé'
+          + '</td></tr>';
+        jourNum++;
+        prevPoint = null; // reset distance au DEP suivant
+        return;
+      }
+
+      const distSeg = prevPoint ? haversine(prevPoint, p) / 1.852 : 0;
+      prevPoint = p;
+
       const badge = p.type === 'DEP'
-        ? `<span class="badge-dep">DEP</span>`
+        ? '<span class="badge-dep">DEP</span>'
         : p.type === 'ARR'
-        ? `<span class="badge-arr">ARR</span>`
-        : `<span class="badge-wp">${p.type || 'WP'}</span>`;
-      return `<tr>
-        <td style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(200,168,75,.5)">${p.ordre}</td>
-        <td class="td-type">${badge}</td>
-        <td class="td-nom">${p.nom || '—'}</td>
-        <td style="font-family:'Space Mono',monospace;font-size:10px">${p.lat.toFixed(5)}</td>
-        <td style="font-family:'Space Mono',monospace;font-size:10px">${p.lng.toFixed(5)}</td>
-        <td style="font-family:'Space Mono',monospace;font-size:10px">${p.heure || '—'}</td>
-        <td>${p.meteo || '—'}</td>
-        <td style="font-family:'Space Mono',monospace;font-size:10px">${p.vent || '—'}</td>
-        <td>${p.mer || '—'}</td>
-        <td class="td-dist">${i > 0 ? distSeg.toFixed(2) + ' NM' : '—'}</td>
-        <td class="td-note">${p.note || ''}</td>
-      </tr>`;
-    }).join('');
+        ? '<span class="badge-arr">ARR</span>'
+        : '<span class="badge-wp">'+(p.type||'WP')+'</span>';
+
+      tableRows += '<tr>'
+        + '<td style="font-family:Space Mono,monospace;font-size:10px;color:rgba(200,168,75,.5)">'+p.ordre+'</td>'
+        + '<td class="td-type">'+badge+'</td>'
+        + '<td class="td-nom">'+(p.nom||'—')+'</td>'
+        + '<td style="font-family:Space Mono,monospace;font-size:10px">'+p.lat.toFixed(5)+'</td>'
+        + '<td style="font-family:Space Mono,monospace;font-size:10px">'+p.lng.toFixed(5)+'</td>'
+        + '<td style="font-family:Space Mono,monospace;font-size:10px">'+(p.heure||'—')+'</td>'
+        + '<td>'+(p.meteo||'—')+'</td>'
+        + '<td style="font-family:Space Mono,monospace;font-size:10px">'+(p.vent||'—')+'</td>'
+        + '<td>'+(p.mer||'—')+'</td>'
+        + '<td class="td-dist">'+(prevPoint && distSeg > 0 ? distSeg.toFixed(2)+' NM' : '—')+'</td>'
+        + '<td class="td-note">'+(p.note||'')+'</td>'
+        + '</tr>';
+    });
+    tbody.innerHTML = tableRows;
 
   } catch(e) {
     console.error('Erreur chargement:', e);
