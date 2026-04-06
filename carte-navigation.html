@@ -375,14 +375,14 @@ console.log(text);
       if (i > 0) totalKm += distSeg;
 
       const popup = `
-        <div style="font-family:monospace;font-size:14px;min-width:220px">
+        <div style="font-family:monospace;font-size:15px;min-width:220px">
           <strong style="color:#c8a84b;font-size:13px">${p.nom || p.type}</strong><br>
           ${p.heure   ? `🕒 ${p.heure}<br>` : ''}
           ${p.meteo   ? `🌤️ ${p.meteo}<br>` : ''}
           ${p.vent    ? `🌬️ ${p.vent} kt<br>` : ''}
           ${p.mer     ? `🌊 ${p.mer}<br>` : ''}
           ${i > 0     ? `<span style="color:#c8a84b">📏 ${(distSeg/1.852).toFixed(2)} NM</span><br>` : ''}
-          ${p.note    ? `<em style="color:#888">📝 ${p.note}</em>` : ''}
+          ${p.note    ? `<em style="color:#0f0707">📝 ${p.note}</em>` : ''}
         </div>`;
 
       const marker = L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(popup);
