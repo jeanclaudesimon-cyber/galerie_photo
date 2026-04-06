@@ -141,6 +141,21 @@ select:focus{border-color:var(--or)}
   </div>
 </header>
 
+
+<!-- Bouton google sheet export csv -->
+<div style="margin:10px 0;">
+  <button onclick="exporterCSV()" style="
+    padding:8px 12px;
+    background:#c8a84b;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:4px;
+  ">
+    Exporter vers Google Sheets
+  </button>
+</div>
+
 <!-- SÉLECTEUR VOYAGE -->
 <div class="controls-bar">
   <span class="ctrl-label">Voyage</span>
@@ -262,6 +277,7 @@ const VOYAGES = {
   "Voyage 2": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSh5ToLaV-2SvxI7zfwc2E_VL0bN6bh0CcqPo2iTbEfUEc9RuOF7EIuaSh4zpZNTiM-6nbw89_UN9bu/pub?gid=292992139&single=true&output=csv"
 };
 
+
 // ── CARTE ─────────────────────────────────────────────
 let map = L.map('map').setView([52.5, 5.1], 9);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -296,6 +312,10 @@ function haversine(a, b) {
     Math.sin(dLon/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
 }
+
+// 👉 tout en haut de ton script
+let points = [];
+
 
 // ── CHARGEMENT VOYAGE ─────────────────────────────────
 async function chargerVoyage(url, nom) {
@@ -337,7 +357,7 @@ const idx = {
   note: findIndex(["note"])
 };
 
-const points = lignes.slice(1).map(l => {
+ points = lignes.slice(1).map(l => {
   const c = l.includes("\t") ? l.split("\t") : l.split(",");
 
   return {
@@ -389,6 +409,31 @@ console.log(text);
       markersLayer.push(marker);
       latlngs.push([p.lat, p.lng]);
     });
+
+  //Export csv
+   function exporterCSV() {
+
+  if (!points || points.length === 0) {
+    alert("Aucun point à exporter");
+    return;
+  }
+
+  // 👉 IMPORTANT : séparateur ;
+  let csv = "Type;Nom;Lat;Lng;Heure;Meteo;Vent;Mer;Note\n";
+
+  points.forEach(p => {
+    csv += `${p.type || ""};${p.nom || ""};${p.lat || ""};${p.lng || ""};${p.heure || ""};${p.meteo || ""};${p.vent || ""};${p.mer || ""};${p.note || ""}\n`;
+  });
+
+  // Copier dans le presse-papiers
+  navigator.clipboard.writeText(csv).then(() => {
+    alert("Données copiées ! Colle dans Google Sheets 👍");
+  }).catch(() => {
+    alert("Erreur copie");
+  });
+
+  console.log(csv); // debug si besoin
+}
 
     // Tracé de la route
     polyline = L.polyline(latlngs, { color: '#3e35bd', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
