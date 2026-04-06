@@ -50,7 +50,7 @@ select:focus{border-color:var(--or)}
 /* CARTE */
 
 .leaflet-popup-content {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .leaflet-popup-content-wrapper {
@@ -375,7 +375,7 @@ console.log(text);
       if (i > 0) totalKm += distSeg;
 
       const popup = `
-        <div style="font-family:monospace;font-size:11px;min-width:160px">
+        <div style="font-family:monospace;font-size:14px;min-width:220px">
           <strong style="color:#c8a84b;font-size:13px">${p.nom || p.type}</strong><br>
           ${p.heure   ? `🕒 ${p.heure}<br>` : ''}
           ${p.meteo   ? `🌤️ ${p.meteo}<br>` : ''}
