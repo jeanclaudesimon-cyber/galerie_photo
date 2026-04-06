@@ -303,28 +303,28 @@ function haversine(a, b) {
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
 }
 
-// ── EXPORT CSV (global, accessible depuis le bouton HTML) ─
-// FIX 2 : fonction déplacée hors de chargerVoyage()
+// ── EXPORT (séparateur TAB = seul universel pour coller dans Google Sheets) ─
 function exporterCSV() {
   if (!points || points.length === 0) {
-    alert("Aucun point à exporter — chargez d'abord un voyage.");
+    alert("Aucun point à exporter.\nAjoutez des waypoints en cliquant sur la carte.");
     return;
   }
-  // Séparateur ";" pour compatibilité Google Sheets / Excel FR
-  let csv = "Type;Nom;Lat;Lng;Heure;Meteo;Vent;Mer;Note\n";
+  // TAB comme séparateur : Google Sheets le reconnaît nativement au coller
+  const T = "\t";
+  let tsv = `Type${T}Nom${T}Lat${T}Lng${T}Heure${T}Meteo${T}Vent${T}Mer${T}Note\n`;
   points.forEach(p => {
-    const esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-    csv += `${esc(p.type)};${esc(p.nom)};${esc(p.lat)};${esc(p.lng)};${esc(p.heure)};${esc(p.meteo)};${esc(p.vent)};${esc(p.mer)};${esc(p.note)}\n`;
+    // Pas de quotes nécessaires avec TAB sauf si le champ contient un TAB
+    const v = x => String(x ?? '').replace(/\t/g, ' ');
+    tsv += `${v(p.type)}${T}${v(p.nom)}${T}${v(p.lat)}${T}${v(p.lng)}${T}${v(p.heure)}${T}${v(p.meteo)}${T}${v(p.vent)}${T}${v(p.mer)}${T}${v(p.note)}\n`;
   });
 
-  navigator.clipboard.writeText(csv).then(() => {
-    alert("✓ " + points.length + " waypoints copiés !\nColle dans Google Sheets avec Ctrl+V 👍");
+  navigator.clipboard.writeText(tsv).then(() => {
+    alert("✓ " + points.length + " waypoints copiés !\nDans Google Sheets : clique sur la cellule A1 puis Ctrl+V");
   }).catch(() => {
-    // Fallback : téléchargement direct
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    // Fallback téléchargement .tsv (s'ouvre bien dans Sheets)
+    const blob = new Blob([tsv], { type: 'text/tab-separated-values;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'waypoints.csv'; a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'waypoints.tsv'; a.click();
     URL.revokeObjectURL(url);
   });
 }
@@ -490,22 +490,54 @@ function saveWP() {
   const mer   = document.getElementById('wpMer').value;
   const note  = document.getElementById('wpNote').value;
 
-  const ligne = `WP;${nom};${lastClick.lat.toFixed(6)};${lastClick.lng.toFixed(6)};${heure};${meteo};${vent};${mer};${note}`;
+  // Ajouter dans le tableau global (export + stats)
+  const newPoint = {
+    ordre: points.length + 1,
+    type: 'WP', nom, lat: lastClick.lat, lng: lastClick.lng,
+    heure, meteo, vent, mer, note
+  };
+  points.push(newPoint);
 
-  document.getElementById('alerteCode').textContent = ligne;
-  document.getElementById('alerte').classList.remove('hidden');
+  // Recalculer stats
+  let totalKm = 0;
+  for (let i = 1; i < points.length; i++) totalKm += haversine(points[i-1], points[i]);
+  document.getElementById('statNM').textContent = (totalKm / 1.852).toFixed(1);
+  document.getElementById('statKM').textContent = totalKm.toFixed(1);
+  document.getElementById('statWP').textContent = points.length;
 
-  // Copier automatiquement dans le presse-papiers
-  navigator.clipboard.writeText(ligne).catch(() => {});
+  // Ajouter ligne au tableau HTML
+  const i = points.length - 1;
+  const distSeg = i > 0 ? haversine(points[i-1], newPoint) / 1.852 : 0;
+  const tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td style="font-family:Space Mono,monospace;font-size:10px;color:rgba(200,168,75,.5)">' + newPoint.ordre + '</td>' +
+    '<td class="td-type"><span class="badge-wp">WP</span></td>' +
+    '<td class="td-nom">' + nom + '</td>' +
+    '<td style="font-family:Space Mono,monospace;font-size:10px">' + newPoint.lat.toFixed(5) + '</td>' +
+    '<td style="font-family:Space Mono,monospace;font-size:10px">' + newPoint.lng.toFixed(5) + '</td>' +
+    '<td style="font-family:Space Mono,monospace;font-size:10px">' + (heure || '—') + '</td>' +
+    '<td>' + (meteo || '—') + '</td>' +
+    '<td style="font-family:Space Mono,monospace;font-size:10px">' + (vent || '—') + '</td>' +
+    '<td>' + (mer || '—') + '</td>' +
+    '<td class="td-dist">' + (i > 0 ? distSeg.toFixed(2) + ' NM' : '—') + '</td>' +
+    '<td class="td-note">' + (note || '') + '</td>';
+  document.getElementById('wpBody').appendChild(tr);
 
-  // Marqueur temporaire
+  // Marqueur carte
   const icon = L.divIcon({
-    html: `<div style="width:10px;height:10px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 6px #c8a84b88"></div>`,
+    html: '<div style="width:10px;height:10px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 6px #c8a84b88"></div>',
     className: '', iconSize: [10,10], iconAnchor: [5,5]
   });
   const m = L.marker([lastClick.lat, lastClick.lng], { icon }).addTo(map)
-    .bindPopup(`<div style="font-family:monospace;font-size:13px"><strong style="color:#c8a84b">${nom}</strong><br><em style="color:#888">WP temporaire</em></div>`).openPopup();
+    .bindPopup('<div style="font-family:monospace;font-size:13px;line-height:1.6"><strong style="color:#c8a84b">' + nom + '</strong><br>' + (heure ? '🕒 '+heure+'<br>' : '') + (note ? '<em style="color:#888">📝 '+note+'</em>' : '') + '</div>').openPopup();
   markersLayer.push(m);
+
+  // Retracer la polyline
+  if (polyline) map.removeLayer(polyline);
+  if (points.length > 1) {
+    const latlngs = points.map(p => [p.lat, p.lng]);
+    polyline = L.polyline(latlngs, { color: '#3e35bd', weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
+  }
 
   annulerWP();
 }
