@@ -425,9 +425,9 @@ console.log(text);
   // 👉 IMPORTANT : séparateur ;
   let csv = "Type;Nom;Lat;Lng;Heure;Meteo;Vent;Mer;Note\n";
 
-  points.forEach(p => {
-    csv += `${p.type || ""};${p.nom || ""};${p.lat || ""};${p.lng || ""};${p.heure || ""};${p.meteo || ""};${p.vent || ""};${p.mer || ""};${p.note || ""}\n`;
-  });
+ points.forEach(p => {
+  csv += `"${p.type ?? ""}";"${p.nom ?? ""}";"${p.lat ?? ""}";"${p.lng ?? ""}";"${p.heure ?? ""}";"${p.meteo ?? ""}";"${p.vent ?? ""}";"${p.mer ?? ""}";"${p.note ?? ""}"\n`;
+});
 
   // Copier dans le presse-papiers
   navigator.clipboard.writeText(csv).then(() => {
