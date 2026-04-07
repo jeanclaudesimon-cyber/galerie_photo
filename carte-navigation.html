@@ -105,6 +105,14 @@ select:focus{border-color:var(--or)}
 .alerte-close{background:var(--or);color:var(--noir);border:none;padding:5px 12px;border-radius:2px;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;font-weight:700}
 
 .statusbar{background:var(--noir2);border-top:1px solid var(--bdr);padding:8px 2rem;display:flex;gap:2rem;font-size:10px;color:rgba(200,168,75,.4);font-family:'Space Mono',monospace;position:relative;z-index:2}
+/* NM PAR JOUR */
+.jours-nm-bar{background:var(--noir3);border-bottom:1px solid var(--bdr);padding:8px 2rem;display:none;gap:1.5rem;flex-wrap:wrap;align-items:center;position:relative;z-index:2}
+.jour-nm-item{display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px}
+.jour-nm-dot{width:10px;height:4px;border-radius:2px;flex-shrink:0}
+.jour-nm-lbl{color:var(--blanc2)}
+.jour-nm-val{color:var(--or);font-weight:700}
+.jour-nm-total{margin-left:auto;color:var(--or);font-family:'Cinzel',serif;font-size:1.1rem;display:flex;align-items:center;gap:6px}
+.jour-nm-total-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);letter-spacing:1px}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--noir)}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
@@ -159,6 +167,9 @@ select:focus{border-color:var(--or)}
 <div class="export-bar">
   <button class="btn-export" onclick="exporterCSV()">⬇ Exporter vers Google Sheets</button>
 </div>
+
+<!-- NM PAR JOUR -->
+<div class="jours-nm-bar" id="joursNmBar"></div>
 
 <!-- CARTE -->
 <div class="carte-wrap">
@@ -280,8 +291,37 @@ const VOYAGES = {
 };
 
 // ── ÉTAT GLOBAL ────────────────────────────────────────
-// FIX 1 : points déclaré en global pour être accessible par exporterCSV()
 let points = [];
+let nmParJour = [];
+
+// ── FLÈCHES DIRECTIONNELLES ────────────────────────────
+// Dessine des marqueurs triangulaires dans le sens de navigation
+function ajouterFleches(map, latlngs, couleur, markersLayer) {
+  // Une flèche par segment (si assez de points, sinon au milieu)
+  const step = Math.max(1, Math.floor(latlngs.length / 5));
+  for (let i = step; i < latlngs.length; i += step) {
+    const a = latlngs[i-1];
+    const b = latlngs[i];
+    const midLat = (a[0]+b[0])/2;
+    const midLng = (a[1]+b[1])/2;
+    const dLat = b[0]-a[0];
+    const dLng = b[1]-a[1];
+    // Angle en degrés : 0=nord, 90=est
+    const angle = Math.atan2(dLng, dLat) * 180 / Math.PI;
+    const html = `<div style="
+      width:0;height:0;
+      border-left:5px solid transparent;
+      border-right:5px solid transparent;
+      border-bottom:11px solid ${couleur};
+      transform:rotate(${angle}deg);
+      opacity:0.9;
+      filter:drop-shadow(0 0 2px ${couleur});
+    "></div>`;
+    const icon = L.divIcon({ html, className:'', iconSize:[10,11], iconAnchor:[5,5] });
+    const m = L.marker([midLat, midLng], { icon, interactive:false }).addTo(map);
+    markersLayer.push(m);
+  }
+}
 
 // ── CARTE ─────────────────────────────────────────────
 let map = L.map('map').setView([52.5, 5.1], 9);
@@ -344,12 +384,14 @@ function exporterCSV() {
   });
 }
 
-// ── CHARGEMENT VOYAGES ─────────────────────────────────
+// ── CHARGEMENT VOYAGE ─────────────────────────────────
 async function chargerVoyage(url, nom) {
   // Nettoyer carte
   markersLayer.forEach(m => map.removeLayer(m));
   markersLayer = [];
   if (polyline) { map.removeLayer(polyline); polyline = null; }
+  nmParJour = [];
+  document.getElementById('joursNmBar').style.display = 'none';
 
   document.getElementById('tableauTitre').textContent = nom + ' — Journal de Navigation';
   document.getElementById('statNM').textContent = '…';
@@ -429,6 +471,7 @@ async function chargerVoyage(url, nom) {
     troncons.forEach((troncon, ti) => {
       const couleurRoute = COULEURS[ti % COULEURS.length];
       const latlngs = [];
+      let jourKm = 0;
 
       troncon.forEach((p, i) => {
         const iPrev = i > 0 ? troncon[i-1] : null;
@@ -440,7 +483,7 @@ async function chargerVoyage(url, nom) {
         });
 
         const distSeg = iPrev ? haversine(iPrev, p) : 0;
-        if (iPrev) totalKm += distSeg;
+        if (iPrev) { totalKm += distSeg; jourKm += distSeg; }
 
         const jourLabel = troncons.length > 1 ? ' · Jour '+(ti+1) : '';
         const popup = '<div style="font-family:monospace;font-size:13px;min-width:200px;line-height:1.7">'
@@ -460,10 +503,15 @@ async function chargerVoyage(url, nom) {
       });
 
       if (latlngs.length > 1) {
-        const pl = L.polyline(latlngs, { color: couleurRoute, weight: 5, opacity: .85, dashArray: '4,6' }).addTo(map);
+        const pl = L.polyline(latlngs, { color: couleurRoute, weight: 4, opacity: .9 }).addTo(map);
         markersLayer.push(pl);
-        polyline = pl; // garde référence au dernier
+        polyline = pl;
+        // Ajouter flèches directionnelles
+        ajouterFleches(map, latlngs, couleurRoute, markersLayer);
       }
+
+      // Stocker NM de ce jour
+      nmParJour.push({ jour: ti+1, nm: jourKm / 1.852, couleur: couleurRoute });
     });
 
     if (allBounds.length > 0) map.fitBounds(allBounds, { padding: [40, 40] });
@@ -475,6 +523,24 @@ async function chargerVoyage(url, nom) {
     // Compter seulement les vrais WP (pas les ESCALE)
     document.getElementById('statWP').textContent = points.filter(p => p.type !== 'ESCALE').length;
 
+    // ── BARRE NM PAR JOUR ──────────────────────────────
+    const barEl = document.getElementById('joursNmBar');
+    if (nmParJour.length > 0) {
+      let html = '<span style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;color:var(--or);text-transform:uppercase;white-space:nowrap">Distances :</span>';
+      nmParJour.forEach(j => {
+        html += `<span class="jour-nm-item">
+          <span class="jour-nm-dot" style="background:${j.couleur}"></span>
+          <span class="jour-nm-lbl">Jour ${j.jour}</span>
+          <span class="jour-nm-val">${j.nm.toFixed(1)} NM</span>
+        </span>`;
+      });
+      if (nmParJour.length > 1) {
+        html += `<span class="jour-nm-total">${totalNM.toFixed(1)} NM <span class="jour-nm-total-lbl">total voyage</span></span>`;
+      }
+      barEl.innerHTML = html;
+      barEl.style.display = 'flex';
+    }
+
     // ── TABLEAU avec séparateurs d'escale ─────────────────
     const tbody = document.getElementById('wpBody');
     let tableRows = '';
@@ -483,12 +549,16 @@ async function chargerVoyage(url, nom) {
 
     points.forEach((p, i) => {
       if (p.type === 'ESCALE') {
+        // NM de ce jour
+        const nmJour = nmParJour[jourNum-1] ? nmParJour[jourNum-1].nm.toFixed(1) + ' NM' : '';
+        const coulJour = nmParJour[jourNum-1] ? nmParJour[jourNum-1].couleur : 'var(--or)';
         // Ligne séparateur escale
         tableRows += '<tr style="background:rgba(200,168,75,0.08)">'
           + '<td colspan="11" style="padding:.5rem .8rem;font-family:Space Mono,monospace;font-size:10px;'
           + 'color:var(--or);letter-spacing:2px;border-bottom:1px solid var(--bdr2);border-top:1px solid var(--bdr2)">'
           + '⚓ &nbsp;ESCALE — ' + (p.nom || ('Nuit ' + jourNum))
           + ' &nbsp;·&nbsp; Jour ' + jourNum + ' terminé'
+          + (nmJour ? ' &nbsp;·&nbsp; <span style="color:'+coulJour+';font-family:Cinzel,serif;font-size:11px">📏 ' + nmJour + '</span>' : '')
           + '</td></tr>';
         jourNum++;
         prevPoint = null; // reset distance au DEP suivant
@@ -519,6 +589,20 @@ async function chargerVoyage(url, nom) {
         + '</tr>';
     });
     tbody.innerHTML = tableRows;
+
+    // Ligne total si plusieurs jours
+    if (nmParJour.length > 1) {
+      const totalNMFinal = nmParJour.reduce((s,j) => s+j.nm, 0);
+      const tr = document.createElement('tr');
+      tr.style.cssText = 'background:rgba(200,168,75,0.12);border-top:2px solid var(--bdr2)';
+      tr.innerHTML = '<td colspan="9" style="padding:.6rem .8rem;font-family:Space Mono,monospace;font-size:10px;color:var(--blanc2);letter-spacing:2px">'
+        + nmParJour.map(j => `<span style="margin-right:1.2rem">Jour ${j.jour} : <span style="color:${j.couleur}">${j.nm.toFixed(1)} NM</span></span>`).join('')
+        + '</td><td colspan="2" style="padding:.6rem .8rem;text-align:right">'
+        + '<span style="font-family:Cinzel,serif;font-size:1.1rem;color:var(--or)">' + totalNMFinal.toFixed(1) + ' NM</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:9px;color:var(--blanc2);display:block;letter-spacing:1px">total voyage</span>'
+        + '</td>';
+      tbody.appendChild(tr);
+    }
 
   } catch(e) {
     console.error('Erreur chargement:', e);
