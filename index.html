@@ -21,6 +21,69 @@
     #tile-voilier-cta { color: #c8a84b; }
     #tile-velo .tile-bg { border-top: 2px solid #4fc3f7; }
     #tile-velo-cta { color: #4fc3f7; }
+    /* ═══════════════════════════════════════
+   TUILE CUISINE — La Cuisine de JC
+═══════════════════════════════════════ */
+.tuile-cuisine {
+  width: 320px;
+  background: #ffffff;
+  border: 3px solid #e67627;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+  text-decoration: none;
+  display: block;
+}
+.tuile-cuisine:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(230,118,39,.25); }
+.cuisine-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
+.cuisine-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #e67627;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.cuisine-titre-box {
+  background: #e67627;
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  margin-bottom: .4rem;
+  display: inline-block;
+}
+.cuisine-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.cuisine-sous-box {
+  background: #e67627;
+  border-radius: 8px;
+  padding: .35rem .9rem;
+  display: inline-block;
+  margin-bottom: .8rem;
+}
+.cuisine-sous {
+  font-family: 'Crimson Pro', serif;
+  font-size: .9rem;
+  color: #000000;
+  font-style: italic;
+}
+.cuisine-badge {
+  display: inline-block;
+  background: #fff5ee;
+  border: 1px solid #e67627;
+  color: #e67627;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+
   </style>
 </head>
 <body>
@@ -218,7 +281,21 @@
     <span class="tile-cta" id="tile-velo-cta">Explorer →</span>
   </div>
 </a>
-    
+
+<a href="cuisine.html" class="tuile-cuisine">
+    <span class="cuisine-icon">🍳</span>
+    <div class="cuisine-label">Carnet de recettes</div>
+    <div class="cuisine-titre-box">
+      <div class="cuisine-titre">La Cuisine de JC</div>
+    </div><br>
+    <div class="cuisine-sous-box">
+      <div class="cuisine-sous">Plaisirs Gourmands &amp; Marmite &amp; Mystères</div>
+    </div>
+    <br>
+    <span class="cuisine-badge">🚧 À venir</span>
+  </a>
+
+
   </div>
 </section>
 
