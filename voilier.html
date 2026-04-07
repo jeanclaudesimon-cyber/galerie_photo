@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Soejangh — Voilier & Voyages</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{
   --noir:#04080f;--noir2:#0a1220;--noir3:#0f1a2e;
@@ -212,12 +210,26 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
 .mtext ul{padding-left:1.4rem;margin-bottom:.7rem}
 .mtext li{margin-bottom:.3rem}
 
-/* CARTE VOYAGE */
-.carte-section-voyage{background:var(--noir2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);position:relative;z-index:2}
-#mapVoyage{height:500px;width:100%}
-.carte-legend{position:absolute;bottom:1rem;left:1rem;z-index:400;background:rgba(4,8,15,.9);border:1px solid var(--bdr2);border-radius:3px;padding:.7rem 1rem;font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2)}
-.legend-item{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* PHOTOS & BOUTONS VOYAGE */
+.voyage-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem}
+.btn-action{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:3px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.25s;text-decoration:none}
+.btn-carte{background:var(--or3);border:1px solid var(--or);color:var(--or)}
+.btn-carte:hover{background:var(--or);color:var(--noir)}
+.btn-album{background:transparent;border:1px solid var(--bdr2);color:var(--blanc2)}
+.btn-album:hover{border-color:var(--or);color:var(--or)}
+.wp-info-box{background:var(--noir3);border:1px solid var(--bdr);border-radius:3px;padding:.7rem 1rem;margin-bottom:1.5rem;font-family:'Space Mono',monospace;font-size:10px;color:var(--blanc2);letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.wp-info-box a{color:var(--or);text-decoration:none}
+.wp-info-box a:hover{text-decoration:underline}
+/* GALERIE PHOTOS */
+.voyage-photos{margin-bottom:2rem}
+.photos-titre{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:8px}
+.photos-titre::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem}
+.photo-thumb{position:relative;border-radius:3px;overflow:hidden;cursor:pointer;border:1px solid var(--bdr);aspect-ratio:4/3;background:var(--noir3)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;filter:saturate(.8);transition:.3s}
+.photo-thumb:hover img{filter:saturate(1.1);transform:scale(1.04)}
+.photo-thumb::after{content:'🔍';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,8,15,.5);opacity:0;transition:.2s;font-size:1.4rem}
+.photo-thumb:hover::after{opacity:1}
 
 /* MÉDIAS */
 /* ===== BLOC DISTANCES NM ===== */
@@ -538,22 +550,31 @@ section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 
   <div class="divider" style="position:relative;z-index:2"></div>
   
 
-  <!-- Carte voyage -->
-  <div id="vcarte" class="carte-section-voyage"><br><br><br><br><br>
-    <section style="padding-bottom:0;position:relative;z-index:2">
-      <div class="slabel">🗺️ Navigation</div>
+  <!-- Carte voyage → remplacé par photos + boutons navigation -->
+  <div id="vcarte" style="position:relative;z-index:2">
+    <section style="padding-bottom:2rem;position:relative;z-index:2">
+      <div class="slabel">📸 Photos du Voyage</div>
       <h2 class="stitle" id="vCarteTitre"></h2>
       <p class="ssub" id="vCarteSub"></p>
-    </section>
-    <div style="position:relative">
-      <div id="mapVoyage"></div>
-      <div class="carte-legend">
-        <div class="legend-item"><div class="ldot" style="background:#c8a84b"></div> Port visité</div>
-        <div class="legend-item"><div class="ldot" style="background:#4a8bc4;border-radius:0;height:2px;width:20px"></div> Route</div>
+
+      <!-- Info waypoints -->
+      <div class="wp-info-box">
+        🧭 Pour consulter le tracé détaillé et les waypoints GPS de ce voyage :
+        <a href="carte-navigation.html">Voir la Carte de Navigation →</a>
       </div>
-    </div>
-    <section style="padding-top:1.5rem;position:relative;z-index:2">
-      <img id="vCarteImg" src="" alt="" style="max-width:100%;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:none">
+
+      <!-- Boutons d'action -->
+      <div class="voyage-actions">
+        <a href="carte-navigation.html" class="btn-action btn-carte">🗺️ Carte de Navigation</a>
+        <a href="#albums" class="btn-action btn-album" onclick="navScrollTo('#albums')">📷 Albums Photos</a>
+      </div>
+
+      <!-- Galerie photos -->
+      <div class="voyage-photos">
+        <div class="photos-titre">Photos</div>
+        <div class="photos-grid" id="voyagePhotosGrid"></div>
+      </div>
+
       <div id="vCartesImgs" style="max-width:100%;"></div>
     </section>
   </div>
@@ -677,7 +698,7 @@ const VOYAGES = [
   lieu:'Markermeer · IJsselmeer', 
   periode:'Mai 2025', 
   duree:'4 Jours', 
-  miles:'91 NM', 
+  miles:'—', 
   ports:'4', 
   vitMax:'—', 
   photo: BASE + 'mai4.webp',
@@ -695,8 +716,8 @@ const VOYAGES = [
   journal: [
     { id:1, jour:1, date:'29 mai 2025', day:'29', month:'MAI',
       type:'navigation', de:'Monnickendam', a:'Enkhuizen',
-      vent:'20-26 noeuds rafales et cap changeant', voile:'GV et Génois', distance:'—', duree:'7h30min', vitMoy:'—', vitMax:'—',
-      resume:'Premier jour. Quand les cirés sont de sortie avant même le premier mille, c’est que le ciel a décidé de tester notre moral.',
+      vent:'—', voile:'—', distance:'—', duree:'—', vitMoy:'—', vitMax:'—',
+      resume:'Premier jour.',
       texte:`Premier jour de navigation.`,
       photo: BASE + 'mai1.webp'
     },
@@ -770,7 +791,6 @@ let voyageActif = null;
 let filtreType = 'all';
 let flickrPhotos = [];
 let flickrIndex = 0;
-let mapVoyageInstance = null;
 
 // ================================================
 // RENDER GRILLE VOYAGES
@@ -807,37 +827,92 @@ async function chargerDistances(sheetUrl) {
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const text = await resp.text();
 
-    // Ignore la ligne d'en-têtes (ligne 1)
-    // Colonnes : A=Nom  B=Date  C=Latitude  D=Longitude  E=Météo  F=Etat mer
-    const wps = text.trim().split('\n').slice(1).map(l => {
-      const cols = l.split(',');
-      const c = i => (cols[i] || '').replace(/^"|"$/g,'').trim();
-      return { nom: c(1), lat: parseFloat(c(3)), lon: parseFloat(c(4)) }; 
-    }).filter(w => w.nom && !isNaN(w.lat) && !isNaN(w.lon));
+    const lignes = text.trim().split(/\r?\n/);
+    const sep = lignes[0].includes('\t') ? '\t' : ',';
+    const headers = lignes[0].split(sep).map(h => h.replace(/^"|"$/g,'').toLowerCase().trim());
+    const iType = headers.findIndex(h => h.includes('type'));
+    const iNom  = headers.findIndex(h => h.includes('nom'));
+    const iLat  = headers.findIndex(h => h.includes('lat'));
+    const iLng  = headers.findIndex(h => h.includes('lng') || h.includes('long'));
 
-    if (wps.length < 2) {
+    const rows = lignes.slice(1).map(l => {
+      const c = l.split(sep).map(v => v.replace(/^"|"$/g,'').trim());
+      return {
+        type: iType >= 0 ? c[iType] : 'WP',
+        nom:  iNom  >= 0 ? c[iNom]  : '',
+        lat:  parseFloat(c[iLat]),
+        lng:  parseFloat(c[iLng])
+      };
+    }).filter(r => r.type === 'ESCALE' || (!isNaN(r.lat) && !isNaN(r.lng)));
+
+    if (rows.length < 2) {
       segDiv.innerHTML = '<div class="dist-erreur">Moins de 2 waypoints valides dans le sheet.</div>';
       return;
     }
 
+    // Découper en tronçons (jours) aux lignes ESCALE
+    const COULEURS = ['#3e35bd','#2a9d8f','#e76f51','#e9c46a','#8338ec','#06d6a0'];
+    const troncons = [];
+    let tronconEnCours = [];
+    rows.forEach(r => {
+      if (r.type === 'ESCALE') {
+        if (tronconEnCours.length > 0) { troncons.push(tronconEnCours); tronconEnCours = []; }
+      } else {
+        tronconEnCours.push(r);
+      }
+    });
+    if (tronconEnCours.length > 0) troncons.push(tronconEnCours);
+
+    const multiJour = troncons.length > 1;
     let totalNM = 0;
     let html = '';
-    for (let i = 1; i < wps.length; i++) {
-      const d = haversineNM(wps[i-1].lat, wps[i-1].lon, wps[i].lat, wps[i].lon);
-      totalNM += d;
-      html += `<div class="dist-segment">
-        <span class="dist-from-to">${wps[i-1].nom}<em>→</em>${wps[i].nom}</span>
-        <span>
-          <span class="dist-nm">${d.toFixed(2)} NM</span>
-          <span class="dist-km">${(d*1.852).toFixed(0)} km</span>
-        </span>
-      </div>`;
-    }
+
+    troncons.forEach((troncon, ti) => {
+      const couleur = COULEURS[ti % COULEURS.length];
+      let jourNM = 0;
+
+      if (multiJour) {
+        html += `<div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;
+          color:${couleur};text-transform:uppercase;margin:${ti>0?'1rem':'.2rem'} 0 .4rem;
+          display:flex;align-items:center;gap:8px">
+          <span style="width:14px;height:3px;background:${couleur};border-radius:2px;display:inline-block"></span>
+          Jour ${ti+1}
+        </div>`;
+      }
+
+      for (let i = 1; i < troncon.length; i++) {
+        const a = troncon[i-1], b = troncon[i];
+        const d = haversineNM(a.lat, a.lng, b.lat, b.lng);
+        jourNM += d;
+        html += `<div class="dist-segment">
+          <span class="dist-from-to">${a.nom}<em>→</em>${b.nom}</span>
+          <span>
+            <span class="dist-nm">${d.toFixed(2)} NM</span>
+            <span class="dist-km">${(d*1.852).toFixed(0)} km</span>
+          </span>
+        </div>`;
+      }
+
+      if (multiJour) {
+        totalNM += jourNM;
+        html += `<div style="display:flex;justify-content:flex-end;padding:.3rem 0 .2rem;
+          border-top:1px solid rgba(200,168,75,.1);margin-top:.2rem">
+          <span style="font-family:'Cinzel',serif;font-size:.95rem;color:${couleur}">
+            ${jourNM.toFixed(2)} NM
+          </span>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--blanc2);
+            margin-left:6px;align-self:flex-end;padding-bottom:2px">Jour ${ti+1}</span>
+        </div>`;
+      } else {
+        totalNM += jourNM;
+      }
+    });
 
     segDiv.innerHTML = html;
     totalNMEl.textContent = totalNM.toFixed(2);
     totalKMEl.textContent = '≈ ' + (totalNM * 1.852).toFixed(0) + ' km';
-    wpCountEl.textContent = wps.length + ' waypoints';
+    const wpCount = rows.filter(r => r.type !== 'ESCALE').length;
+    wpCountEl.textContent = wpCount + ' waypoints' + (multiJour ? ' · ' + troncons.length + ' jours' : '');
 
   } catch(e) {
     console.error('Distances NM :', e);
@@ -917,23 +992,29 @@ function ouvrirVoyage(id) {
   document.querySelectorAll('.fbtn')[0]?.classList.add('active');
   renderJournal();
 
- // Carte
-   // ← Chargement automatique des distances NM depuis le Google Sheet
+  // Distances NM depuis Google Sheet
   chargerDistances(voyageActif.sheetUrl || '');
 
-  document.getElementById('vCarteTitre').textContent = 'La Route — ' + voyageActif.titre;
-  document.getElementById('vCarteSub').textContent = voyageActif.lieu;
-  const carteZone = document.getElementById('vCartesImgs');
+  // Section carte/photos
+  document.getElementById('vCarteTitre').textContent = voyageActif.titre;
+  document.getElementById('vCarteSub').textContent = voyageActif.lieu + ' · ' + voyageActif.periode;
+
+  // Galerie photos du voyage (cartesImgs + carteImg)
   const imgs = voyageActif.cartesImgs || (voyageActif.carteImg ? [voyageActif.carteImg] : []);
-  carteZone.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">` +
-  imgs.map(src =>
-    `<img src="${src}" onclick="ouvrirLb('${src}')" style="width:100%;height:250px;object-fit:contain;border-radius:3px;border:1px solid var(--bdr2);opacity:.85;display:block;cursor:pointer">`
-  ).join('') +
-`</div>`;
-  const ci = document.getElementById('vCarteImg');
-  if (voyageActif.carteImg) { ci.src = voyageActif.carteImg; ci.style.display = 'block'; }
-  else ci.style.display = 'none';
-  initMapVoyage();
+  const pgrid = document.getElementById('voyagePhotosGrid');
+  if (imgs.length > 0) {
+    pgrid.innerHTML = imgs.map(src =>
+      `<div class="photo-thumb" onclick="ouvrirLb('${src}')">
+        <img src="${src}" alt="" loading="lazy">
+      </div>`
+    ).join('');
+    document.querySelector('.voyage-photos').style.display = 'block';
+  } else {
+    document.querySelector('.voyage-photos').style.display = 'none';
+  }
+
+  // Zone images supplémentaires (cartes statiques)
+  document.getElementById('vCartesImgs').innerHTML = '';
 }
 
 // ================================================
@@ -946,17 +1027,15 @@ function afficherAccueil() {
   document.getElementById('navVoyage').style.display = 'none';
   voyageActif = null;
   window.scrollTo(0,0);
-  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
-  }
- function afficherAccueilListeVoyage() {
+}
+function afficherAccueilListeVoyage() {
   document.getElementById('pageAccueil').style.display = 'block';
   document.getElementById('vueVoyage').style.display = 'none';
   document.getElementById('navAccueil').style.display = 'block';
   document.getElementById('navVoyage').style.display = 'none';
   voyageActif = null;
   window.scrollTo(0,0);
-  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
-navScrollTo('#voyages');
+  navScrollTo('#voyages');
   afficherAccueil();
   setTimeout(() => navScrollTo('#voyages'), 100);
 }
@@ -1034,46 +1113,6 @@ function closeModal() { document.getElementById('modal').classList.add('hidden')
 document.getElementById('modal').addEventListener('click', e => { if (e.target===document.getElementById('modal')) closeModal(); });
 
 
-
-// ================================================
-// CARTE OPENSTREETMAP + OPENSTREETMAP TILES
-// ================================================
-function initMapVoyage() {
-  if (mapVoyageInstance) { mapVoyageInstance.remove(); mapVoyageInstance = null; }
-  if (!voyageActif || voyageActif.route.length === 0) return;
-  setTimeout(() => {
-    mapVoyageInstance = L.map('mapVoyage', { scrollWheelZoom: false });
-
-    // Fond OpenStreetMap standard (compatible OpenSeaMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 17
-    }).addTo(mapVoyageInstance);
-
-    // Couche OpenSeaMap par dessus
-    L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
-      attribution: '© OpenSeaMap contributors',
-      maxZoom: 17,
-      opacity: 0.8
-    }).addTo(mapVoyageInstance);
-
-    const icon = L.divIcon({
-      html:`<div style="width:12px;height:12px;border-radius:50%;background:#c8a84b;border:2px solid #e8c870;box-shadow:0 0 8px rgba(200,168,75,.7)"></div>`,
-      className:'',iconSize:[12,12],iconAnchor:[6,6]
-    });
-    voyageActif.ports_carte.forEach(p => {
-      L.marker(p.coords, { icon }).addTo(mapVoyageInstance)
-        .bindPopup(`<div style="font-family:monospace;font-size:11px"><strong style="color:#c8a84b">${p.nom}</strong><br><span style="color:#666">${p.desc}</span></div>`);
-    });
-  L.polyline(voyageActif.route, { 
-  color: voyageActif.couleurRoute || '#1a3a5c', 
-  weight: 5, 
-  opacity: .9,
-  dashArray: '2,6'
-}).addTo(mapVoyageInstance);
-    mapVoyageInstance.fitBounds(voyageActif.route, { padding:[40,40] });
-  }, 100);
-}
 
 // ================================================
 // RENDER MÉDIAS
