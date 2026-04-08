@@ -475,7 +475,7 @@ async function chargerVoyage(url, nom) {
 
       troncon.forEach((p, i) => {
         const iPrev = i > 0 ? troncon[i-1] : null;
-        const couleur = p.type === 'DEP' ? '#8bc87a' : p.type === 'ARR' ? '#e57373' : '#c8a84b';
+        const couleur = p.type === 'DEP' ? '#8bc87a' : p.type === 'ARR' ? '#e57373' : '#0915bd';
         const taille  = (p.type === 'DEP' || p.type === 'ARR') ? 14 : 10;
         const icon = L.divIcon({
           html: '<div style="width:'+taille+'px;height:'+taille+'px;border-radius:50%;background:'+couleur+';border:2px solid '+(couleur === '#c8a84b' ? '#e8c870' : '#fff')+';box-shadow:0 0 6px '+couleur+'88"></div>',
