@@ -298,7 +298,7 @@ let nmParJour = [];
 // Dessine des marqueurs triangulaires dans le sens de navigation
 function ajouterFleches(map, latlngs, couleur, markersLayer) {
   // Une flèche par segment (si assez de points, sinon au milieu)
-  const step = Math.max(1, Math.floor(latlngs.length / 5));
+  const step = Math.max(1, Math.floor(latlngs.length / 4));
   for (let i = step; i < latlngs.length; i += step) {
     const a = latlngs[i-1];
     const b = latlngs[i];
@@ -312,7 +312,7 @@ function ajouterFleches(map, latlngs, couleur, markersLayer) {
       width:0;height:0;
       border-left:6px solid transparent;
       border-right:6px solid transparent;
-      border-bottom:13px solid ${couleur};
+      border-bottom:14px solid ${couleur};
       transform:rotate(${angle}deg);
       opacity:0.9;
       filter:drop-shadow(0 0 2px ${couleur});
