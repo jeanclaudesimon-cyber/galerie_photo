@@ -310,9 +310,9 @@ function ajouterFleches(map, latlngs, couleur, markersLayer) {
     const angle = Math.atan2(dLng, dLat) * 180 / Math.PI;
     const html = `<div style="
       width:0;height:0;
-      border-left:5px solid transparent;
-      border-right:5px solid transparent;
-      border-bottom:11px solid ${couleur};
+      border-left:6px solid transparent;
+      border-right:6px solid transparent;
+      border-bottom:13px solid ${couleur};
       transform:rotate(${angle}deg);
       opacity:0.9;
       filter:drop-shadow(0 0 2px ${couleur});
