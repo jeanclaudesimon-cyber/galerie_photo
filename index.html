@@ -21,6 +21,137 @@
     #tile-voilier-cta { color: #c8a84b; }
     #tile-velo .tile-bg { border-top: 2px solid #4fc3f7; }
     #tile-velo-cta { color: #4fc3f7; }
+    /* ═══════════════════════════════════════
+   TUILE CUISINE — La Cuisine de JC
+═══════════════════════════════════════ */
+.tuile-cuisine {
+  width: 320px;
+  background: #ffffff;
+  border: 3px solid #e67627;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+  text-decoration: none;
+  display: block;
+}
+.tuile-cuisine:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(230,118,39,.25); }
+.cuisine-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
+.cuisine-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #e67627;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.cuisine-titre-box {
+  background: #e67627;
+  border-radius: 8px;
+  padding: .5rem .9rem;
+  margin-bottom: .4rem;
+  display: inline-block;
+}
+.cuisine-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.cuisine-sous-box {
+  background: #e67627;
+  border-radius: 8px;
+  padding: .35rem .9rem;
+  display: inline-block;
+  margin-bottom: .8rem;
+}
+.cuisine-sous {
+  font-family: 'Crimson Pro', serif;
+  font-size: .9rem;
+  color: #000000;
+  font-style: italic;
+}
+.cuisine-badge {
+  display: inline-block;
+  background: #fff5ee;
+  border: 1px solid #e67627;
+  color: #e67627;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+/* ═══════════════════════════════════════
+   TUILE RC — Off-Road Obsession
+═══════════════════════════════════════ */
+.tuile-rc {
+  width: 320px;
+  background: #244fed;
+  border: 3px solid #0f1a42;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+}
+.tuile-rc:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,26,66,.6); }
+.tuile-rc::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+}
+.tuile-rc::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; left: -20px;
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,.04);
+  border-radius: 50%;
+}
+.rc-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
+.rc-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,.6);
+  text-transform: uppercase;
+  margin-bottom: .3rem;
+}
+.rc-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: .2rem;
+}
+.rc-sous {
+  font-family: 'Crimson Pro', serif;
+  font-size: .9rem;
+  color: rgba(255,255,255,.7);
+  font-style: italic;
+}
+.rc-badge {
+  margin-top: .8rem;
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+
   </style>
 </head>
 <body>
@@ -218,7 +349,29 @@
     <span class="tile-cta" id="tile-velo-cta">Explorer →</span>
   </div>
 </a>
-    
+
+<a href="cuisine.html" class="tuile-cuisine">
+    <span class="cuisine-icon">🍳</span>
+    <div class="cuisine-label">Carnet de recettes</div>
+    <div class="cuisine-titre-box">
+      <div class="cuisine-titre">La Cuisine de JC</div>
+    </div><br>
+    <div class="cuisine-sous-box">
+      <div class="cuisine-sous">Plaisirs Gourmands &amp; Marmite &amp; Mystères</div>
+    </div>
+    <br>
+    <span class="cuisine-badge">🚧 À venir</span>
+  </a>
+
+  <a href="rc.html" class="tuile-rc">
+    <span class="rc-icon">🏎️</span>
+    <div class="rc-label">Collection privée</div>
+    <div class="rc-titre">Off-Road Obsession</div>
+    <div class="rc-sous">1/10 &amp; 1/18 · Modèles à l'Épreuve</div>
+    <span class="rc-badge">🔒 Accès protégé</span>
+  </a>
+
+
   </div>
 </section>
 
