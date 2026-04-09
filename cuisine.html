@@ -6,8 +6,8 @@
 <title>La Cuisine de JC — Plaisirs Gourmands</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --or:#e67627;--or2:#f4a261;--or3:rgba(230,118,39,0.12);--or4:rgba(230,118,39,0.06);
+:root{
+  --or:#e67627;--or2:#f4a261;--or3:rgba(230,118,39,0.12);--or4:rgba(230,118,39,0.05);
   --fond:#f2cbaa;--fond2:#fdf6ee;--fond3:#fff8f2;
   --noir:#2c1810;--noir2:#4a2c1a;--gris:#8a6a55;
   --bdr:rgba(230,118,39,0.2);--bdr2:rgba(230,118,39,0.45);
@@ -15,16 +15,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Lato',sans-serif;background:var(--fond);color:var(--noir);min-height:100vh;overflow-x:hidden}
-
-/* TEXTURE FOND */
 body::before{content:'';position:fixed;inset:0;
   background-image:radial-gradient(circle at 20% 50%,rgba(230,118,39,.06) 0%,transparent 50%),
     radial-gradient(circle at 80% 20%,rgba(244,162,97,.08) 0%,transparent 40%);
   pointer-events:none;z-index:0}
-
-/* HEADER */
-header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
-  padding:0 2rem;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(44,24,16,.3)}
+header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);padding:0 2rem;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(44,24,16,.3)}
 .hdr{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-icon{width:42px;height:42px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
@@ -33,43 +28,29 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
 .nav-links{display:flex;gap:.5rem;flex-wrap:wrap}
 .nav-link{color:rgba(242,203,170,.6);font-size:11px;letter-spacing:1px;text-decoration:none;padding:5px 12px;border:1px solid rgba(242,203,170,.15);border-radius:3px;transition:.2s;font-family:'Lato',sans-serif}
 .nav-link:hover{color:var(--or);border-color:var(--or)}
-
-/* HERO */
 .hero{position:relative;padding:3rem 2rem 2rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;z-index:2}
-@media(max-width:768px){.hero{grid-template-columns:1fr}}
-
-/* CALENDRIER */
 .cal-wrap{background:var(--fond3);border:2px solid var(--bdr2);border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(44,24,16,.1)}
-.cal-header{background:linear-gradient(135deg,var(--or),var(--or2));padding:1rem;text-align:center;position:relative}
+.cal-header{background:linear-gradient(135deg,var(--or),var(--or2));padding:1rem;text-align:center}
 .cal-cuistot{font-size:3.5rem;line-height:1;display:block}
 .cal-mois{font-family:'Playfair Display',serif;font-size:1.3rem;color:#fff;font-weight:700;margin-top:.3rem}
 .cal-annee{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:3px;font-family:'Lato',sans-serif;text-transform:uppercase}
 .cal-grid-header{display:grid;grid-template-columns:repeat(7,1fr);background:var(--noir2)}
 .cal-jour-nom{text-align:center;padding:.4rem;font-size:9px;letter-spacing:1px;color:rgba(242,203,170,.6);font-family:'Lato',sans-serif;text-transform:uppercase}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:.5rem;gap:2px}
-.cal-day{text-align:center;padding:.35rem .2rem;font-size:.8rem;color:var(--gris);border-radius:6px;cursor:default}
+.cal-day{text-align:center;padding:.35rem .2rem;font-size:.8rem;color:var(--gris);border-radius:6px}
 .cal-day.today{background:var(--or);color:#fff;font-weight:700;border-radius:8px}
-.cal-day.other-month{opacity:.3}
-.cal-day:not(.empty):not(.other-month):hover{background:var(--or3)}
-.cal-day.empty{pointer-events:none}
-
-/* BLAGUE */
 .blague-wrap{background:var(--fond3);border:2px solid var(--bdr2);border-radius:20px;padding:1.5rem;box-shadow:0 8px 30px rgba(44,24,16,.1);display:flex;flex-direction:column;gap:1rem}
 .blague-titre{font-family:'Dancing Script',cursive;font-size:1.4rem;color:var(--or);display:flex;align-items:center;gap:.5rem}
 .blague-texte{font-family:'Playfair Display',serif;font-size:1rem;color:var(--noir2);line-height:1.7;font-style:italic;background:var(--or4);border-left:3px solid var(--or);padding:.8rem 1rem;border-radius:0 8px 8px 0;min-height:80px}
 .blague-punch{font-weight:700;color:var(--or);font-style:normal}
-.btn-kroll{display:inline-flex;align-items:center;gap:6px;background:var(--noir);color:var(--fond);padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:1px;text-decoration:none;font-family:'Lato',sans-serif;transition:.2s;border:none;cursor:pointer}
+.btn-kroll{display:inline-flex;align-items:center;gap:6px;background:var(--noir);color:var(--fond);padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:1px;text-decoration:none;font-family:'Lato',sans-serif;transition:.2s}
 .btn-kroll:hover{background:var(--noir2);color:var(--or)}
 .btn-nouvelle-blague{display:inline-flex;align-items:center;gap:6px;background:var(--or3);color:var(--or);padding:7px 14px;border-radius:8px;font-size:11px;letter-spacing:1px;font-family:'Lato',sans-serif;transition:.2s;border:1px solid var(--bdr2);cursor:pointer}
 .btn-nouvelle-blague:hover{background:var(--or);color:#fff}
-
-/* TITRE SECTION */
 .section-wrap{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;position:relative;z-index:2}
 .section-titre{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--noir);margin-bottom:.3rem;display:flex;align-items:center;gap:.8rem}
 .section-titre::before{content:'';width:40px;height:3px;background:var(--or);border-radius:2px;flex-shrink:0}
 .section-sub{font-size:.9rem;color:var(--gris);margin-bottom:1.5rem;margin-left:52px}
-
-/* BOUTONS CATÉGORIES */
 .cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.9rem;margin-bottom:2rem}
 .cat-btn{background:var(--or);border:none;border-radius:14px;padding:1.1rem 1.2rem;cursor:pointer;transition:.25s;text-align:left;position:relative;overflow:hidden;box-shadow:0 4px 15px rgba(230,118,39,.25)}
 .cat-btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(230,118,39,.35)}
@@ -77,18 +58,14 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
 .cat-icon{font-size:2rem;display:block;margin-bottom:.5rem}
 .cat-nom{font-family:'Playfair Display',serif;font-size:1rem;color:#fff;font-weight:700;display:block;margin-bottom:.2rem}
 .cat-count{font-size:10px;color:rgba(255,255,255,.7);letter-spacing:1px;font-family:'Lato',sans-serif}
-
-/* FAVORIS */
 .favoris-wrap{border:2px dashed var(--bdr2);border-radius:16px;padding:1.5rem;background:var(--fond3)}
-.favoris-titre{font-family:'Dancing Script',cursive;font-size:1.5rem;color:var(--or);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.favoris-titre{font-family:'Dancing Script',cursive;font-size:1.5rem;color:var(--or);margin-bottom:1rem}
 .favoris-liste{display:flex;flex-direction:column;gap:.4rem}
 .favori-item{display:flex;align-items:center;gap:.8rem;padding:.5rem .8rem;border-radius:8px;cursor:pointer;transition:.2s;text-decoration:none;color:var(--noir2)}
 .favori-item:hover{background:var(--or3)}
 .favori-num{width:22px;height:22px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;flex-shrink:0}
 .favori-nom{font-family:'Playfair Display',serif;font-size:.95rem}
 .favori-cat{font-size:10px;color:var(--gris);margin-left:auto;letter-spacing:1px;font-family:'Lato',sans-serif;text-transform:uppercase}
-
-/* MODAL LISTE RECETTES */
 .modal-overlay{position:fixed;inset:0;background:rgba(44,24,16,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
 .modal-box{background:var(--fond3);border-radius:20px;max-width:700px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(44,24,16,.4)}
@@ -99,25 +76,16 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
 .modal-body{padding:1.5rem}
 .recette-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1rem;border-radius:10px;cursor:pointer;transition:.2s;border:1px solid transparent;text-decoration:none;color:var(--noir)}
 .recette-item:hover{background:var(--or3);border-color:var(--bdr)}
-.recette-etoiles{color:var(--or);font-size:.75rem;letter-spacing:1px}
+.recette-etoiles{color:var(--or);font-size:.75rem}
 .recette-nom{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
 .recette-desc{font-size:.82rem;color:var(--gris);font-style:italic}
-.recette-diff{font-size:10px;color:var(--gris);letter-spacing:1px;font-family:'Lato',sans-serif;margin-left:auto;white-space:nowrap}
-.recette-vide{text-align:center;padding:2rem;color:var(--gris);font-style:italic;font-family:'Playfair Display',serif}
-
-/* STATUS BAR */
+.chargement{text-align:center;padding:2rem;color:var(--gris);font-style:italic;font-family:'Playfair Display',serif}
 .statusbar{background:var(--noir);padding:8px 2rem;display:flex;justify-content:space-between;font-size:10px;color:rgba(242,203,170,.3);font-family:'Lato',sans-serif;letter-spacing:1px;position:relative;z-index:2}
-
-/* RESPONSIVE */
-@media(max-width:600px){
-  .cats-grid{grid-template-columns:1fr 1fr}
-  .hero{padding:1.5rem 1rem}
-  .section-wrap{padding:1rem}
-}
+@media(max-width:768px){.hero{grid-template-columns:1fr}}
+@media(max-width:600px){.cats-grid{grid-template-columns:1fr 1fr}.hero{padding:1.5rem 1rem}.section-wrap{padding:1rem}}
 </style>
 </head>
 <body>
-
 <header>
   <div class="hdr">
     <div class="logo">
@@ -134,10 +102,7 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
   </div>
 </header>
 
-<!-- HERO : CALENDRIER + BLAGUE -->
 <div class="hero">
-
-  <!-- CALENDRIER -->
   <div class="cal-wrap">
     <div class="cal-header">
       <span class="cal-cuistot" id="calCuistot">👨‍🍳</span>
@@ -145,47 +110,38 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
       <div class="cal-annee" id="calAnnee"></div>
     </div>
     <div class="cal-grid-header">
-      <div class="cal-jour-nom">Lun</div>
-      <div class="cal-jour-nom">Mar</div>
-      <div class="cal-jour-nom">Mer</div>
-      <div class="cal-jour-nom">Jeu</div>
-      <div class="cal-jour-nom">Ven</div>
-      <div class="cal-jour-nom">Sam</div>
+      <div class="cal-jour-nom">Lun</div><div class="cal-jour-nom">Mar</div>
+      <div class="cal-jour-nom">Mer</div><div class="cal-jour-nom">Jeu</div>
+      <div class="cal-jour-nom">Ven</div><div class="cal-jour-nom">Sam</div>
       <div class="cal-jour-nom">Dim</div>
     </div>
     <div class="cal-grid" id="calGrid"></div>
   </div>
-
-  <!-- BLAGUE + KROLL -->
   <div class="blague-wrap">
     <div class="blague-titre">😄 Humour du Chef</div>
     <div class="blague-texte" id="blagueTexte"></div>
     <div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:center">
-      <button class="btn-nouvelle-blague" onclick="nouvellBlague()">🎲 Autre blague</button>
+      <button class="btn-nouvelle-blague" onclick="nouvelleBlague()">🎲 Autre blague</button>
       <a href="https://kroll.be/category/Dessins-du-jour" target="_blank" class="btn-kroll">✏️ Kroll du jour →</a>
     </div>
   </div>
-
 </div>
 
-<!-- CATÉGORIES -->
 <div class="section-wrap">
   <div class="section-titre">Nos Catégories</div>
   <div class="section-sub">Choisissez une catégorie pour découvrir les recettes</div>
   <div class="cats-grid" id="catsGrid"></div>
 </div>
 
-<!-- FAVORIS -->
 <div class="section-wrap" style="padding-top:0">
   <div class="section-titre">Coups de Cœur</div>
   <div class="section-sub">Mes recettes préférées, toujours à portée de main</div>
   <div class="favoris-wrap">
     <div class="favoris-titre">⭐ Mes Favoris</div>
-    <div class="favoris-liste" id="favorisList"></div>
+    <div class="favoris-liste" id="favorisList"><div class="chargement">Chargement des favoris…</div></div>
   </div>
 </div>
 
-<!-- MODAL LISTE RECETTES -->
 <div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
   <div class="modal-box">
     <div class="modal-header">
@@ -202,70 +158,140 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// DONNÉES — CATÉGORIES
-// ═══════════════════════════════════════════
+const BASE_IMG = 'https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/';
+
+// ════════════════════════════════════════════════════════
+// VOYAGES — LISTE DES ONGLETS GOOGLE SHEETS
+// Ajoute une ligne par recette avec le lien CSV publié
+// Nom de l'onglet = ce qui s'affiche dans la liste déroulante
+// ════════════════════════════════════════════════════════
+const RECETTES_SHEETS = {
+  "Chili-con-carne":      "https://docs.google.com/spreadsheets/d/e/TON_ID_ICI/pub?gid=0&single=true&output=csv",
+  "Pate-gaumais":         "https://docs.google.com/spreadsheets/d/e/TON_ID_ICI/pub?gid=XXXXXX&single=true&output=csv",
+  "Salade-chevre-chaud":  "https://docs.google.com/spreadsheets/d/e/TON_ID_ICI/pub?gid=XXXXXX&single=true&output=csv",
+  "Tarte-aux-pommes":     "https://docs.google.com/spreadsheets/d/e/TON_ID_ICI/pub?gid=XXXXXX&single=true&output=csv",
+  "Verrines-avocat":      "https://docs.google.com/spreadsheets/d/e/TON_ID_ICI/pub?gid=XXXXXX&single=true&output=csv",
+};
+
 const CATEGORIES = [
-  { id:'zakouski',  icon:'🥂', nom:'Zakouski',          couleur:'#e67627', desc:'Apéritifs & amuse-bouches' },
-  { id:'entrees',   icon:'🥗', nom:'Entrées',            couleur:'#d4580a', desc:'Pour bien commencer' },
-  { id:'plats',     icon:'🍖', nom:'Plats Uniques',      couleur:'#c44d08', desc:'Pâté gaumais, terrines...' },
-  { id:'mijotes',   icon:'🫕', nom:'Plats Mijotés',      couleur:'#b84206', desc:'Gaume, robot Moulinex...' },
-  { id:'desserts',  icon:'🎂', nom:'Desserts & Pâtisseries', couleur:'#f4a261', desc:'Douceurs & gourmandises' },
+  { id:'zakouski', icon:'🥂', nom:'Zakouski',              couleur:'#e67627' },
+  { id:'entrees',  icon:'🥗', nom:'Entrées',               couleur:'#d4580a' },
+  { id:'plats',    icon:'🍖', nom:'Plats Uniques',         couleur:'#c44d08' },
+  { id:'mijotes',  icon:'🫕', nom:'Plats Mijotés',         couleur:'#b84206' },
+  { id:'desserts', icon:'🎂', nom:'Desserts & Pâtisseries',couleur:'#f4a261' },
 ];
 
-// ═══════════════════════════════════════════
-// DONNÉES — RECETTES
-// Ajoute tes recettes ici au fur et à mesure
-// Structure : { id, cat, nom, desc, difficulte(1-5), favori:true/false,
-//               sheetUrl:'url csv google sheet' }
-// ═══════════════════════════════════════════
-const RECETTES = [
-  { id:1, cat:'mijotes', nom:'Chili con carne revisité', desc:'Légumes frais du marché, haricots rouges, épices maison', difficulte:2, favori:true, sheetUrl:'' },
-  { id:2, cat:'plats',   nom:'Pâté gaumais',              desc:'La recette de la Gaume, tradition et terroir', difficulte:4, favori:true, sheetUrl:'' },
-  { id:3, cat:'entrees', nom:'Salade de chèvre chaud',    desc:'Miel, noix, pain grillé et herbes fraîches', difficulte:1, favori:false, sheetUrl:'' },
-  { id:4, cat:'desserts',nom:'Tarte aux pommes maison',   desc:'Pâte brisée, cannelle, pommes du jardin', difficulte:2, favori:true, sheetUrl:'' },
-  { id:5, cat:'zakouski',nom:'Verrines avocat-crevettes', desc:'Fraîcheur et élégance en une bouchée', difficulte:1, favori:false, sheetUrl:'' },
-];
-
-// ═══════════════════════════════════════════
-// BLAGUES — ajoute-en autant que tu veux !
-// ═══════════════════════════════════════════
 const BLAGUES = [
-  { texte:"Pourquoi les cuisiniers sont-ils de bonne humeur ?", punch:"Parce qu'ils ont toujours le moral… au beurre !" },
-  { texte:"Mon médecin m'a dit de surveiller ce que je mange.", punch:"Depuis, je mange devant un miroir." },
-  { texte:"Comment appelle-t-on un crocodile qui surveille la farine ?", punch:"Un gâteau-dile !" },
-  { texte:"Quelle est la différence entre un cuisinier et un chimiste ?", punch:"L'un fait des recettes, l'autre fait des réactions… et parfois c'est pareil !" },
-  { texte:"Pourquoi le beurre ne va jamais au cinéma ?", punch:"Parce qu'il fond toujours avant la fin !" },
-  { texte:"Mon fils m'a demandé ce qu'on mangeait ce soir.", punch:"J'ai dit 'de la soupe', il a fait la grimace. Je lui ai dit que c'était du 'velouté artisanal'. Il a adoré." },
-  { texte:"Un chef à ses apprentis : 'Goûtez toujours avant de servir !'", punch:"L'apprenti : 'Mais chef, c'est de la vaisselle sale…'" },
-  { texte:"Pourquoi le sel est-il philosophe ?", punch:"Parce qu'il donne du sens à tout !" },
-  { texte:"Comment s'appelle un poisson sans yeux ?", punch:"Un posson. Et sans queue ? Un poi." },
-  { texte:"Ma femme a dit que je cuisinais comme sa mère.", punch:"J'ai mis du temps à comprendre que c'était un compliment." },
-  { texte:"Quel est le comble pour un boulanger ?", punch:"De manquer de pain… et de patience !" },
-  { texte:"Pourquoi les spaghettis sont-ils philosophes ?", punch:"Parce qu'ils ont beaucoup de fil à retordre." },
-  { texte:"Comment appelle-t-on quelqu'un qui vole des épices ?", punch:"Un assaissonneur en fuite !" },
-  { texte:"Mon régime ne marche pas. J'ai mangé des carottes toute la semaine.", punch:"Mais maintenant je vois très bien le frigo la nuit…" },
-  { texte:"Un client au restaurant : 'Garçon, il y a une mouche dans ma soupe !'", punch:"Le serveur : 'Chut, tout le monde va en vouloir une !'" },
-  { texte:"Pourquoi les cuisiniers ne jouent-ils jamais aux cartes ?", punch:"Parce qu'ils ont peur de faire un mauvais mélange !" },
-  { texte:"Comment s'appelle un chat tombé dans un pot de confiture ?", punch:"Un chat-marmelade !" },
-  { texte:"Ma grand-mère cuisinait sans recette. Elle appelait ça de l'improvisation.", punch:"Nous, on appelait ça 'on commande une pizza ce soir'." },
-  { texte:"Pourquoi les oignons font-ils pleurer ?", punch:"Parce qu'ils ont entendu parler de ton régime sans glucides." },
-  { texte:"Un chef étoilé présente son plat : 'Voici une émulsion de légumineuses sur lit de céréales anciennes.'", punch:"En clair : des haricots sur du riz. Mais à 45€ le couvert." },
-  { texte:"Comment appelle-t-on un champignon qu'on invite à dîner ?", punch:"Un bon convive ! (bon comestible)" },
-  { texte:"Pourquoi le citron est-il toujours de bonne humeur ?", punch:"Parce qu'il ne se prend jamais au sérieux — il sait qu'il n'est qu'un zeste !" },
-  { texte:"Mon fils de 8 ans a voulu m'aider en cuisine.", punch:"On a commandé des pizzas." },
-  { texte:"Quelle est la différence entre un cuisinier belge et un cuisinier français ?", punch:"Le Belge met des frites partout. Le Français dit que les frites sont belges." },
-  { texte:"Comment appelle-t-on un fromage qui n'est pas à toi ?", punch:"Du fromage… à moi non !" },
-  { texte:"Pourquoi mange-t-on des crêpes à la Chandeleur ?", punch:"Parce qu'une Chandeleur sans crêpes, c'est une journée sans soleil dans la poêle !" },
-  { texte:"Mon plat préféré c'est les restes du lendemain.", punch:"Mystérieusement, ils ont toujours meilleur goût que la veille." },
-  { texte:"Qu'est-ce qu'un cannibale végétarien ?", punch:"Quelqu'un qui ne mange que des légumes… mais qui regarde les autres manger de la viande." },
-  { texte:"Pourquoi la mayonnaise ne raconte jamais de blagues ?", punch:"Elle a peur de tourner." },
-  { texte:"Un enfant à sa mère : 'Maman, c'est quoi ce truc vert dans la soupe ?'", punch:"La mère : 'C'est du persil, c'est bon pour toi.' L'enfant : 'Et le truc marron à côté ?' '…Mange et tais-toi.'" },
+  {t:"Pourquoi les cuisiniers sont-ils de bonne humeur ?",p:"Parce qu'ils ont toujours le moral… au beurre !"},
+  {t:"Mon médecin m'a dit de surveiller ce que je mange.",p:"Depuis, je mange devant un miroir."},
+  {t:"Comment appelle-t-on un crocodile qui surveille la farine ?",p:"Un gâteau-dile !"},
+  {t:"Quelle différence entre un cuisinier et un chimiste ?",p:"L'un fait des recettes, l'autre des réactions… et parfois c'est pareil !"},
+  {t:"Pourquoi le beurre ne va jamais au cinéma ?",p:"Parce qu'il fond toujours avant la fin !"},
+  {t:"Mon fils m'a demandé ce qu'on mangeait ce soir.",p:"J'ai dit 'de la soupe'. Il a grimacé. J'ai dit 'velouté artisanal'. Il a adoré."},
+  {t:"Un chef à ses apprentis : 'Goûtez toujours avant de servir !'",p:"L'apprenti : 'Mais chef, c'est de la vaisselle sale…'"},
+  {t:"Pourquoi le sel est-il philosophe ?",p:"Parce qu'il donne du sens à tout !"},
+  {t:"Comment s'appelle un poisson sans yeux ?",p:"Un posson. Et sans queue ? Un poi."},
+  {t:"Ma femme a dit que je cuisinais comme sa mère.",p:"J'ai mis du temps à comprendre que c'était un compliment."},
+  {t:"Quel est le comble pour un boulanger ?",p:"De manquer de pain… et de patience !"},
+  {t:"Pourquoi les spaghettis sont-ils philosophes ?",p:"Parce qu'ils ont beaucoup de fil à retordre."},
+  {t:"Comment appelle-t-on quelqu'un qui vole des épices ?",p:"Un assaissonneur en fuite !"},
+  {t:"Mon régime ne marche pas. J'ai mangé des carottes toute la semaine.",p:"Mais maintenant je vois très bien le frigo la nuit…"},
+  {t:"Un client : 'Garçon, il y a une mouche dans ma soupe !'",p:"Le serveur : 'Chut, tout le monde va en vouloir une !'"},
+  {t:"Pourquoi les cuisiniers ne jouent-ils jamais aux cartes ?",p:"Parce qu'ils ont peur de faire un mauvais mélange !"},
+  {t:"Ma grand-mère cuisinait sans recette. Elle appelait ça de l'improvisation.",p:"Nous, on appelait ça 'on commande une pizza ce soir'."},
+  {t:"Pourquoi les oignons font-ils pleurer ?",p:"Parce qu'ils ont entendu parler de ton régime sans glucides."},
+  {t:"Un chef étoilé : 'Émulsion de légumineuses sur lit de céréales anciennes.'",p:"En clair : des haricots sur du riz. Mais à 45€ le couvert."},
+  {t:"Comment appelle-t-on un champignon qu'on invite à dîner ?",p:"Un bon convive ! (bon comestible)"},
+  {t:"Pourquoi le citron est-il toujours de bonne humeur ?",p:"Il sait qu'il n'est qu'un zeste !"},
+  {t:"Mon fils de 8 ans a voulu m'aider en cuisine.",p:"On a commandé des pizzas."},
+  {t:"Quelle différence entre un cuisinier belge et français ?",p:"Le Belge met des frites partout. Le Français dit que les frites sont belges."},
+  {t:"Comment appelle-t-on un fromage qui n'est pas à toi ?",p:"Du fromage… à moi non !"},
+  {t:"Pourquoi mange-t-on des crêpes à la Chandeleur ?",p:"Une Chandeleur sans crêpes, c'est une journée sans soleil dans la poêle !"},
+  {t:"Mon plat préféré c'est les restes du lendemain.",p:"Mystérieusement, ils ont toujours meilleur goût que la veille."},
+  {t:"Pourquoi la mayonnaise ne raconte jamais de blagues ?",p:"Elle a peur de tourner."},
+  {t:"Un enfant : 'Maman, c'est quoi ce truc vert dans la soupe ?'",p:"'Du persil.' 'Et le truc marron ?' '…Mange et tais-toi.'"},
+  {t:"Comment s'appelle un chat tombé dans un pot de confiture ?",p:"Un chat-marmelade !"},
+  {t:"Pourquoi le pain au chocolat s'appelle chocolatine dans le Sud ?",p:"Pour que les Belges et les Parisiens aient quelque chose à expliquer aux autres."},
 ];
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// CACHE DES RECETTES CHARGÉES DEPUIS SHEETS
+// ════════════════════════════════════════════════════════
+let recettesCache = {};
+let recettesChargees = [];
+
+// Lit un CSV de recette et retourne un objet structuré
+function parseRecetteCSV(texte, nomOnglet) {
+  const lignes = texte.trim().split(/\r?\n/).map(l => {
+    const sep = l.includes('\t') ? '\t' : ',';
+    return l.split(sep).map(v => v.replace(/^"|"$/g,'').trim());
+  });
+
+  const get = (cle) => {
+    const l = lignes.find(r => r[0] === cle);
+    return l ? l[1] || '' : '';
+  };
+
+  // Ingrédients : entre INGREDIENTS et FIN_INGREDIENTS
+  const iStart = lignes.findIndex(r => r[0] === 'INGREDIENTS') + 2; // +2 pour sauter l'en-tête NOM/QTE/UNITE
+  const iEnd   = lignes.findIndex(r => r[0] === 'FIN_INGREDIENTS');
+  const ingredients = (iStart > 1 && iEnd > iStart)
+    ? lignes.slice(iStart, iEnd).filter(r => r[0]).map(r => ({
+        nom: r[0], qte: parseFloat(r[1]) || 0, unite: r[2] || ''
+      }))
+    : [];
+
+  // Étapes : entre ETAPES et FIN_ETAPES
+  const eStart = lignes.findIndex(r => r[0] === 'ETAPES') + 2;
+  const eEnd   = lignes.findIndex(r => r[0] === 'FIN_ETAPES');
+  const etapes = (eStart > 1 && eEnd > eStart)
+    ? lignes.slice(eStart, eEnd).filter(r => r[1]).map(r => r[1])
+    : [];
+
+  return {
+    id: nomOnglet,
+    nom:          get('TITRE'),
+    cat:          get('CATEGORIE'),
+    difficulte:   parseInt(get('DIFFICULTE')) || 1,
+    desc:         get('DESCRIPTION'),
+    portions_base:parseInt(get('PORTIONS_BASE')) || 4,
+    favori:       get('FAVORI').toLowerCase() === 'oui',
+    photo:        get('PHOTO'),
+    tempsPrep:    get('TEMPS_PREP'),
+    tempsCuisson: get('TEMPS_CUISSON'),
+    noteEtoiles:  get('NOTE_ETOILES'),
+    noteTexte:    get('NOTE_TEXTE'),
+    ingredients,
+    etapes,
+    sheetUrl:     RECETTES_SHEETS[nomOnglet] || ''
+  };
+}
+
+// Charge toutes les recettes depuis Sheets
+async function chargerToutesLesRecettes() {
+  recettesChargees = [];
+  const promesses = Object.entries(RECETTES_SHEETS).map(async ([nom, url]) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const texte = await res.text();
+      const recette = parseRecetteCSV(texte, nom);
+      recettesCache[nom] = recette;
+      return recette;
+    } catch(e) {
+      console.warn('Erreur chargement recette:', nom, e);
+      return null;
+    }
+  });
+  const resultats = await Promise.all(promesses);
+  recettesChargees = resultats.filter(r => r && r.nom);
+  renderCats();
+  renderFavoris();
+}
+
+// ════════════════════════════════════════════════════════
 // CALENDRIER
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 const CUISTOTS = ['👨‍🍳','🧑‍🍳','👩‍🍳','🍳','🥘','🫕','🧆','🥗','🍲'];
 function buildCalendar() {
   const now = new Date();
@@ -277,44 +303,37 @@ function buildCalendar() {
   const grid = document.getElementById('calGrid');
   const premier = new Date(y, m, 1);
   const dernier = new Date(y, m+1, 0).getDate();
-  let jourDepart = premier.getDay(); // 0=dim
-  jourDepart = jourDepart === 0 ? 6 : jourDepart - 1; // lundi=0
+  let dep = premier.getDay();
+  dep = dep === 0 ? 6 : dep - 1;
   grid.innerHTML = '';
-  for (let i=0; i<jourDepart; i++) {
-    const d = document.createElement('div');
-    d.className = 'cal-day empty';
-    grid.appendChild(d);
-  }
+  for (let i=0; i<dep; i++) { const d=document.createElement('div'); d.className='cal-day'; grid.appendChild(d); }
   for (let j=1; j<=dernier; j++) {
-    const d = document.createElement('div');
-    d.className = 'cal-day' + (j === now.getDate() ? ' today' : '');
-    d.textContent = j;
-    grid.appendChild(d);
+    const d=document.createElement('div');
+    d.className='cal-day'+(j===now.getDate()?' today':'');
+    d.textContent=j; grid.appendChild(d);
   }
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // BLAGUES
-// ═══════════════════════════════════════════
-let blagueIndex = Math.floor(Math.random() * BLAGUES.length);
+// ════════════════════════════════════════════════════════
+let blagueIdx = Math.floor(Math.random()*BLAGUES.length);
 function afficherBlague() {
-  const b = BLAGUES[blagueIndex];
+  const b = BLAGUES[blagueIdx];
   document.getElementById('blagueTexte').innerHTML =
-    b.texte + '<br><span class="blague-punch">👉 ' + b.punch + '</span>';
+    b.t+'<br><span class="blague-punch">👉 '+b.p+'</span>';
 }
-function nouvellBlague() {
-  let next;
-  do { next = Math.floor(Math.random() * BLAGUES.length); } while (next === blagueIndex);
-  blagueIndex = next;
-  afficherBlague();
+function nouvelleBlague() {
+  let n; do { n=Math.floor(Math.random()*BLAGUES.length); } while(n===blagueIdx);
+  blagueIdx=n; afficherBlague();
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // CATÉGORIES
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function renderCats() {
   document.getElementById('catsGrid').innerHTML = CATEGORIES.map(cat => {
-    const nb = RECETTES.filter(r => r.cat === cat.id).length;
+    const nb = recettesChargees.filter(r => r.cat === cat.id).length;
     return `<button class="cat-btn" style="background:${cat.couleur}" onclick="ouvrirCategorie('${cat.id}','${cat.nom}','${cat.icon}')">
       <span class="cat-icon">${cat.icon}</span>
       <span class="cat-nom">${cat.nom}</span>
@@ -323,66 +342,64 @@ function renderCats() {
   }).join('');
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // FAVORIS
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function renderFavoris() {
-  const favs = RECETTES.filter(r => r.favori);
+  const favs = recettesChargees.filter(r => r.favori);
   const el = document.getElementById('favorisList');
   if (favs.length === 0) {
-    el.innerHTML = '<div style="color:var(--gris);font-style:italic;padding:.5rem">Aucun favori pour l\'instant — marque tes recettes préférées !</div>';
+    el.innerHTML = '<div style="color:var(--gris);font-style:italic;padding:.5rem">Aucun favori — marque tes recettes préférées dans Sheets !</div>';
     return;
   }
   el.innerHTML = favs.map((r,i) => {
     const cat = CATEGORIES.find(c => c.id === r.cat);
-    return `<a class="favori-item" href="cuisine-recette.html?id=${r.id}">
+    return `<a class="favori-item" href="cuisine-recette.html?id=${encodeURIComponent(r.id)}">
       <div class="favori-num">${i+1}</div>
       <div>
         <div class="favori-nom">${r.nom}</div>
         <div style="font-size:.78rem;color:var(--gris);font-style:italic">${r.desc}</div>
       </div>
-      <div class="favori-cat">${cat ? cat.icon+' '+cat.nom : ''}</div>
+      <div class="favori-cat">${cat?cat.icon+' '+cat.nom:''}</div>
     </a>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // MODAL LISTE RECETTES
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function ouvrirCategorie(catId, nomCat, iconCat) {
-  const recettes = RECETTES.filter(r => r.cat === catId);
-  document.getElementById('modalTitre').textContent = iconCat + ' ' + nomCat;
+  const recettes = recettesChargees.filter(r => r.cat === catId);
+  document.getElementById('modalTitre').textContent = iconCat+' '+nomCat;
   const body = document.getElementById('modalBody');
   if (recettes.length === 0) {
-    body.innerHTML = '<div class="recette-vide">Aucune recette dans cette catégorie pour l\'instant.<br>À venir bientôt… 🍳</div>';
+    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gris);font-style:italic;font-family:Playfair Display,serif">Aucune recette dans cette catégorie pour l\'instant.<br>À venir bientôt… 🍳</div>';
   } else {
     body.innerHTML = recettes.map(r => {
-      const etoiles = '★'.repeat(r.difficulte) + '☆'.repeat(5-r.difficulte);
-      return `<a class="recette-item" href="cuisine-recette.html?id=${r.id}">
-        <div style="font-size:1.8rem">🍽️</div>
+      const etoiles = '★'.repeat(r.difficulte)+'☆'.repeat(5-r.difficulte);
+      const temps = r.tempsPrep ? '⏱ '+r.tempsPrep+(r.tempsCuisson?' · 🔥 '+r.tempsCuisson:'') : '';
+      return `<a class="recette-item" href="cuisine-recette.html?id=${encodeURIComponent(r.id)}">
+        <div style="font-size:1.8rem">${CATEGORIES.find(c=>c.id===r.cat)?.icon||'🍽️'}</div>
         <div style="flex:1">
           <div class="recette-nom">${r.nom}</div>
           <div class="recette-desc">${r.desc}</div>
-          <div class="recette-etoiles">${etoiles}</div>
+          <div class="recette-etoiles">${etoiles}${temps?' &nbsp;·&nbsp; <span style="font-size:10px;color:var(--gris)">'+temps+'</span>':''}</div>
         </div>
-        <div class="recette-diff">Difficulté ${r.difficulte}/5</div>
       </a>`;
     }).join('');
   }
   document.getElementById('modalOverlay').classList.add('open');
 }
-function fermerModal(e) { if (e.target === document.getElementById('modalOverlay')) fermerModalBtn(); }
-function fermerModalBtn() { document.getElementById('modalOverlay').classList.remove('open'); }
-document.addEventListener('keydown', e => { if (e.key==='Escape') fermerModalBtn(); });
+function fermerModal(e){if(e.target===document.getElementById('modalOverlay'))fermerModalBtn();}
+function fermerModalBtn(){document.getElementById('modalOverlay').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')fermerModalBtn();});
 
-// ═══════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
 buildCalendar();
 afficherBlague();
 renderCats();
-renderFavoris();
-setInterval(() => { document.getElementById('sclock').textContent = new Date().toLocaleTimeString('fr-BE'); }, 1000);
+chargerToutesLesRecettes();
+setInterval(()=>{document.getElementById('sclock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
 </script>
 </body>
 </html>
