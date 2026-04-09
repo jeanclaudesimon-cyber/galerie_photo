@@ -95,7 +95,7 @@ canvas{max-height:210px;}
 .week-nav{display:flex;align-items:center;gap:.4rem;}
 .week-sel{font-family:'Space Mono',monospace;font-size:.58rem;background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:2px 5px;cursor:pointer;}
 
-/* ROI ITEMS */
+/* ROI ITEMS — texte plus lisible */
 .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
 .roi-item{padding:.55rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);}
 .roi-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.18rem;font-weight:600;}
@@ -113,7 +113,7 @@ canvas{max-height:210px;}
 .sun-v{font-size:.6rem;font-weight:700;margin-top:1px;}
 .sun-b{height:3px;border-radius:999px;margin-top:2px;}
 
-/* RECORDS */
+/* RECORDS — texte plus lisible */
 .rec-item{padding:.5rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);margin-bottom:.45rem;}
 .rec-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.15rem;font-weight:600;}
 .rec-val{font-size:1rem;font-weight:700;}
@@ -150,11 +150,13 @@ canvas{max-height:210px;}
   #pdf-print *{display:revert!important;}
   @page{margin:1.5cm;size:A4;}
 }
+/* Print table styles */
 .pdf-page{page-break-after:always;padding:0;font-family:Arial,sans-serif;color:#000;}
 .pdf-page:last-child{page-break-after:avoid;}
 .pdf-header{border-bottom:3px solid #FFB800;padding-bottom:.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;}
 .pdf-header h1{font-size:16px;font-weight:800;color:#0A1628;margin:0;}
 .pdf-header p{font-size:9px;color:#666;margin:2px 0 0;}
+.pdf-header .pdf-date{font-size:9px;color:#999;text-align:right;}
 .pdf-section-title{font-size:11px;font-weight:700;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem;padding-left:.4rem;border-left:3px solid #FFB800;}
 .pdf-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem;}
 .pdf-kpi{background:#F8F9FA;border:1px solid #E0E0E0;border-radius:6px;padding:.5rem .7rem;}
@@ -169,6 +171,10 @@ canvas{max-height:210px;}
 .pdf-table td:first-child{text-align:left;font-weight:600;color:#0A1628;}
 .pdf-table tr:nth-child(even) td{background:#F8F9FA;}
 .pdf-table tr.total-row td{background:#FFF8E7!important;font-weight:700;color:#0A1628;border-top:2px solid #FFB800;}
+.pdf-table .sun-col{color:#FF7A00;font-weight:700;}
+.pdf-table .green-col{color:#00995A;font-weight:700;}
+.pdf-table .blue-col{color:#0066CC;font-weight:600;}
+.pdf-table .red-col{color:#CC0000;font-weight:600;}
 .pdf-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin-bottom:1rem;}
 .pdf-info-item{background:#F8F9FA;border:1px solid #E8E8E8;border-radius:4px;padding:.35rem .6rem;display:flex;justify-content:space-between;align-items:center;}
 .pdf-info-lbl{font-size:8.5px;color:#666;}
@@ -183,7 +189,7 @@ footer{text-align:center;padding:.9rem;font-family:'Space Mono',monospace;font-s
 @media(max-width:768px){main,header,.year-row{padding:.85rem 1rem;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:420px){.logo-text p{display:none;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
 
-/* MODE JOUR */
+/* ===== MODE JOUR ===== */
 body.light header{background:#fff;border-bottom:2px solid #F59E0B;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 body.light .logo-text h1{color:#0D1B2A;}
 body.light .logo-text p{color:#4A5568;}
@@ -279,16 +285,16 @@ body.light .future-box p{color:#4A5568;}
 <script>
 // ===== CONFIG =====
 const URLS = {
-  releve:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vQBHAmZGXfuL9_s0k3zn_RBaAjBOYrl_R0S6Fgm0pA_I9WRpIwCyCLQ5LMBx1KBHQ/pub?gid=1161015824&single=true&output=csv',
-  bilan:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vQBHAmZGXfuL9_s0k3zn_RBaAjBOYrl_R0S6Fgm0pA_I9WRpIwCyCLQ5LMBx1KBHQ/pub?gid=1703533851&single=true&output=csv',
-  diagnostic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQBHAmZGXfuL9_s0k3zn_RBaAjBOYrl_R0S6Fgm0pA_I9WRpIwCyCLQ5LMBx1KBHQ/pub?gid=412366668&single=true&output=csv',
+  releve:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=656070211&single=true&output=csv',
+  bilan:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1636316695&single=true&output=csv',
+  diagnostic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1696505362&single=true&output=csv',
 };
 const INSTALL_COST = 10374.23;
-const KWH_PRICE_REAL = 0.67;
+const KWH_PRICE_REAL = 0.67; // tarif réel tout compris (énergie+transport+taxes)
 const KWH_PRICE_CONTRACT = 0.12;
 const PUISSANCE = 4.2;
 const OBJECTIF = 4800;
-const SUNSHINE = [49,42,104,132,123,185,206,221,213,163,96,55];
+const SUNSHINE = [49,42,104,132,123,185,206,221,213,163,96,55]; // Source: IRM Saint-Léger, période 1991-2020
 const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
 const MONTHS_F = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const YEARS_CFG = [
@@ -302,34 +308,25 @@ const PREV_MAP = {2023:null,2024:2023,2025:2024,2026:2025,2027:2026,2028:2027,20
 let curYear = 2026;
 let charts = {};
 let darkMode = true;
-let pData = {};
+let pData = {}; // processed data per year
 
 // ===== CSV =====
-// FIX: robuste contre le séparateur point-virgule (export BE Google Sheets)
 function parseCSV(txt) {
-  const lines = txt.trim().split('\n');
-  // Détecter le séparateur : si la première ligne contient des ";" mais pas de ","
-  const sample = lines[0] || '';
-  const sep = (sample.split(';').length > sample.split(',').length) ? ';' : ',';
-  return lines.map(l => {
+  return txt.trim().split('\n').map(l => {
     const cols=[];let cur='',inQ=false;
-    for(const c of l){
-      if(c==='"'){inQ=!inQ;continue;}
-      if(c===sep&&!inQ){cols.push(cur.trim());cur='';}
-      else cur+=c;
-    }
-    cols.push(cur.trim());
-    return cols;
+    for(const c of l){if(c==='"'){inQ=!inQ;continue;}if(c===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=c;}
+    cols.push(cur.trim());return cols;
   });
 }
-
 function num(v){
-  if(v===null||v===undefined||v===''||v==='—'||v==='N/A')return null;
+  if(!v||v===''||v==='\u2014'||v==='N/A')return null;
   const s=String(v).trim();
   if(s.indexOf('#')>=0||s==='')return null;
-  // Virgule décimale FR → point
-  let clean=s.replace(/\s/g,'').replace(',','.');
-  clean=clean.replace(/[^0-9.\-]/g,'');
+  // Handle French decimal comma: "15,1" -> "15.1", "3917,9" -> "3917.9"
+  let clean=s.replace(/ /g,'');
+  clean=clean.replace(',','.');
+  // Remove any non-numeric chars except dot and minus
+  clean=clean.replace(/[^0-9.-]/g,'');
   const n=parseFloat(clean);
   return isNaN(n)?null:n;
 }
@@ -340,7 +337,7 @@ function proxify(url){ return PROXY + encodeURIComponent(url); }
 
 async function fetchAll() {
   showLoading();
-  loadStatic();
+  loadStatic(); // base toujours présente (incl. décembre)
   try {
     const [r1,r2,r3] = await Promise.all([
       fetch(proxify(URLS.releve)).then(r=>r.text()),
@@ -374,56 +371,48 @@ function loadStatic() {
 }
 
 function processAll(relRows, bilanRows, diagRows) {
+  // Keep static data as base, live data overrides
   const byYear = {};
 
-  // Chercher le début des données (ligne avec date DD/MM/YYYY)
+  // Find data start - look for first row where col A is a date AND col D has a number (production)
+  // CSV has multi-line headers (lines 0-12), data starts at line 13
   let startIdx = 0;
   for(let i=0;i<relRows.length;i++){
     const r=relRows[i];
     if(!r[0]||r[0].trim()==='')continue;
+    // Must look like DD/MM/YYYY
     if(r[0].match(/^\d{2}\/\d{2}\/\d{4}$/)){startIdx=i;break;}
   }
 
   for(const row of relRows.slice(startIdx)){
     if(!row[0]||row[0].trim()==='')continue;
+    // Must be a date row
     if(!row[0].match(/^\d{2}\/\d{2}\/\d{4}$/))continue;
+    // Parse DD/MM/YYYY
     const p=row[0].split('/');
     const dt=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
     if(isNaN(dt.getTime()))continue;
     const y=dt.getFullYear(),m=dt.getMonth(),d=dt.getDate();
     if(y<2022||y>2030)continue;
-
-    // Col D (index 3) = Production — obligatoire
+    // Col D (index 3) = Production Solaire - MUST have a value
     const prod=num(row[3]);
-    if(prod===null||prod<0)continue;
-    // FIX: accepter prod=0 uniquement si autres colonnes remplies (ligne avec index mais pas de soleil)
-    // Si prod=0 ET pas d'injection ET pas d'autoconso → on skip (ligne vide pré-remplie)
-    if(prod===0){
-      const hasIndex = num(row[1])!==null||num(row[2])!==null;
-      if(!hasIndex)continue;
-    }
-
-    const inj      = num(row[6]);  // G = Injection Réseau
-    const consoRes  = num(row[7]);  // H = Conso Réseau Totale
-    const consoReel = num(row[8]);  // I = Conso Réelle
-    const ac        = num(row[9]);  // J = Autoconsommation
-
-    // FIX: pour les lignes "prod-seule" (pas d'index → inj=null)
-    // On garde prod et ac/consoReel tels quels, injection=0 si null
-    const acFinal   = ac   !== null ? ac   : (inj!==null ? Math.max(0,Math.round((prod-inj)*10)/10) : Math.round(prod*0.55*10)/10);
-    const injFinal  = inj  !== null ? inj  : Math.max(0,Math.round((prod-acFinal)*10)/10);
-    const consoResFinal  = consoRes  !== null ? consoRes  : 0;
-    const consoReelFinal = consoReel !== null ? consoReel : acFinal;
-
+    if(prod===null||prod<=0)continue; // skip empty/zero rows (pre-filled dates)
+    const inj=num(row[6]);    // col G = Injection Réseau
+    const consoRes=num(row[7]); // col H = Conso Réseau Totale
+    const consoReel=num(row[8]); // col I = Conso Réelle D+H
+    const ac=num(row[9]);     // col J = Autoconsommation
+    // Estimate if missing
+    const acFinal=ac!==null?ac:(inj!==null?Math.max(0,Math.round((prod-inj)*10)/10):Math.round(prod*0.55*10)/10);
+    const injFinal=inj!==null?inj:Math.max(0,Math.round((prod-acFinal)*10)/10);
     if(!byYear[y])byYear[y]={monthly:Array(12).fill(null),injection:Array(12).fill(null),autoconso:Array(12).fill(null),dailyByMonth:{}};
-    byYear[y].monthly[m]  = Math.round(((byYear[y].monthly[m]||0)+prod)*10)/10;
-    byYear[y].injection[m]= Math.round(((byYear[y].injection[m]||0)+injFinal)*10)/10;
-    byYear[y].autoconso[m]= Math.round(((byYear[y].autoconso[m]||0)+acFinal)*10)/10;
+    byYear[y].monthly[m]=Math.round(((byYear[y].monthly[m]||0)+prod)*10)/10;
+    byYear[y].injection[m]=Math.round(((byYear[y].injection[m]||0)+injFinal)*10)/10;
+    byYear[y].autoconso[m]=Math.round(((byYear[y].autoconso[m]||0)+acFinal)*10)/10;
     if(!byYear[y].dailyByMonth[m])byYear[y].dailyByMonth[m]=[];
-    byYear[y].dailyByMonth[m].push({day:d,prod:prod,ac:acFinal,inj:injFinal,consoRes:consoResFinal,consoReel:consoReelFinal});
+    byYear[y].dailyByMonth[m].push({day:d,prod:prod,ac:acFinal,inj:injFinal,consoRes:consoRes||0,consoReel:consoReel||0});
   }
 
-  // Parse diagnostic historique
+  // Parse diagnostic for historical monthly
   const mn=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
   let histIdx=-1;
   for(let i=0;i<diagRows.length;i++){
@@ -438,21 +427,24 @@ function processAll(relRows, bilanRows, diagRows) {
       const mn2n=mn2.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       const mi=mn.findIndex(x=>{const xn=x.normalize('NFD').replace(/[\u0300-\u036f]/g,'');return mn2.startsWith(x)||mn2n.startsWith(xn);});
       if(mi<0)continue;
-      [[2023,1],[2024,2],[2025,3],[2026,4]].forEach(([y,ci])=>{
+      // Try columns 1,2,3,4 for years 2023,2024,2025,2026
+    [[2023,1],[2024,2],[2025,3],[2026,4]].forEach(([y,ci])=>{
         const v=num(row[ci]);
         if(v!==null&&v>0&&v<1000){
           if(!byYear[y])byYear[y]={monthly:Array(12).fill(null),injection:Array(12).fill(null),autoconso:Array(12).fill(null),dailyByMonth:{}};
+          // Diagnostic always fills - daily data (from relRows) takes priority later
           byYear[y].monthly[mi]=Math.round(v*10)/10;
         }
       });
     }
   }
 
-  // Fusionner live → pData
+  // Merge live data into pData (static is already there as base)
   for(const[ys,yd] of Object.entries(byYear)){
     const y=parseInt(ys);
     if(!pData[y]) pData[y]=yd;
     else {
+      // Override monthly with live data where available
       for(let m=0;m<12;m++){
         if(yd.monthly[m])pData[y].monthly[m]=yd.monthly[m];
         if(yd.autoconso[m])pData[y].autoconso[m]=yd.autoconso[m];
@@ -525,6 +517,7 @@ function renderYear(){
   const savings=Math.round(d.total*KWH_PRICE_REAL);
   const prog=Math.min(100,Math.round(d.total/OBJECTIF*100));
 
+  // Best week from daily data
   let bestWeek={lbl:'—',val:0};
   if(d.dailyByMonth){
     for(const[mi,days]of Object.entries(d.dailyByMonth)){
@@ -534,6 +527,7 @@ function renderYear(){
     }
   }
 
+  // Current month progress bar
   const now = new Date();
   const curMonthIdx = now.getMonth();
   const curDayOfMonth = now.getDate();
@@ -712,24 +706,29 @@ function baseOpts(unit){
 function renderCharts(d,prev,prevLbl,totalAC,totalInj){
   const isDark=!document.body.classList.contains('light');
   const maxV=Math.max(...d.monthly.filter(x=>x));
+  // Monthly bars
   const sets=[];
   if(prev&&prev.monthly)sets.push({label:prevLbl,data:prev.monthly.map(v=>v===null?0:v),backgroundColor:isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)',borderColor:isDark?'rgba(255,255,255,0.14)':'rgba(0,0,0,0.2)',borderWidth:1,borderRadius:3,borderSkipped:false,type:'bar'});
   sets.push({label:String(curYear),data:d.monthly.map(v=>v===null?0:v),backgroundColor:d.monthly.map(v=>!v?'rgba(255,184,0,0.07)':`rgba(255,${Math.round(184-(v/maxV)*60)},0,${0.45+(v/maxV)*0.55})`),borderRadius:6,borderSkipped:false});
   charts.monthly=new Chart(document.getElementById('cMonthly').getContext('2d'),{type:'bar',data:{labels:MONTHS,datasets:sets},options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,legend:{display:!!prev,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false}}}});
 
+  // Donut
   charts.donut=new Chart(document.getElementById('cDonut').getContext('2d'),{type:'doughnut',data:{labels:['Autoconsommation','Injection réseau'],datasets:[{data:[totalAC,totalInj],backgroundColor:['rgba(0,229,160,0.85)','rgba(0,170,255,0.85)'],borderWidth:0,hoverOffset:5}]},options:{cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw} kWh`}}}}});
   document.getElementById('donut-leg').innerHTML=`
     <div class="leg-item"><div class="leg-dot" style="background:#00E5A0"></div>Autoconso <strong>${totalAC} kWh</strong></div>
     <div class="leg-item"><div class="leg-dot" style="background:#00AAFF"></div>Injection <strong>${totalInj} kWh</strong></div>
     <div class="leg-item"><div class="leg-dot" style="background:rgba(128,128,128,.3)"></div>Taux <strong>${Math.round(totalAC/d.total*100)}%</strong></div>`;
 
+  // Compare line
   const cs=[];
   if(prev&&prev.monthly)cs.push({label:prevLbl,data:prev.monthly.map(v=>v===null?0:v),borderColor:isDark?'rgba(255,184,0,.32)':'rgba(180,100,0,.6)',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],pointRadius:2,tension:.4});
   cs.push({label:String(curYear),data:d.monthly.map(v=>v===null?0:v),borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,.07)',borderWidth:2.5,pointRadius:3,tension:.4,fill:true});
   charts.compare=new Chart(document.getElementById('cCompare').getContext('2d'),{type:'line',data:{labels:MONTHS,datasets:cs},options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,legend:{display:cs.length>1,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:16}},tooltip:{mode:'index',intersect:false}}}});
 
+  // Stacked
   charts.autoconso=new Chart(document.getElementById('cAutoconso').getContext('2d'),{type:'bar',data:{labels:MONTHS,datasets:[{label:'Autoconsommation',data:d.autoconso.map(v=>v===null?0:v),backgroundColor:'rgba(0,229,160,0.72)',borderRadius:0,borderSkipped:false,stack:'s'},{label:'Injection',data:d.injection.map(v=>v===null?0:v),backgroundColor:'rgba(0,170,255,0.72)',borderRadius:5,borderSkipped:false,stack:'s'}]},options:{...baseOpts('kWh'),plugins:{legend:{display:true,labels:{color:isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.65)',font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false}},scales:{x:{stacked:true,ticks:{color:'rgba(255,255,255,0.38)',font:{family:'Space Mono',size:9}},grid:{color:'rgba(255,255,255,0.05)'}},y:{stacked:true,ticks:{color:'rgba(255,255,255,0.38)',font:{family:'Space Mono',size:9}},grid:{color:'rgba(255,255,255,0.05)'}}}}});
 
+  // History
   const hLbl=[],hVal=[];
   Object.keys(pData).map(Number).sort().forEach(y=>{
     const yd=pData[y];
@@ -738,7 +737,7 @@ function renderCharts(d,prev,prevLbl,totalAC,totalInj){
   charts.history=new Chart(document.getElementById('cHistory').getContext('2d'),{type:'line',data:{labels:hLbl,datasets:[{label:'Production (kWh)',data:hVal,borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,0.06)',borderWidth:2,pointRadius:1.5,tension:.4,fill:true}]},options:{...baseOpts('kWh'),scales:{x:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:7},maxRotation:45},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}},y:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:8}},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}}}}});
 }
 
-// ===== WEEK CHARTS — FIX COMPLET =====
+// ===== WEEK CHARTS =====
 function renderWeekCharts(){
   const selM=document.getElementById('sel-month');
   const selW=document.getElementById('sel-week');
@@ -752,7 +751,7 @@ function renderWeekCharts(){
   const days=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
 
   if(wVal==='all'){
-    // Vue hebdomadaire : totaux par semaine
+    // Weekly totals view
     const ws=[[],[],[],[],[]];
     if(days&&days.length>0){
       days.forEach(({day,prod})=>{ws[Math.min(Math.floor((day-1)/7),4)].push(prod);});
@@ -790,113 +789,31 @@ function renderDayChart(){
   const tc=isDark?'rgba(255,255,255,0.38)':'rgba(0,0,0,0.4)';
   const gc=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
 
-  // Gérer absence de données
-  const canvas=document.getElementById('cWeek');
   if(!allDays||allDays.length===0){
-    canvas.style.display='none';
-    const nd=canvas.nextSibling;
-    if(!nd||nd.className!=='no-data-note'){
-      const p=document.createElement('p');p.className='no-data-note';
-      p.textContent=`Pas de données journalières pour ${MONTHS_F[mIdx]} ${curYear}`;
-      canvas.parentNode.insertBefore(p,canvas.nextSibling);
-    }
+    document.getElementById('cWeek').getContext('2d').clearRect(0,0,500,220);
+    const p=document.createElement('p');p.className='no-data-note';p.textContent=`Pas de données journalières pour ${MONTHS_F[mIdx]} ${curYear}`;
+    const canvas=document.getElementById('cWeek');canvas.style.display='none';
+    if(!canvas.nextSibling||canvas.nextSibling.className!=='no-data-note')canvas.parentNode.insertBefore(p,canvas.nextSibling);
     return;
   } else {
-    canvas.style.display='block';
+    const canvas=document.getElementById('cWeek');canvas.style.display='block';
     const nd=canvas.nextSibling;if(nd&&nd.className==='no-data-note')nd.remove();
   }
 
   const weekDays=allDays.filter(({day})=>day>=dMin&&day<=dMax).sort((a,b)=>a.day-b.day);
-  if(weekDays.length===0){
-    canvas.style.display='none';
-    const p=document.createElement('p');p.className='no-data-note';
-    p.textContent=`Pas de données pour cette semaine`;
-    const nd=canvas.nextSibling;
-    if(!nd||nd.className!=='no-data-note')canvas.parentNode.insertBefore(p,canvas.nextSibling);
-    return;
-  }
-
   const lbls=weekDays.map(({day})=>`${String(day).padStart(2,'0')}/${String(mIdx+1).padStart(2,'0')}`);
 
-  // FIX GRAPHIQUE SEMAINE :
-  // - Production = ligne amber (évite le problème de superposition avec les barres stackées)
-  // - Autoconso + ConsoRéseau = barres stackées (stack 'conso')
-  // - ConsoRéelle = ligne violette
-  // Cela résout le problème de chevauchement des stacks Chart.js
-  charts.week=new Chart(canvas.getContext('2d'),{
+  charts.week=new Chart(document.getElementById('cWeek').getContext('2d'),{
     type:'bar',
     data:{labels:lbls,datasets:[
-      // FIX: Production en LIGNE pour éviter overlap avec le stack
-      {
-        label:'Production',
-        data:weekDays.map(x=>Math.round(x.prod*10)/10),
-        type:'line',
-        borderColor:'rgba(255,184,0,0.95)',
-        backgroundColor:'rgba(255,184,0,0.12)',
-        borderWidth:2.5,
-        pointRadius:4,
-        pointBackgroundColor:'rgba(255,184,0,0.9)',
-        tension:.3,
-        fill:true,
-        order:1,
-        yAxisID:'y',
-      },
-      // Autoconsommation : barre stackée verte
-      {
-        label:'Autoconsommation',
-        data:weekDays.map(x=>Math.round((x.ac||0)*10)/10),
-        backgroundColor:'rgba(0,229,160,0.75)',
-        borderRadius:0,
-        borderSkipped:false,
-        stack:'conso',
-        order:2,
-        yAxisID:'y',
-      },
-      // Conso Réseau : barre stackée bleue (par-dessus autoconso)
-      {
-        label:'Conso Réseau',
-        data:weekDays.map(x=>Math.round((x.consoRes||0)*10)/10),
-        backgroundColor:'rgba(0,170,255,0.75)',
-        borderRadius:4,
-        borderSkipped:false,
-        stack:'conso',
-        order:2,
-        yAxisID:'y',
-      },
-      // Conso Réelle : ligne violette
-      {
-        label:'Conso Réelle',
-        data:weekDays.map(x=>Math.round((x.consoReel||0)*10)/10),
-        type:'line',
-        borderColor:'rgba(168,85,247,0.9)',
-        backgroundColor:'transparent',
-        borderWidth:2,
-        pointRadius:3,
-        tension:.3,
-        fill:false,
-        order:1,
-        yAxisID:'y',
-      },
+      {label:'Production',data:weekDays.map(x=>Math.round(x.prod*10)/10),backgroundColor:'rgba(255,184,0,0.75)',borderRadius:5,borderSkipped:false,stack:'no'},
+      {label:'Autoconso',data:weekDays.map(x=>Math.round(x.ac*10)/10),backgroundColor:'rgba(0,229,160,0.7)',borderRadius:0,borderSkipped:false,stack:'conso'},
+      {label:'Conso Réseau',data:weekDays.map(x=>Math.round(x.consoRes*10)/10),backgroundColor:'rgba(0,170,255,0.7)',borderRadius:0,borderSkipped:false,stack:'conso'},
+      {label:'Conso Réelle',data:weekDays.map(x=>Math.round(x.consoReel*10)/10),backgroundColor:'rgba(168,85,247,0.6)',type:'line',borderColor:'rgba(168,85,247,0.9)',borderWidth:2,pointRadius:4,tension:.3,fill:false},
     ]},
-    options:{
-      responsive:true,
-      maintainAspectRatio:true,
-      plugins:{
-        legend:{
-          display:true,
-          labels:{color:tc,font:{family:'Space Mono',size:9},boxWidth:12}
-        },
-        tooltip:{
-          mode:'index',
-          intersect:false,
-          callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw??'—'} kWh`}
-        }
-      },
-      scales:{
-        x:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}},
-        y:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc},stacked:false}
-      }
-    }
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:true,labels:{color:tc,font:{family:'Space Mono',size:9},boxWidth:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw??'—'} kWh`}}},
+      scales:{x:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}},y:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}}}}
   });
 }
 
@@ -946,6 +863,8 @@ function buildPDFContent(){
   const prev = prevKey?pData[prevKey]:null;
   const diff = prev?Math.round((d.total-prev.total)/prev.total*100):null;
 
+  // ========== PAGE 1 : RÉSUMÉ ANNÉE ==========
+  // KPI summary text
   const kpiRows = [
     ['Production totale', d.total.toFixed(1)+' kWh', prev?`${diff>=0?'+':''}${diff}% vs ${prevKey}`:''],
     ['Autoconsommation', totalAC.toFixed(1)+' kWh', Math.round(totalAC/d.total*100)+'% de la prod.'],
@@ -961,6 +880,7 @@ function buildPDFContent(){
     kpiHTML+=`<tr><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:9.5px;color:#333;">${lbl}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:10px;font-weight:700;color:#0A1628;text-align:right;">${val}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:8.5px;color:#666;text-align:right;">${sub}</td></tr>`;
   });
 
+  // Monthly table
   let monthRows = '';
   let totProd=0,totAC=0,totInj=0;
   for(let m=0;m<12;m++){
@@ -991,6 +911,7 @@ function buildPDFContent(){
     <td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${Math.round(totProd/SUNSHINE.reduce((a,b)=>a+b,0)*10)/10}</td>
   </tr>`;
 
+  // ========== PAGE 2 : COMPARAISON HISTORIQUE ==========
   const availYears = [2023,2024,2025,2026].filter(y=>pData[y]);
   let histRows = '';
   let histTotals = {};
@@ -1008,6 +929,7 @@ function buildPDFContent(){
     });
     histRows+=`<tr>${row}</tr>`;
   }
+  // 2026 progress line
   let prog2026 = '';
   if(pData[2026]){
     const d26=pData[2026];
@@ -1028,6 +950,7 @@ function buildPDFContent(){
   });
   histRows+=`<tr>${totalRow}</tr>${prog2026}`;
 
+  // ========== PAGE 3 : MOIS EN COURS ==========
   const curMonthIdx = now.getMonth();
   const curYearNow = now.getFullYear();
   const daysInMonth = new Date(curYearNow, curMonthIdx+1, 0).getDate();
@@ -1041,7 +964,10 @@ function buildPDFContent(){
     const pctVsMoy = moyHist?Math.round(cumul/moyHist*100):null;
     const joursRestants = daysInMonth - now.getDate();
     const moyJour = Math.round(cumul/days.length*10)/10;
+
+    // Summary line
     const summaryLine = `${MOIS_F[curMonthIdx]} ${curYearNow} : ${cumul} kWh cumulés (${days.length} jour${days.length>1?'s':''} saisis)${moyHist?' · Moy. historique : '+moyHist+' kWh':''}${pctVsMoy?' · '+pctVsMoy+'% de la moyenne':''} · ${moyJour} kWh/jour · ${joursRestants} jours restants`;
+
     let dayRows = '';
     let runTotal = 0;
     days.forEach(({day,prod,ac,inj,consoReel})=>{
@@ -1058,17 +984,19 @@ function buildPDFContent(){
         <td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;color:#555;">${runTotal.toFixed(1)}</td>
       </tr>`;
     });
-    const totAC2=Math.round(days.reduce((a,b)=>a+(b.ac||0),0)*10)/10;
-    const totInj2=Math.round(days.reduce((a,b)=>a+(b.inj||0),0)*10)/10;
+    // Total row
+    const totAC=Math.round(days.reduce((a,b)=>a+(b.ac||0),0)*10)/10;
+    const totInj=Math.round(days.reduce((a,b)=>a+(b.inj||0),0)*10)/10;
     const totCR=Math.round(days.reduce((a,b)=>a+(b.consoReel||0),0)*10)/10;
     dayRows+=`<tr style="background:#FFF3CD;font-weight:800;border-top:2px solid #CC8800;">
       <td style="padding:.3rem .5rem;font-size:9px;">CUMUL</td>
       <td style="padding:.3rem .5rem;text-align:right;color:#CC5500;font-size:9px;">${cumul.toFixed(1)}</td>
-      <td style="padding:.3rem .5rem;text-align:right;color:#007A45;font-size:9px;">${totAC2.toFixed(1)}</td>
-      <td style="padding:.3rem .5rem;text-align:right;color:#0055AA;font-size:9px;">${totInj2.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;color:#007A45;font-size:9px;">${totAC.toFixed(1)}</td>
+      <td style="padding:.3rem .5rem;text-align:right;color:#0055AA;font-size:9px;">${totInj.toFixed(1)}</td>
       <td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${totCR.toFixed(1)}</td>
       <td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${cumul.toFixed(1)}</td>
     </tr>`;
+
     dailyHTML = `
       <p style="font-size:9px;color:#333;margin-bottom:.6rem;padding:.4rem .6rem;background:#EEF6FF;border-left:3px solid #0055AA;border-radius:3px;">${summaryLine}</p>
       <table style="width:100%;border-collapse:collapse;">
@@ -1084,6 +1012,7 @@ function buildPDFContent(){
       </table>`;
   }
 
+  // ========== ASSEMBLE PDF ==========
   const headerStyle = 'border-bottom:3px solid #CC8800;padding-bottom:.5rem;margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:flex-end;';
   const titleStyle = 'font-size:15px;font-weight:800;color:#0A1628;margin:0;';
   const subtitleStyle = 'font-size:8.5px;color:#666;margin:2px 0 0;';
@@ -1092,60 +1021,105 @@ function buildPDFContent(){
   const thStyleL = 'background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:left;font-size:8.5px;font-weight:700;';
 
   document.getElementById('pdf-print').innerHTML = `
+  <!-- PAGE 1 -->
   <div class="pdf-page">
     <div style="${headerStyle}">
-      <div><h1 style="${titleStyle}">☀️ Suivi Solaire — Saint-Léger · ${curYear}</h1>
-      <p style="${subtitleStyle}">SunPower Maxeon 3 · 10×420Wc · 4,2 kWc · Plein Sud 33° · Gaume 6747, BE · Installation Août 2023</p></div>
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Saint-Léger · ${curYear}</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · 10×420Wc · 4,2 kWc · Plein Sud 33° · Gaume 6747, BE · Installation Août 2023</p>
+      </div>
       <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
     </div>
+
     <div style="${sectionStyle}">Résumé ${curYear}</div>
     <table style="width:100%;border-collapse:collapse;margin-bottom:1rem;border:1px solid #E0E0E0;">
-      <thead><tr><th style="${thStyleL}">Indicateur</th><th style="${thStyle}">Valeur</th><th style="${thStyle}">Détail</th></tr></thead>
+      <thead><tr>
+        <th style="${thStyleL}">Indicateur</th>
+        <th style="${thStyle}">Valeur</th>
+        <th style="${thStyle}">Détail</th>
+      </tr></thead>
       <tbody>${kpiHTML}</tbody>
     </table>
+
     <div style="${sectionStyle}">Production mensuelle ${curYear}</div>
     <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
       <thead><tr>
-        <th style="${thStyleL}">Mois</th><th style="${thStyle}">Prod. (kWh)</th><th style="${thStyle}">Autoconso. (kWh)</th>
-        <th style="${thStyle}">Injection (kWh)</th><th style="${thStyle}">Taux autoconso.</th><th style="${thStyle}">Ensoleil. (h)</th><th style="${thStyle}">kWh/h soleil</th>
+        <th style="${thStyleL}">Mois</th>
+        <th style="${thStyle}">Prod. (kWh)</th>
+        <th style="${thStyle}">Autoconso. (kWh)</th>
+        <th style="${thStyle}">Injection (kWh)</th>
+        <th style="${thStyle}">Taux autoconso.</th>
+        <th style="${thStyle}">Ensoleil. (h)</th>
+        <th style="${thStyle}">kWh/h soleil</th>
       </tr></thead>
       <tbody>${monthRows}</tbody>
     </table>
-    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">Source : Google Sheets · IRM Saint-Léger 1991-2020 · Page 1/3</div>
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      Source données : Google Sheets (temps réel) · Ensoleillement : IRM Saint-Léger 1991-2020 · Page 1/3
+    </div>
   </div>
 
+  <!-- PAGE 2 -->
   <div class="pdf-page">
     <div style="${headerStyle}">
-      <div><h1 style="${titleStyle}">☀️ Suivi Solaire — Comparaison historique</h1>
-      <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Depuis Août 2023</p></div>
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Comparaison historique</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Depuis Août 2023</p>
+      </div>
       <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
     </div>
+
     <div style="${sectionStyle}">Production mensuelle par année (kWh)</div>
     <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
-      <thead><tr><th style="${thStyleL}">Mois</th>${availYears.map(y=>`<th style="${thStyle}">${y}</th>`).join('')}</tr></thead>
+      <thead><tr>
+        <th style="${thStyleL}">Mois</th>
+        ${availYears.map(y=>`<th style="${thStyle}">${y}</th>`).join('')}
+      </tr></thead>
       <tbody>${histRows}</tbody>
     </table>
+
     <div style="${sectionStyle}">Installation & ROI</div>
     <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;">
-      <thead><tr><th style="${thStyleL}">Paramètre</th><th style="${thStyle}">Valeur</th></tr></thead>
+      <thead><tr>
+        <th style="${thStyleL}">Paramètre</th>
+        <th style="${thStyle}">Valeur</th>
+      </tr></thead>
       <tbody>
-        ${[['Coût installation',INSTALL_COST.toFixed(2)+' €'],['Économies cumulées',roi.totalSaved+' €'],['ROI atteint',roi.pct+'%'],['Années restantes (estimation)',roi.yearsLeft+' ans'],['Tarif kWh réel appliqué',KWH_PRICE_REAL+' €/kWh']].map(([l,v],i)=>`<tr style="background:${i%2?'#F8F9FA':'#FFF'};"><td style="padding:.3rem .5rem;font-size:9px;border-bottom:1px solid #EEE;">${l}</td><td style="padding:.3rem .5rem;font-size:9.5px;font-weight:700;text-align:right;border-bottom:1px solid #EEE;">${v}</td></tr>`).join('')}
+        ${[
+          ['Coût installation', INSTALL_COST.toFixed(2)+' €'],
+          ['Économies cumulées', roi.totalSaved+' €'],
+          ['ROI atteint', roi.pct+'%'],
+          ['Années restantes (estimation)', roi.yearsLeft+' ans'],
+          ['Tarif kWh réel appliqué', KWH_PRICE_REAL+' €/kWh'],
+        ].map(([l,v],i)=>`<tr style="background:${i%2?'#F8F9FA':'#FFF'};"><td style="padding:.3rem .5rem;font-size:9px;border-bottom:1px solid #EEE;">${l}</td><td style="padding:.3rem .5rem;font-size:9.5px;font-weight:700;text-align:right;border-bottom:1px solid #EEE;">${v}</td></tr>`).join('')}
       </tbody>
     </table>
-    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">🏆 = Meilleure valeur · Page 2/3</div>
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      🏆 = Meilleure valeur de l'historique · Page 2/3
+    </div>
   </div>
 
+  <!-- PAGE 3 -->
   <div class="pdf-page">
     <div style="${headerStyle}">
-      <div><h1 style="${titleStyle}">☀️ Suivi Solaire — Relevé journalier ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</h1>
-      <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Données saisies à 22h</p></div>
+      <div>
+        <h1 style="${titleStyle}">☀️ Suivi Solaire — Relevé journalier ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</h1>
+        <p style="${subtitleStyle}">SunPower Maxeon 3 · Saint-Léger · Données saisies à 22h</p>
+      </div>
       <div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div>
     </div>
+
     <div style="${sectionStyle}">Relevé journalier — ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</div>
     ${dailyHTML}
-    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">Prod. = Production solaire · Autoconso. = PV - Injection · Conso. réelle = Autoconso. + Conso. nuit · Page 3/3</div>
+
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">
+      Prod. = Production solaire · Autoconso. = PV - Injection · Conso. réelle = Autoconso. + Conso. nuit · Page 3/3
+    </div>
   </div>`;
 }
+
 
 function refreshData(){fetchAll();}
 
