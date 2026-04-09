@@ -30,6 +30,27 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);paddi
 .nav-link:hover{color:var(--or);border-color:var(--or)}
 .hero{position:relative;padding:3rem 2rem 2rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;z-index:2}
 .cal-wrap{background:var(--fond3);border:2px solid var(--bdr2);border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(44,24,16,.1)}
+/* ÉTAPE 1 : On dit au parent de servir de repère */
+.cal-wrap {
+  position: relative; 
+}
+
+/* ÉTAPE 2 : On règle l'image */
+.dessin-overlay {
+  position: absolute; 
+  top: 50%;           
+  left: 50%;          
+  transform: translate(-50%, -50%); 
+  z-index: 5;         
+  
+  max-width: 85%;     
+  max-height: 85%;    
+  width: auto;        
+  height: auto;       
+  
+  opacity: 0.8;       
+  pointer-events: none; 
+}
 .cal-header{background:linear-gradient(135deg,var(--or),var(--or2));padding:1rem;text-align:center}
 .cal-cuistot{font-size:3.5rem;line-height:1;display:block}
 .cal-mois{font-family:'Playfair Display',serif;font-size:1.3rem;color:#fff;font-weight:700;margin-top:.3rem}
@@ -83,6 +104,7 @@ header{background:linear-gradient(135deg,var(--noir) 0%,var(--noir2) 100%);paddi
 .statusbar{background:var(--noir);padding:8px 2rem;display:flex;justify-content:space-between;font-size:10px;color:rgba(242,203,170,.3);font-family:'Lato',sans-serif;letter-spacing:1px;position:relative;z-index:2}
 @media(max-width:768px){.hero{grid-template-columns:1fr}}
 @media(max-width:600px){.cats-grid{grid-template-columns:1fr 1fr}.hero{padding:1.5rem 1rem}.section-wrap{padding:1rem}}
+
 </style>
 </head>
 <body>
