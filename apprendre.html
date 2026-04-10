@@ -1,6 +1,196 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+
+  // Idempotency: skip if already initialized (e.g., server-side injection
+  // followed by client-side inject-javascript via the Bloks webview component).
+  if (window.playablesSDK) return;
+
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+
+  // --- Transport Layer ---
+
+  function hasIOSBridge() {
+    return !!(window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers[HANDLER_NAME]);
+  }
+
+  function hasAndroidBridge() {
+    return !!(window[ANDROID_BRIDGE_NAME] &&
+              typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+  }
+
+  function isInIframe() {
+    return !!(window.parent && window.parent !== window);
+  }
+
+  function sendEvent(eventName, payload) {
+    var message = {
+      type: eventName,
+      payload: payload || {},
+      timestamp: Date.now()
+    };
+
+    if (hasIOSBridge()) {
+      try {
+        window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
+      } catch (e) { /* ignore */ }
+      return;
+    }
+
+    if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      window[ANDROID_BRIDGE_NAME].postEvent(
+        eventName,
+        JSON.stringify(p)
+      );
+    } catch (e) { /* ignore */ }
+    return;
+  }
+
+    if (isInIframe()) {
+      try {
+        window.parent.postMessage(message, '*');
+      } catch (e) { /* ignore */ }
+      return;
+    }
+  }
+
+  // --- rAF Game-Ready Detection ---
+
+  function onFrame() {
+    if (gameReadySent) return;
+
+    frameCount++;
+    if (frameCount >= RAF_FRAME_THRESHOLD) {
+      gameReadySent = true;
+      sendEvent('game_ready', {
+        frame_count: frameCount,
+        detected_at: Date.now()
+      });
+      return;
+    }
+
+    originalRAF.call(window, onFrame);
+  }
+
+  if (originalRAF) {
+    window.requestAnimationFrame = function(callback) {
+      if (!gameReadySent) {
+        return originalRAF.call(window, function(timestamp) {
+          frameCount++;
+          if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+            gameReadySent = true;
+            sendEvent('game_ready', {
+              frame_count: frameCount,
+              detected_at: Date.now()
+            });
+          }
+          callback(timestamp);
+        });
+      }
+      return originalRAF.call(window, callback);
+    };
+  }
+
+  // --- First User Interaction Detection ---
+
+  function setupFirstInteractionDetection() {
+    var events = ['touchstart', 'mousedown', 'keydown'];
+
+    function onFirstInteraction() {
+      if (firstInteractionSent) return;
+      firstInteractionSent = true;
+      sendEvent('user_interaction_start', null);
+
+      for (var i = 0; i < events.length; i++) {
+        document.removeEventListener(events[i], onFirstInteraction, true);
+      }
+    }
+
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], onFirstInteraction, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+  } else {
+    setupFirstInteractionDetection();
+  }
+
+  // --- Auto Error Capture ---
+
+  window.addEventListener('error', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', {
+      message: event.message || 'Unknown error',
+      source: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      auto_captured: true
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    var reason = event.reason;
+    sendEvent('error', {
+      message: (reason instanceof Error) ? reason.message : String(reason),
+      type: 'unhandled_promise_rejection',
+      auto_captured: true
+    });
+  });
+
+  // --- Public API ---
+
+  window.playablesSDK = {
+    complete: function(score) {
+      sendEvent('game_ended', {
+        score: score,
+        completed: true
+      });
+    },
+
+    error: function(message) {
+      if (errorSent) return;
+      errorSent = true;
+      sendEvent('error', {
+        message: message || 'Unknown error',
+        auto_captured: false
+      });
+    },
+
+    sendEvent: function(eventName, payload) {
+      if (!eventName || typeof eventName !== 'string') return;
+      sendEvent(eventName, payload);
+    }
+  };
+
+  // Kick off rAF detection in case no game code calls rAF immediately
+  if (originalRAF) {
+    originalRAF.call(window, onFrame);
+  }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apprendre HTML · CSS · JS — Sjc</title>
@@ -77,9 +267,269 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
 .ref-table tr:last-child td{border-bottom:none}
 
 .statusbar{background:var(--dk2);border-top:1px solid var(--bdr);padding:7px 2rem;display:flex;gap:2rem;font-size:11px;color:var(--muted);margin-top:2rem}
+/* ========== AJOUT : Sommaire Cliquable ========== */
+.sommaire {
+  position: sticky;
+  top: 0;
+  background: #0f1a0d;
+  border-bottom: 2px solid #4a7c3f;
+  padding: 15px 20px;
+  z-index: 999;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.sommaire h2 {
+  color: #6aad5e;
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+}
+.sommaire details {
+  margin: 8px 0;
+}
+.sommaire summary {
+  cursor: pointer;
+  color: #5b9bd5;
+  font-weight: bold;
+  padding: 5px;
+  user-select: none;
+}
+.sommaire summary:hover {
+  background: #162213;
+  border-radius: 4px;
+}
+.sommaire ul {
+  list-style: none;
+  padding-left: 15px;
+  margin: 5px 0;
+}
+.sommaire li a {
+  color: #8a9e84;
+  text-decoration: none;
+  display: block;
+  padding: 3px 5px;
+  font-size: 0.9em;
+}
+.sommaire li a:hover {
+  color: #e8f0e4;
+  background: #1c2b19;
+  border-radius: 3px;
+}
+.sommaire-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #6aad5e;
+  color: #0f1a0d;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 1000;
+}
+.sommaire.hidden {
+  display: none;
+}
+.q-card {
+  scroll-margin-top: 250px;
+}
+
+/* ========== AJOUT : Sommaire Cliquable ========== */
+.sommaire {
+  position: sticky;
+  top: 66px;
+  background: var(--dk2);
+  border-bottom: 2px solid var(--vert);
+  padding: 15px 2rem;
+  z-index: 99;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+.sommaire h2 {
+  color: var(--vert2);
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  font-family: 'Bebas Neue';
+  letter-spacing: 2px;
+}
+.sommaire details {
+  margin: 8px 0;
+}
+.sommaire summary {
+  cursor: pointer;
+  color: var(--bleu);
+  font-weight: 600;
+  padding: 5px;
+  user-select: none;
+  font-size: 14px;
+}
+.sommaire summary:hover {
+  background: var(--card);
+  border-radius: 4px;
+}
+.sommaire ul {
+  list-style: none;
+  padding-left: 15px;
+  margin: 5px 0;
+}
+.sommaire li a {
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  padding: 3px 5px;
+  font-size: 13px;
+}
+.sommaire li a:hover {
+  color: var(--txt);
+  background: var(--card);
+  border-radius: 3px;
+}
+.sommaire-toggle {
+  position: fixed;
+  top: 12px;
+  right: 15px;
+  background: var(--vert2);
+  color: var(--dk);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 101;
+  font-size: 13px;
+}
+.sommaire.hidden {
+  display: none;
+}
+.q-card {
+  scroll-margin-top: 280px;
+}
 </style>
 </head>
 <body>
+
+  <button class="sommaire-toggle" onclick="toggleSommaire()">📑 Menu</button>
+  <nav class="sommaire" id="sommaire">
+    <h2>📑 Accès Rapide par Catégorie</h2>
+    <details>
+      <summary>🏗️ HTML — La Structure</summary>
+      <ul>
+        <li><a href="#q1">Q1 — Comment fonctionne le lien entre CSS en haut et HTML en bas ? Par exemple .info-card h3 et mon &lt;h3&gt; dans le code ?</a></li>
+        <li><a href="#q2">Q2 — Les balises HTML — comment ça fonctionne ? Ouvrir et fermer ?</a></li>
+        <li><a href="#q3">Q3 — C'est quoi la différence entre &lt;br&gt;&lt;br&gt; et des &lt;p&gt; séparés ?</a></li>
+        <li><a href="#q4">Q4 — Les div imbriquées — comment ne pas se perdre dans les fermetures ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🎨 CSS — Le Style</summary>
+      <ul>
+        <li><a href="#q5">Q5 — C'est quoi la différence entre le style inline et le CSS en haut ?</a></li>
+        <li><a href="#q6">Q6 — Comment mettre un mot en gras ET en vert avec &lt;strong&gt; ?</a></li>
+        <li><a href="#q7">Q7 — C'est quoi les variables CSS comme var(--vert2) ?</a></li>
+        <li><a href="#q8">Q8 — C'est quoi le media query et comment l'utiliser pour le responsive mobile ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🛠️ Outils & Astuces</summary>
+      <ul>
+        <li><a href="#q9">Q9 — Comment utiliser VS Code directement dans GitHub sans rien installer ?</a></li>
+        <li><a href="#q10">Q10 — Comment ajouter des emojis dans le HTML ?</a></li>
+        <li><a href="#q11">Q11 — Les commentaires HTML — comment ça marche ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🗺️ Leaflet — Cartes & Tracés</summary>
+      <ul>
+        <li><a href="#q12">Q12 — Comment changer la couleur des tracés par jour ?</a></li>
+        <li><a href="#q13">Q13 — Comment gérer couleur/taille des marqueurs DEP / ARR / WP ?</a></li>
+        <li><a href="#q14">Q14 — Comment éviter qu’une photo soit tronquée dans un cadre fixe ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>📊 Google Sheets — Liaison & Calculs</summary>
+      <ul>
+        <li><a href="#q15">Q15 — Comment connecter un Google Sheet à une page web ?</a></li>
+        <li><a href="#q16">Q16 — Correction formules solaires : Conso réelle = Autoconso + Conso réseau</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🧱 HTML/CSS — Tuiles & Images</summary>
+      <ul>
+        <li><a href="#q17">Q17 — Comment créer une tuile cliquable RC ou Cuisine ?</a></li>
+        <li><a href="#q18">Q18 — Comment faire un zoom sur image sans casser la mise en page ?</a></li>
+        <li><a href="#q19">Q19 — Vocabulaire positionnement : relative vs absolute ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>⚡ Photovoltaïque — Retour d’expérience Gaume 6747</summary>
+      <ul>
+        <li><a href="#q20">Q20 — Pourquoi mon onduleur décroche quand il fait chaud ?</a></li>
+        <li><a href="#q21">Q21 — Comment j’ai réduit mes décrochages alors que les voisins trinquent ?</a></li>
+        <li><a href="#q22">Q22 — Le compteur communiquant règle le problème de décrochage ?</a></li>
+        <li><a href="#q23">Q23 — Quelle stratégie après 2030 en Wallonie ?</a></li>
+        <li><a href="#q24">Q24 — Checklist entretien panneaux Maxeon 3</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🍳 Cuisine — Liaison Google Sheet pour les recettes</summary>
+      <ul>
+        <li><a href="#q25">Q25 — Comment structurer le Google Sheet pour les recettes ?</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🍳 Cuisine — Photo sur le calendrier</summary>
+      <ul>
+        <li><a href="#q26">Q26 — Comment ajouter une photo au-dessus du calendrier sans casser la mise en page ?</a></li>
+        <li><a href="#q27">Q27 — Vocabulaire positionnement : pourquoi relative + absolute ?</a></li>
+        <li><a href="#q28">Q28 — Checklist quand l’image overlay ne s’affiche pas bien</a></li>
+        <li><a href="#q29">Q29 — Alternative : image en fond du calendrier au lieu d’overlay</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>🔌 Résidence Secondaire Alsace — Kit Plug & Play</summary>
+      <ul>
+        <li><a href="#q30">Q30 — Quel est mon talon de conso à effacer en Alsace ?</a></li>
+        <li><a href="#q31">Q31 — Combien de panneaux plug-and-play il me faut ?</a></li>
+        <li><a href="#q32">Q32 — Plug-and-play : légalité, branchement et limites</a></li>
+        <li><a href="#q33">Q33 — Marques de kit plug-and-play et où poser en Alsace ?</a></li>
+        <li><a href="#q34">Q34 — Que se passe-t-il si je branche un kit plug-and-play sans déclarer ?</a></li>
+        <li><a href="#q35">Q35 — Comment limiter l’injection si je veux rester discret ?</a></li>
+        <li><a href="#q36">Q36 — Compteur à disque : que se passe-t-il avec un kit plug-and-play ?</a></li>
+        <li><a href="#q37">Q37 — Stratégie avec compteur à disque pour rester sous les radars</a></li>
+        <li><a href="#q38">Q38 — Checklist finale 2 panneaux 800Wc + compteur à disque</a></li>
+        <li><a href="#q39">Q39 — Ce que ça va donner sur ta facture avec 2x400Wc</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary>☁️ Quels panneaux pour l’hiver / ciel couvert ?</summary>
+      <ul>
+        <li><a href="#q40">Q40 — Quelles marques produisent le mieux par faible lumière ?</a></li>
+        <li><a href="#q41">Q41 — Où acheter en Belgique / Alsace / en ligne ? Prix 2026</a></li>
+        <li><a href="#q42">Q42 — Micro-onduleur : aussi important que le panneau en hiver</a></li>
+      </ul>
+    </details>
+  </nav>
+  <script>
+    function toggleSommaire() {
+      document.getElementById('sommaire').classList.toggle('hidden');
+    }
+    document.querySelectorAll('.sommaire a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const id = this.getAttribute('href').substring(1);
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          target.style.transition = 'background 0.3s';
+          target.style.background = '#1a3a1a';
+          setTimeout(() => { target.style.background = ''; }, 1500);
+        }
+      });
+    });
+    // Open first category by default
+    document.querySelector('.sommaire details').setAttribute('open', '');
+  </script>
+
 <header>
   <div class="hdr">
     <div class="logo">
@@ -101,7 +551,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   <div class="stitle">🏗️ HTML — La Structure</div>
 
   <!-- Q1 -->
-  <div class="q-card">
+  <div class="q-card" id="q1">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment fonctionne le lien entre CSS en haut et HTML en bas ? Par exemple .info-card h3 et mon &lt;h3&gt; dans le code ?</p>
@@ -125,7 +575,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   </div>
 
   <!-- Q2 -->
-  <div class="q-card">
+  <div class="q-card" id="q2">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Les balises HTML — comment ça fonctionne ? Ouvrir et fermer ?</p>
@@ -150,7 +600,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   </div>
 
   <!-- Q3 -->
-  <div class="q-card">
+  <div class="q-card" id="q3">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>C'est quoi la différence entre &lt;br&gt;&lt;br&gt; et des &lt;p&gt; séparés ?</p>
@@ -172,7 +622,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q4 -->
-  <div class="q-card">
+  <div class="q-card" id="q4">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Les div imbriquées — comment ne pas se perdre dans les fermetures ?</p>
@@ -201,7 +651,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🎨 CSS — Le Style</div>
 
   <!-- Q5 -->
-  <div class="q-card">
+  <div class="q-card" id="q5">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>C'est quoi la différence entre le style inline et le CSS en haut ?</p>
@@ -224,7 +674,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q6 -->
-  <div class="q-card">
+  <div class="q-card" id="q6">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment mettre un mot en gras ET en vert avec &lt;strong&gt; ?</p>
@@ -245,7 +695,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q7 -->
-  <div class="q-card">
+  <div class="q-card" id="q7">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>C'est quoi les variables CSS comme var(--vert2) ?</p>
@@ -268,7 +718,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q8 -->
-  <div class="q-card">
+  <div class="q-card" id="q8">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>C'est quoi le media query et comment l'utiliser pour le responsive mobile ?</p>
@@ -293,7 +743,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🛠️ Outils & Astuces</div>
 
   <!-- Q9 -->
-  <div class="q-card">
+  <div class="q-card" id="q9">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment utiliser VS Code directement dans GitHub sans rien installer ?</p>
@@ -312,7 +762,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q10 -->
-  <div class="q-card">
+  <div class="q-card" id="q10">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment ajouter des emojis dans le HTML ?</p>
@@ -333,7 +783,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q11 -->
-  <div class="q-card">
+  <div class="q-card" id="q11">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Les commentaires HTML — comment ça marche ?</p>
@@ -355,7 +805,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🗺️ Leaflet — Cartes & Tracés</div>
 
   <!-- Q1 -->
-  <div class="q-card">
+  <div class="q-card" id="q12">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment changer la couleur des tracés par jour ?</p>
@@ -371,7 +821,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q2 -->
-  <div class="q-card">
+  <div class="q-card" id="q13">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment gérer couleur/taille des marqueurs DEP / ARR / WP ?</p>
@@ -391,7 +841,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q3 -->
-  <div class="q-card">
+  <div class="q-card" id="q14">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment éviter qu’une photo soit tronquée dans un cadre fixe ?</p>
@@ -411,7 +861,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">📊 Google Sheets — Liaison & Calculs</div>
 
   <!-- Q4 -->
-  <div class="q-card">
+  <div class="q-card" id="q15">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment connecter un Google Sheet à une page web ?</p>
@@ -431,7 +881,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q5 -->
-  <div class="q-card">
+  <div class="q-card" id="q16">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Correction formules solaires : Conso réelle = Autoconso + Conso réseau</p>
@@ -458,7 +908,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🧱 HTML/CSS — Tuiles & Images</div>
 
   <!-- Q6 -->
-  <div class="q-card">
+  <div class="q-card" id="q17">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment créer une tuile cliquable RC ou Cuisine ?</p>
@@ -476,7 +926,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q7 -->
-  <div class="q-card">
+  <div class="q-card" id="q18">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment faire un zoom sur image sans casser la mise en page ?</p>
@@ -492,7 +942,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q8 -->
-  <div class="q-card">
+  <div class="q-card" id="q19">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Vocabulaire positionnement : relative vs absolute ?</p>
@@ -514,7 +964,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">⚡ Photovoltaïque — Retour d’expérience Gaume 6747</div>
 
   <!-- Q9 -->
-  <div class="q-card">
+  <div class="q-card" id="q20">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Pourquoi mon onduleur décroche quand il fait chaud ?</p>
@@ -526,7 +976,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q10 -->
-  <div class="q-card">
+  <div class="q-card" id="q21">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment j’ai réduit mes décrochages alors que les voisins trinquent ?</p>
@@ -546,7 +996,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q11 -->
-  <div class="q-card">
+  <div class="q-card" id="q22">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Le compteur communiquant règle le problème de décrochage ?</p>
@@ -559,7 +1009,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q12 -->
-  <div class="q-card">
+  <div class="q-card" id="q23">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Quelle stratégie après 2030 en Wallonie ?</p>
@@ -580,7 +1030,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q13 -->
-  <div class="q-card">
+  <div class="q-card" id="q24">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Checklist entretien panneaux Maxeon 3</p>
@@ -597,7 +1047,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🍳 Cuisine — Liaison Google Sheet pour les recettes</div>
 
   <!-- Q18 -->
-  <div class="q-card">
+  <div class="q-card" id="q25">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment structurer le Google Sheet pour les recettes ?</p>
@@ -620,7 +1070,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🍳 Cuisine — Photo sur le calendrier</div>
 
   <!-- Q14 -->
-  <div class="q-card">
+  <div class="q-card" id="q26">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment ajouter une photo au-dessus du calendrier sans casser la mise en page ?</p>
@@ -657,7 +1107,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q15 -->
-  <div class="q-card">
+  <div class="q-card" id="q27">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Vocabulaire positionnement : pourquoi relative + absolute ?</p>
@@ -676,7 +1126,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q16 -->
-  <div class="q-card">
+  <div class="q-card" id="q28">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Checklist quand l’image overlay ne s’affiche pas bien</p>
@@ -695,7 +1145,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q17 -->
-  <div class="q-card">
+  <div class="q-card" id="q29">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Alternative : image en fond du calendrier au lieu d’overlay</p>
@@ -719,7 +1169,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">🔌 Résidence Secondaire Alsace — Kit Plug & Play</div>
 
   <!-- Q24 -->
-  <div class="q-card">
+  <div class="q-card" id="q30">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Quel est mon talon de conso à effacer en Alsace ?</p>
@@ -740,7 +1190,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q25 -->
-  <div class="q-card">
+  <div class="q-card" id="q31">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Combien de panneaux plug-and-play il me faut ?</p>
@@ -764,7 +1214,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q26 -->
-  <div class="q-card">
+  <div class="q-card" id="q32">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Plug-and-play : légalité, branchement et limites</p>
@@ -788,7 +1238,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q27 -->
-  <div class="q-card">
+  <div class="q-card" id="q33">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Marques de kit plug-and-play et où poser en Alsace ?</p>
@@ -811,7 +1261,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
     <!-- Q28 -->
-  <div class="q-card">
+  <div class="q-card" id="q34">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Que se passe-t-il si je branche un kit plug-and-play sans déclarer ?</p>
@@ -832,7 +1282,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q29 -->
-  <div class="q-card">
+  <div class="q-card" id="q35">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Comment limiter l’injection si je veux rester discret ?</p>
@@ -853,7 +1303,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
     <!-- Q30 -->
-  <div class="q-card">
+  <div class="q-card" id="q36">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Compteur à disque : que se passe-t-il avec un kit plug-and-play ?</p>
@@ -874,7 +1324,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q31 -->
-  <div class="q-card">
+  <div class="q-card" id="q37">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Stratégie avec compteur à disque pour rester sous les radars</p>
@@ -898,7 +1348,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
     <!-- Q32 -->
-  <div class="q-card">
+  <div class="q-card" id="q38">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Checklist finale 2 panneaux 800Wc + compteur à disque</p>
@@ -914,7 +1364,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q33 -->
-  <div class="q-card">
+  <div class="q-card" id="q39">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Ce que ça va donner sur ta facture avec 2x400Wc</p>
@@ -937,7 +1387,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="stitle">☁️ Quels panneaux pour l’hiver / ciel couvert ?</div>
 
   <!-- Q34 -->
-  <div class="q-card">
+  <div class="q-card" id="q40">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Quelles marques produisent le mieux par faible lumière ?</p>
@@ -958,7 +1408,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q35 -->
-  <div class="q-card">
+  <div class="q-card" id="q41">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Où acheter en Belgique / Alsace / en ligne ? Prix 2026</p>
@@ -988,7 +1438,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   </div>
 
   <!-- Q36 -->
-  <div class="q-card">
+  <div class="q-card" id="q42">
     <div class="q-block">
       <span class="q-icon">❓</span>
       <p>Micro-onduleur : aussi important que le panneau en hiver</p>
