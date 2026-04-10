@@ -420,6 +420,9 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
         <li><a href="#q4">Q4 — Les div imbriquées — comment ne pas se perdre dans les fermetures ?</a></li>
       </ul>
     </details>
+      <sumary>⚙️ JavaScript — L'Interactivité</sumary>
+        <ul><li><a href="#q43">Q43 — Sommaire sticky + scroll</a></li>
+      </ul>
     <details>
       <summary>🎨 CSS — Le Style</summary>
       <ul>
@@ -664,6 +667,21 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
       <code>&lt;/div&gt;<span class="comm">&lt;!-- fin vid-card --&gt;</span></code> — invisible sur la page mais très utile !</div>
     </div>
   </div>
+<!-- ======Javascript============-->
+ <div class="stitle">⚙️ JavaScript — L'Interactivité</div>
+
+ <!--Q43-->
+ <div class="q-card" id="q43">
+  <div class="q-block">
+    <p>Comment faire un sommaire qui scrolle à la bonne hauteur malgré un menu sticky ?</p>
+    <span class="toggle-icon">+</span>
+  </div>
+  <div class="r-block">
+    <div class="r-line"><span class="r-title">Réponse :</span>On calcule la hauteur du header + sommaire en JS à chaque clic, puis on utilise <code>window.scrollTo()</code> avec un offset.</div>
+    <div class="r-line"><span class="r-title">Exemple :</span><code>const offset = header.offsetHeight + sommaire.offsetHeight;<br>window.scrollTo({ top: cible - offset, behavior: 'smooth' });</code></div>
+    <div class="r-line"><span class="r-title">💡 Astuce :</span>Ajoute un <code>setTimeout</code> de 50ms pour éviter le bug des <code>&lt;details&gt;</code> qui se referment et faussent le calcul.</div>
+  </div>
+</div>
 
   <!-- ========== CSS ========== -->
   <div class="stitle">🎨 CSS — Le Style</div>
