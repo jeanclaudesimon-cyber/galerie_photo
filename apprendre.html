@@ -422,6 +422,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
     </details>
       <sumary>⚙️ JavaScript — L'Interactivité</sumary>
         <ul><li><a href="#q43">Q43 — Sommaire sticky + scroll</a></li>
+            <li><a href="#q44">Q44 — Changer texte d'un bouton</a></li>
       </ul>
     <details>
       <summary>🎨 CSS — Le Style</summary>
@@ -682,6 +683,18 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
     <div class="r-line"><span class="r-title">💡 Astuce :</span>Ajoute un <code>setTimeout</code> de 50ms pour éviter le bug des <code>&lt;details&gt;</code> qui se referment et faussent le calcul.</div>
   </div>
 </div>
+<div class="q-card" id="q44">
+  <div class="q-block">
+    <p>Comment changer le texte d'un bouton quand on clique dessus ?</p>
+    <span class="toggle-icon">?</span>
+  </div>
+  <div class="r-block">
+    <div class="r-line"><span class="r-title">Réponse :</span>On sélectionne le bouton avec <code>querySelector</code> et on change <code>textContent</code> dans un <code>addEventListener</code>.</div>
+    <div class="r-line"><span class="r-title">Exemple :</span><code>const btn = document.querySelector('#monBtn');<br>btn.addEventListener('click', () => {<br>&nbsp;&nbsp;btn.textContent = 'Cliqué !';<br>});</code></div>
+    <div class="r-line"><span class="r-title">💡 Astuce :</span>Pour remettre le texte d'origine, stocke-le dans une variable avant de le changer.</div>
+  </div>
+</div>
+
 
   <!-- ========== CSS ========== -->
   <div class="stitle">🎨 CSS — Le Style</div>
