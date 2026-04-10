@@ -593,6 +593,422 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
     </div>
   </div>
 
+  <!-- ========== 🍳 Cuisine — Google Sheet Recettes ========== -->
+  <div class="stitle">🍳 Cuisine — Liaison Google Sheet pour les recettes</div>
+
+  <!-- Q18 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment structurer le Google Sheet pour les recettes ?</p>
+    </div>
+    <div class="r-block">
+      <p>Un onglet par recette, ou toutes les recettes dans un seul onglet. Structure obligatoire en ligne 1 :</p>
+      <table class="ref-table">
+        <tr><th>A1</th><th>B1</th><th>C1</th><th>D1</th><th>E1</th><th>F1</th></tr>
+        <tr><td>titre</td><td>technique</td><td>description</td><td>difficulte</td><td>portions_base</td><td>sheetUrl</td></tr>
+      </table>
+      <p><strong>Exemple ligne 2 :</strong></p>
+      <div class="code-block">
+        <span class="val">Chili con carne revisité</span> | <span class="val">Mijoté</span> | <span class="val">Version généreuse aux haricots rouges</span> | <span class="val">2</span> | <span class="val">4</span> | <span class="val">https://docs.google.com/.../pub?output=csv</span>
+      </div>
+      <div class="tip"><strong>Règle d’or :</strong> Le <span class="hl">titre colonne A</span> doit être identique au caractère près au titre sur Flickr ou dans ton HTML. Majuscules, accents, espaces compris</div>
+    </div>
+  </div>
+
+    <!-- ========== 🍳 Cuisine — Calendrier & Overlay ========== -->
+  <div class="stitle">🍳 Cuisine — Photo sur le calendrier</div>
+
+  <!-- Q14 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment ajouter une photo au-dessus du calendrier sans casser la mise en page ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Overlay avec position absolute</span>. Le parent est en <span class="hl">relative</span>, l’image en <span class="hl">absolute</span> → elle flotte au-dessus.</p>
+      <p><strong>1. HTML :</strong> ajoute l’image dans <span class="hl">.cal-wrap</span> juste avant <span class="hl">.cal-header</span></p>
+      <div class="code-block">
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"cal-wrap"</span><span class="tag">&gt;</span><br>
+        &nbsp;&nbsp;<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"https://raw.githubusercontent.com/.../cuistot.webp"</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">class</span>=<span class="val">"dessin-overlay"</span> <span class="attr">alt</span>=<span class="val">"Cuistot fou"</span><span class="tag">&gt;</span><br>
+        &nbsp;&nbsp;<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"cal-header"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span><br>
+        <span class="tag">&lt;/div&gt;</span>
+      </div>
+      <p><strong>2. CSS :</strong> à ajouter dans ton <span class="hl">style</span> cuisine</p>
+      <div class="code-block">
+        <span class="sel">.cal-wrap</span> {<br>
+        &nbsp;&nbsp;<span class="attr">position</span>: <span class="val">relative</span>;<br>
+        }<br><br>
+        <span class="sel">.dessin-overlay</span> {<br>
+        &nbsp;&nbsp;<span class="attr">position</span>: <span class="val">absolute</span>;<br>
+        &nbsp;&nbsp;<span class="attr">top</span>: <span class="val">50%</span>;<br>
+        &nbsp;&nbsp;<span class="attr">left</span>: <span class="val">0</span>;<br>
+        &nbsp;&nbsp;<span class="attr">transform</span>: <span class="val">translateY(-50%)</span>;<br>
+        &nbsp;&nbsp;<span class="attr">z-index</span>: <span class="val">5</span>;<br>
+        &nbsp;&nbsp;<span class="attr">width</span>: <span class="val">40%</span>;<br>
+        &nbsp;&nbsp;<span class="attr">height</span>: <span class="val">auto</span>;<br>
+        &nbsp;&nbsp;<span class="attr">opacity</span>: <span class="val">0.8</span>;<br>
+        &nbsp;&nbsp;<span class="attr">pointer-events</span>: <span class="val">none</span>;<br>
+        }
+      </div>
+      <div class="tip"><strong>Résultat :</strong> L’image flotte à gauche, centrée verticalement. <span class="hl">pointer-events: none</span> = tu peux cliquer le calendrier à travers</div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Vocabulaire positionnement : pourquoi relative + absolute ?</p>
+    </div>
+    <div class="r-block">
+      <table class="ref-table">
+        <tr><th>Code</th><th>Traduction simple</th><th>Rôle</th></tr>
+        <tr><td><span class="sel">position: relative</span></td><td>Sers de repère à tes enfants</td><td>.cal-wrap = parent</td></tr>
+        <tr><td><span class="sel">position: absolute</span></td><td>Décolle-toi et flotte au-dessus</td><td>img = enfant</td></tr>
+        <tr><td><span class="sel">top: 50% + translateY(-50%)</span></td><td>Centrage vertical parfait</td><td>Image au milieu</td></tr>
+        <tr><td><span class="sel">z-index: 5</span></td><td>Numéro d’étage, 5 > 1</td><td>Image passe devant</td></tr>
+        <tr><td><span class="sel">pointer-events: none</span></td><td>Les clics passent à travers</td><td>Calendrier reste cliquable</td></tr>
+        <tr><td><span class="sel">width: 40% + height: auto</span></td><td>Taille sans déformer</td><td>Image garde proportions</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Checklist quand l’image overlay ne s’affiche pas bien</p>
+    </div>
+    <div class="r-block">
+      <table class="ref-table">
+        <tr><th>Problème</th><th>Cause</th><th>Solution</th></tr>
+        <tr><td>Petite icône cassée</td><td>Mauvais chemin/nom fichier</td><td>Vérifier <span class="hl">src="..."</span> à la lettre</td></tr>
+        <tr><td>Image en haut de page</td><td>Oublié <span class="hl">position: relative</span> sur parent</td><td>Ajouter sur <span class="hl">.cal-wrap</span></td></tr>
+        <tr><td>Image derrière calendrier</td><td><span class="hl">z-index</span> trop petit</td><td>Monter à <span class="hl">z-index: 10</span></td></tr>
+        <tr><td>Image déformée</td><td>Oublié <span class="hl">height: auto</span></td><td>Toujours avec <span class="hl">width</span></td></tr>
+        <tr><td>Je peux pas cliquer calendrier</td><td>Oublié <span class="hl">pointer-events: none</span></td><td>Ajouter sur l’image</td></tr>
+      </table>
+      <div class="tip"><strong>Mémo :</strong> Parent <span class="hl">relative</span> + Enfant <span class="hl">absolute</span> = 90% des placements CSS</div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Alternative : image en fond du calendrier au lieu d’overlay</p>
+    </div>
+    <div class="r-block">
+      <p>Si tu veux l’image <span class="badge badge-or">derrière</span> le calendrier, pas au-dessus :</p>
+      <div class="code-block">
+        <span class="sel">.cal-wrap</span> {<br>
+        &nbsp;&nbsp;<span class="attr">background-image</span>: <span class="val">url('mon-dessin.webp')</span>;<br>
+        &nbsp;&nbsp;<span class="attr">background-size</span>: <span class="val">contain</span>;<br>
+        &nbsp;&nbsp;<span class="attr">background-repeat</span>: <span class="val">no-repeat</span>;<br>
+        &nbsp;&nbsp;<span class="attr">background-position</span>: <span class="val">left center</span>;<br>
+        &nbsp;&nbsp;<span class="attr">opacity</span>: <span class="val">0.3</span>;<br>
+        }
+      </div>
+      <div class="tip"><strong>Différence :</strong> Overlay = devant avec <span class="hl">z-index</span>. Background = derrière, pas besoin de <span class="hl">&lt;img&gt;</span></div>
+    </div>
+  </div>
+
+    <!-- ========== 🔌 Résidence Secondaire Alsace — Kit Plug & Play ========== -->
+  <div class="stitle">🔌 Résidence Secondaire Alsace — Kit Plug & Play</div>
+
+  <!-- Q24 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Quel est mon talon de conso à effacer en Alsace ?</p>
+    </div>
+    <div class="r-block">
+      <p>On additionne tout ce qui tourne H24 quand t’es pas là :</p>
+      <table class="ref-table">
+        <tr><th>Appareil</th><th>Conso estimée</th><th>Par 24h</th></tr>
+        <tr><td>Chaudière Frisquet Connect</td><td>15W veille + circulateur</td><td>~360 Wh</td></tr>
+        <tr><td>Freebox Pop</td><td>12W</td><td>~290 Wh</td></tr>
+        <tr><td>2x Caméras Imou 5MP</td><td>2x 5W = 10W</td><td>~240 Wh</td></tr>
+        <tr><td>Frigo 140 kWh/an</td><td>140000/365</td><td>~385 Wh</td></tr>
+        <tr><td><strong>Total talon</strong></td><td><strong>~53W moyen</strong></td><td><strong>~1,3 kWh/24h</strong></td></tr>
+      </table>
+      <p><span class="badge badge-or">Exception hiver :</span> Radiateur Sauter hors-gel = +1 à 2 kWh/24h quand il fait très froid. Total hiver : <span class="hl">2,3 à 3,3 kWh/24h</span></p>
+      <div class="tip"><strong>Objectif :</strong> Effacer 1,3 kWh/jour en intersaison, et au moins 50% du talon en hiver. Le reste part sur le réseau, c’est pas grave</div>
+    </div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Combien de panneaux plug-and-play il me faut ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Base Alsace :</span> 1 kWc bien orienté = 1000-1100 kWh/an = 2,7 à 3 kWh/jour de moyenne annuelle.</p>
+      <p><strong>Calcul pour ton talon de 1,3 kWh/jour :</strong></p>
+      <table class="ref-table">
+        <tr><th>Kit</th><th>Prod hiver</th><th>Prod été</th><th>Couvre talon ?</th></tr>
+        <tr><td>1 panneau 400Wc</td><td>0,4 à 0,8 kWh/j</td><td>1,6 à 2 kWh/j</td><td>30-60% hiver, 100% été</td></tr>
+        <tr><td>2 panneaux 800Wc</td><td>0,8 à 1,6 kWh/j</td><td>3,2 à 4 kWh/j</td><td><span class="badge badge-vert">60-100% hiver</span>, surplus été</td></tr>
+        <tr><td>3 panneaux 1200Wc</td><td>1,2 à 2,4 kWh/j</td><td>4,8 à 6 kWh/j</td><td>100% hiver + radiateur</td></tr>
+      </table>
+      <div class="code-block">
+        <span class="comm">// Règle simple Alsace</span><br>
+        <span class="txt">Talon 1,3 kWh/j</span> → <span class="val">2 panneaux 400Wc = 800Wc</span><br>
+        <span class="txt">Si radiateur hors-gel important</span> → <span class="val">3 panneaux 1200Wc</span>
+      </div>
+      <div class="tip"><strong>Mon conseil :</strong> Commence avec <span class="hl">2 panneaux plug-and-play 400Wc</span>. Tu effaces 100% du talon 8 mois/an, et 60-80% en plein hiver. Le surplus d’été part gratos sur le réseau, osef</div>
+    </div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Plug-and-play : légalité, branchement et limites</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Légal France :</span> Oui jusqu’à 3 kWc sans Consuel si kit <span class="hl">NF EN 50549-1</span> avec micro-onduleur qui coupe si réseau tombe.</p>
+      <p><strong>Branchement :</strong></p>
+      <p>1. Panneau sur châssis au sol ou façade sud<br>
+      2. Micro-onduleur intégré<br>
+      3. Câble avec prise mâle → tu branches direct dans une prise extérieure 16A</p>
+      <p><strong>Limites à connaître :</strong></p>
+      <table class="ref-table">
+        <tr><th>Point</th><th>Détail</th></tr>
+        <tr><td>Injection</td><td>Le surplus part gratos chez Enedis. Pas de revente sans CACSI</td></tr>
+        <tr><td>Décrochage</td><td>Comme en Gaume : si tension > 253V, le micro-onduleur coupe</td></tr>
+        <tr><td>Linky</td><td>Il compte l’injection en index séparé, mais t’es pas payé</td></tr>
+        <tr><td>Assurance</td><td>Déclarer à l’assureur habitation. Souvent inclus gratos</td></tr>
+      </table>
+      <div class="tip"><strong>Astuce Frisquet Connect :</strong> Ta chaudière 20434646592229 consomme surtout quand le circulateur tourne. Les 2 panneaux couvrent large sa veille + box + caméras. Le frigo neuf 140 kWh/an c’est que 16W de moyenne, c’est peanuts</div>
+    </div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Marques de kit plug-and-play et où poser en Alsace ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Marques sérieuses 2026 :</span> Sunology, Beem, Supersola, Mon Kit Solaire. Prends du <span class="hl">400Wc bifacial</span> si possible, ça gratte 5-10% de prod.</p>
+      <p><strong>Pose optimale Alsace :</strong></p>
+      <p>1. <span class="hl">Plein sud, 30-35° inclinaison</span> = max annuel<br>
+      2. <span class="hl">Sol sur châssis lesté</span> si jardin, sinon façade<br>
+      3. <span class="hl">Zéro ombre 10h-16h</span> = critique en hiver<br>
+      4. <span class="hl">Prise extérieure dédiée</span> avec disjoncteur 16A courbe C</p>
+      <div class="code-block">
+        <span class="comm">// Prod estimée 800Wc Alsace sud 35°</span><br>
+        <span class="txt">Décembre-Janvier</span> : <span class="val">0,8 à 1,2 kWh/j</span> → couvre 60-90% talon<br>
+        <span class="txt">Mars-Septembre</span> : <span class="val">3 à 4,5 kWh/j</span> → couvre 100% + surplus<br>
+        <span class="txt">Annuel</span> : <span class="val">~850 kWh</span> → <span class="val">255€ économisés</span> à 0,30€/kWh
+      </div>
+      <div class="tip"><strong>Rentabilité :</strong> Kit 2x400Wc = 900€ posé. 255€/an économisés = <span class="hl">amorti 3,5 ans</span>. Après c’est gratos 20 ans. Et tu protèges ta Frisquet + caméras des coupures courtes</div>
+    </div>
+  </div>
+
+    <!-- Q28 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Que se passe-t-il si je branche un kit plug-and-play sans déclarer ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-rouge">Techniquement</span> : Ça marche. Tu branches, ça produit, ton Linky tourne moins vite ou à l’envers. Le micro-onduleur coupe si le réseau tombe, donc sécurité anti-électrocution OK.</p>
+      <p><span class="badge badge-or">Légalement</span> : En France, toute installation de production même < 3 kWc doit être déclarée à Enedis via CACSI. C’est gratuit et ça prend 10 min en ligne.</p>
+      <table class="ref-table">
+        <tr><th>Risque</th><th>Probabilité</th><th>Conséquence</th></tr>
+        <tr><td>Linky voit injection</td><td>100% si surplus</td><td>Index injection s’incrémente, Enedis le voit</td></tr>
+        <tr><td>Contrôle Enedis</td><td>Faible < 3kWc</td><td>Lettre recommandée pour régulariser</td></tr>
+        <tr><td>Assurance si sinistre</td><td>Faible mais réel</td><td>Expert peut chercher la cause si incendie électrique</td></tr>
+        <tr><td>Revente maison</td><td>100% au diag</td><td>Diagnostiqueur note “installation non conforme”</td></tr>
+      </table>
+      <div class="tip"><strong>Le Linky te trahit :</strong> Il a un index “injection” séparé. Même si tu consommes tout, le micro-onduleur envoie des micro-impulsions. Enedis voit que t’as une prod. En hiver avec talon 1,3 kWh/j, 800Wc vont forcément injecter 0,5 à 1 kWh/j les beaux jours</div>
+      <div class="tip"><strong>Pourquoi la CACSI existe :</strong> Pas pour t’embêter. C’est pour que Enedis sache qu’il y a une prod sur ton bout de réseau. Si ils coupent pour travaux, ils vérifient que ton micro-onduleur s’est bien coupé aussi. Sécurité des agents</div>
+    </div>
+  </div>
+
+  <!-- Q29 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Comment limiter l’injection si je veux rester discret ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Technique</span> : Il faut consommer tout ce que tu produis en instantané. 3 méthodes :</p>
+      <p><strong>1. Dimensionner juste :</strong> 1 panneau 400Wc au lieu de 2. Prod hiver 0,4-0,8 kWh/j = sous ton talon 1,3 kWh/j. Zéro injection 9 mois/an. L’été tu injecteras quand même 0,5 kWh/j.</p>
+      <p><strong>2. Routeur solaire :</strong> Boîtier qui envoie le surplus dans ton ballon d’eau chaude ou ton radiateur Sauter. Coût 200€. Plus d’injection, mais plus plug-and-play.</p>
+      <p><strong>3. Batterie plug-and-play :</strong> EcoFlow PowerStream + batterie 1kWh. 1200€. Stocke le surplus la journée, le rend la nuit. Zéro injection. Plus plug-and-play non plus.</p>
+      <div class="code-block">
+        <span class="comm">// Avec ton talon 1,3 kWh/j</span><br>
+        <span class="txt">1x 400Wc</span> → <span class="val">injection ~0,2 kWh/j été</span>, 0 hiver<br>
+        <span class="txt">2x 400Wc</span> → <span class="val">injection ~1,5 kWh/j été</span>, ~0,2 kWh/j hiver<br>
+        <span class="txt">Le Linky comptera 50 à 200 kWh injectés/an</span>
+      </div>
+      <div class="tip"><strong>Réalité :</strong> Pour 1 ou 2 panneaux, Enedis bouge rarement. Ils ont des milliers de cas. Mais légalement t’es pas couvert. À toi de voir si tu joues le jeu ou pas</div>
+    </div>
+  </div>
+
+    <!-- Q30 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Compteur à disque : que se passe-t-il avec un kit plug-and-play ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Technique</span> : Le disque tourne à l’envers quand tu injectes. Si tu produis 2 kWh et consommes 1 kWh, le compteur recule de 1 kWh. C’est l’ancien “compteur qui remonte”.</p>
+      <p><span class="badge badge-or">Légalement</span> : En France tu as le droit de refuser le Linky. Enedis ne peut pas t’obliger. Par contre, ils peuvent facturer les relevés manuels si tu refuses 2 fois : 53€/an depuis 2023.</p>
+      <table class="ref-table">
+        <tr><th>Situation</th><th>Compteur à disque</th><th>Linky</th></tr>
+        <tr><td>Tu consommes plus que tu produis</td><td>Disque tourne lentement</td><td>Index conso monte</td></tr>
+        <tr><td>Tu produis plus que tu consommes</td><td><span class="hl">Disque tourne à l’envers</span></td><td>Index injection monte</td></tr>
+        <tr><td>Enedis voit l’injection</td><td>Non, sauf relevé manuel</td><td>Oui, en temps réel</td></tr>
+        <tr><td>CACSI obligatoire</td><td>Oui légalement</td><td>Oui légalement</td></tr>
+      </table>
+      <div class="tip"><strong>Conséquence pratique :</strong> Avec ton talon 1,3 kWh/j et 2 panneaux 800Wc qui font 3-4 kWh/j en été, ton disque va reculer 1,5 à 2,5 kWh/j de mars à septembre. Ton index annuel va baisser. Le releveur va le noter</div>
+      <div class="tip"><strong>Ce que voit le releveur :</strong> Index N-1 = 15000, Index N = 14700. Il note -300 kWh. Son logiciel va lever une alerte “index incohérent”. Un technicien peut passer vérifier si t’as pas shunté le compteur</div>
+    </div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Stratégie avec compteur à disque pour rester sous les radars</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-rouge">Attention</span> : Je te donne la technique, pas un conseil. Légalement toute prod doit être déclarée, même avec disque.</p>
+      <p><strong>Si tu veux vraiment zéro injection visible :</strong></p>
+      <p>1. <span class="hl">1 seul panneau 400Wc</span> : Prod hiver 0,4-0,8 kWh/j < ton talon 1,3 kWh/j. Prod été 1,6-2 kWh/j = injection 0,3-0,7 kWh/j seulement. Sur l’année = 80-150 kWh de recul, quasi invisible.</p>
+      <p>2. <span class="hl">Branche le radiateur Sauter en permanence</span> l’hiver : Il bouffe 1-2 kWh/j. Avec 2 panneaux 800Wc, tu seras à l’équilibre même en février. Zéro recul.</p>
+      <p>3. <span class="hl">Coupe 1 panneau de juin à août</span> : Tu passes de 800Wc à 400Wc les 3 mois où ça produit à fond. Plus de recul.</p>
+      <div class="code-block">
+        <span class="comm">// Simulation 1 panneau 400Wc + talon 1,3 kWh/j</span><br>
+        <span class="txt">Déc-Jan-Fév</span> : Prod 0,6 → Conso 1,3 → <span class="val">+0,7 kWh/j tiré</span><br>
+        <span class="txt">Mar-Avr-Mai</span> : Prod 1,5 → Conso 1,3 → <span class="val">-0,2 kWh/j reculé</span><br>
+        <span class="txt">Jun-Jul-Aoû</span> : Prod 2,0 → Conso 1,3 → <span class="val">-0,7 kWh/j reculé</span><br>
+        <span class="txt">Sep-Oct-Nov</span> : Prod 1,2 → Conso 1,3 → <span class="val">+0,1 kWh/j tiré</span><br>
+        <span class="txt">Bilan annuel</span> : <span class="val">~ -50 kWh de recul</span> = invisible sur relevé
+      </div>
+      <div class="tip"><strong>Réalité disque :</strong> Le releveur passe 1-2 fois/an. Si l’index a reculé de 50 kWh, il note et basta. Si il a reculé de 500 kWh, il fait un signalement. Reste sous 100 kWh/an de recul et t’es peinard</div>
+    </div>
+  </div>
+
+    <!-- Q32 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Checklist finale 2 panneaux 800Wc + compteur à disque</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Matos :</span> 2x 400Wc bifacial + micro-onduleur APS ou Hoymiles + châssis sol + câble 5m prise. Budget ~900€.</p>
+      <p><span class="badge badge-vert">Pose :</span> Plein sud, 35°, zéro ombre 10h-16h. Prise extérieure 16A dédiée.</p>
+      <p><span class="badge badge-or">Gestion hiver :</span> Nov à Mars → laisse ton Sauter hors-gel branché H24. Il bouffe 1-2 kWh/j et équilibre ta prod 0,8-1,5 kWh/j. Résultat : disque quasi immobile.</p>
+      <p><span class="badge badge-or">Gestion été :</span> Avril à Oct → coupe le Sauter. Prod 3-4 kWh/j - talon 1,3 = <span class="hl">1,7 à 2,7 kWh/j de recul</span>. Sur 6 mois = 300-500 kWh de recul.</p>
+      <div class="tip"><strong>Lissage annuel :</strong> Si t’as vraiment peur du relevé, débranche 1 panneau de juin à août. Tu passes à 400Wc, recul divisé par 2. Tu rebranches en septembre</div>
+      <div class="tip"><strong>Si Enedis appelle :</strong> Même discours qu’avant : "On n’est jamais là, frigo neuf A+++, on a tout coupé, et j’ai mis le chauffage hors-gel très bas". Avec ton historique, ils vont pas chercher plus loin</div>
+    </div>
+  </div>
+
+  <!-- Q33 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Ce que ça va donner sur ta facture avec 2x400Wc</p>
+    </div>
+    <div class="r-block">
+      <table class="ref-table">
+        <tr><th>Période</th><th>Prod 800Wc</th><th>Talon</th><th>Bilan compteur</th></tr>
+        <tr><td>Déc-Jan-Fév</td><td>0,8-1,5 kWh/j</td><td>2,5 kWh/j avec Sauter</td><td><span class="val">+1 kWh/j tiré</span> = normal</td></tr>
+        <tr><td>Mar-Avr-Mai</td><td>2,5-3,5 kWh/j</td><td>1,3 kWh/j</td><td><span class="hl">-1,2 à -2,2 kWh/j reculé</span></td></tr>
+        <tr><td>Jun-Jul-Aoû</td><td>3,5-4,5 kWh/j</td><td>1,3 kWh/j</td><td><span class="hl">-2,2 à -3,2 kWh/j reculé</span></td></tr>
+        <tr><td>Sep-Oct-Nov</td><td>1,5-2,5 kWh/j</td><td>1,3 kWh/j</td><td><span class="val">-0,2 à -1,2 kWh/j reculé</span></td></tr>
+      </table>
+      <p><strong>Bilan annuel estimé :</strong> 850 kWh produits - 475 kWh talon = <span class="hl">375 kWh de recul/an</span></p>
+      <p>Si ta conso actuelle est déjà 200-300 kWh/an, ta facture va tomber à 0 ou négative. Là le releveur tiquera.</p>
+      <div class="tip"><strong>Solution simple :</strong> Branche un petit convecteur 500W sur programmateur 2h/nuit de avril à septembre. Il bouffe 1 kWh/j et annule le recul. Coût 20€. T’es à l’équilibre et personne voit rien</div>
+    </div>
+  </div>
+
+    <!-- ========== ☁️ Panneaux Plug&Play Performants par Temps Couvert ========== -->
+  <div class="stitle">☁️ Quels panneaux pour l’hiver / ciel couvert ?</div>
+
+  <!-- Q34 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Quelles marques produisent le mieux par faible lumière ?</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Le critère clé :</span> Cellules <span class="hl">N-Type TOPCon</span> ou <span class="hl">IBC/Back Contact</span>. Elles démarrent plus tôt le matin et bossent mieux sous nuages que les vieilles P-Type.</p>
+      <table class="ref-table">
+        <tr><th>Marque / Techno</th><th>Pourquoi c’est bon hiver</th><th>Gamme plug-and-play</th></tr>
+        <tr><td><strong>Maxeon/SunPower 3 ou 6</strong> IBC</td><td>Contact arrière, pas d’ombre sur cellule. Meilleur rendement diffus</td><td>Sunology PLAY Maxeon 430W</td></tr>
+        <tr><td><strong>Aiko Neostar</strong> N-Type ABC</td><td>Champion 2024-2025 en faible irradiance</td><td>Mon Kit Solaire Aiko 460W</td></tr>
+        <tr><td><strong>Trina Vertex S+</strong> N-Type TOPCon</td><td>Excellent rapport perf/prix sous nuages</td><td>Beem Energy 420W, Supersola 425W</td></tr>
+        <tr><td><strong>JA Solar JAM54</strong> N-Type</td><td>Bonne perf diffus, prix serré</td><td>Kit Oscaro Power 425W</td></tr>
+        <tr><td><strong>Longi Hi-MO 6</strong> HPBC</td><td>Back contact, proche Maxeon moins cher</td><td>Allo Solar 430W</td></tr>
+      </table>
+      <div class="tip"><strong>À éviter :</strong> Les vieux kits P-Type PERC 300-375W à 150€. Ils s’écroulent sous 200W/m². En hiver alsacien t’as souvent 100-150W/m²...</div>
+      <div class="tip"><strong>Bifacial :</strong> Si tu poses au sol sur gravier clair ou dalle blanche, le bifacial gratte 5-15% gratos en hiver par réverbération. Sunology et Beem le proposent</div>
+    </div>
+  </div>
+
+  <!-- Q35 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Où acheter en Belgique / Alsace / en ligne ? Prix 2026</p>
+    </div>
+    <div class="r-block">
+      <p><span class="badge badge-vert">Spécialistes fiables, livraison BE/FR :</span></p>
+      <table class="ref-table">
+        <tr><th>Vendeur</th><th>Marque phare</th><th>Prix 2x400Wc</th><th>Note</th></tr>
+        <tr><td><strong>Sunology.com</strong></td><td>Maxeon 430W bifacial</td><td>950-1050€</td><td>Le + performant hiver, SAV FR top</td></tr>
+        <tr><td><strong>Beemenergy.fr</strong></td><td>Trina 420W bifacial</td><td>800-900€</td><td>Design, appli nickel, livré BE</td></tr>
+        <tr><td><strong>Monkitsolaire.fr</strong></td><td>Aiko 460W ou JA 425W</td><td>750-850€</td><td>Meilleur rapport perf/prix 2026</td></tr>
+        <tr><td><strong>Oscaro-power.com</strong></td><td>JA Solar 425W</td><td>700-800€</td><td>Prix plancher, fiable</td></tr>
+        <tr><td><strong>Allo.solar</strong></td><td>Longi 430W</td><td>780-880€</td><td>Bon compromis</td></tr>
+      </table>
+      <p><span class="badge badge-or">Grandes surfaces :</span></p>
+      <p><strong>Leroy Merlin / Castorama / Brico</strong> : Vendent Beem et Sunology. +50€ vs en ligne mais SAV physique. <br>
+      <strong>Leclerc / Auchan</strong> : Kits Supersola ou marques distributeur. Souvent P-Type ancien, vérifie la fiche techno.<br>
+      <strong>Amazon</strong> : Évite. 80% de kits P-Type chinois sans NF EN 50549-1. Micro-onduleur no-name = risque décrochage + SAV 0.</p>
+      <div class="code-block">
+        <span class="comm">// Mon classement pour Alsace hiver avec talon 1,3 kWh/j</span><br>
+        <span class="txt">1. Aiko 460W N-Type</span> → <span class="val">Monkitsolaire ~800€</span> = perf max<br>
+        <span class="txt">2. Maxeon 430W IBC</span> → <span class="val">Sunology ~1000€</span> = fiabilité max<br>
+        <span class="txt">3. Trina 420W TOPCon</span> → <span class="val">Beem ~850€</span> = équilibre
+      </div>
+      <div class="tip"><strong>Pour la Belgique :</strong> Tous livrent en BE. TVA 21% incluse. Pas de douane. Sunology et Beem ont entrepôts France = livraison 3-5j</div>
+    </div>
+  </div>
+
+  <!-- Q36 -->
+  <div class="q-card">
+    <div class="q-block">
+      <span class="q-icon">❓</span>
+      <p>Micro-onduleur : aussi important que le panneau en hiver</p>
+    </div>
+    <div class="r-block">
+      <p>Par temps couvert, c’est le micro-onduleur qui décide si tu produis 10W ou 0W. Il faut une <span class="hl">tension de démarrage basse</span>.</p>
+      <table class="ref-table">
+        <tr><th>Micro-onduleur</th><th>Tension démarrage</th><th>Verdict hiver</th></tr>
+        <tr><td><strong>APS DS3-L</strong></td><td>22V</td><td><span class="badge badge-vert">Excellent</span> démarre à 50W/m²</td></tr>
+        <tr><td><strong>Hoymiles HMS-800</strong></td><td>22V</td><td><span class="badge badge-vert">Excellent</span> idem APS</td></tr>
+        <tr><td><strong>Enphase IQ8+</strong></td><td>25V</td><td><span class="badge badge-vert">Très bon</span> démarre à 60W/m²</td></tr>
+        <tr><td><strong>No-name chinois</strong></td><td>30-35V</td><td><span class="badge badge-rouge">Nul</span> démarre à 150W/m² = rien en hiver</td></tr>
+      </table>
+      <div class="tip"><strong>Check obligatoire :</strong> Sur la fiche kit, cherche "Micro-onduleur APS, Hoymiles ou Enphase". Si c’est pas marqué ou si c’est "WVC, SG, etc.", fuis. C’est 80% de ta prod d’hiver qui se joue là</div>
+      <div class="tip"><strong>Combo gagnant Alsace :</strong> Panneau Aiko N-Type 460W + APS DS3-L. Tu sors 40-80W par panneau même sous ciel plombé. Avec 2 panneaux = 80-160W = tu couvres déjà ta Frisquet + box + caméras à 53W</div>
+    </div>
+  </div>
+
+  
+
 </main>
 <div class="statusbar">
   <span>💻 Référence HTML·CSS·JS — Sjc</span>
