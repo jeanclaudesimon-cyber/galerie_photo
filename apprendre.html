@@ -510,24 +510,36 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
     </details>
   </nav>
   <script>
-    function toggleSommaire() {
-      document.getElementById('sommaire').classList.toggle('hidden');
+    unction toggleSommaire() {
+    document.getElementById('sommaire').classList.toggle('hidden');
+  }
+  
+  function getOffset() {
+    const header = document.querySelector('header');
+    const sommaire = document.getElementById('sommaire');
+    let offset = header ? header.offsetHeight : 0;
+    if (sommaire && !sommaire.classList.contains('hidden')) {
+      offset += sommaire.offsetHeight;
     }
-    document.querySelectorAll('.sommaire a').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const id = this.getAttribute('href').substring(1);
-        const target = document.getElementById(id);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          target.style.transition = 'background 0.3s';
-          target.style.background = '#1a3a1a';
-          setTimeout(() => { target.style.background = ''; }, 1500);
-        }
-      });
+    return offset + 20;
+  }
+
+  document.querySelectorAll('.sommaire a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const id = this.getAttribute('href').substring(1);
+      const target = document.getElementById(id);
+      if (target) {
+        const y = target.getBoundingClientRect().top + window.pageYOffset - getOffset();
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        target.style.transition = 'background 0.3s';
+        target.style.background = '#1a3a1a';
+        setTimeout(() => { target.style.background = ''; }, 1500);
+      }
     });
-    // Open first category by default
-    document.querySelector('.sommaire details').setAttribute('open', '');
+  });
+  document.querySelector('.sommaire details').setAttribute('open', '');
+
   </script>
 
 <header>
