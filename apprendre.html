@@ -865,72 +865,63 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
 <!-- ========== Soeyangh ========== -->
   <div class="stitle">⛵ Soeyangh : les bases avant d’embarquer</div>
 
-   <!-- Q45 -->
-    <div class="qcard" id="q45">
-  <h3>⛵ Loffer vs Abattre : vu du dessus</h3>
-  
-  <!-- Schéma SVG : on voit le bateau, le vent, et la voile qui bouge -->
-  <svg viewBox="0 0 400 300" style="width:100%; max-width:400px; background:#e0f7fa; border-radius:8px; margin:10px 0;">
-    <!-- Flèche du VENT qui vient du haut -->
-    <defs>
-      <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L9,3 z" fill="#0288d1"/>
-      </marker>
-    </defs>
-    <text x="200" y="25" text-anchor="middle" font-weight="bold" fill="#0288d1">VENT</text>
-    <line x1="200" y1="35" x2="200" y2="80" stroke="#0288d1" stroke-width="3" marker-end="url(#arrow)"/>
+ <!-- Q45 -->
+<div class="q-card" id="q45">
+  <div class="q-block">
+    <span class="q-icon">⛵</span>
+    <p>Loffer vs Abattre : comment ça marche vu du dessus ?</p>
+  </div>
+  <div class="r-block">
+    <p>Le plus simple c’est de voir le bateau du dessus. Le vent arrive du haut du schéma.</p>
     
-    <!-- COQUE du bateau -->
-    <ellipse cx="200" cy="180" rx="40" ry="80" fill="#8d6e63" stroke="#5d4037" stroke-width="2"/>
-    <text x="200" y="185" text-anchor="middle" fill="white" font-weight="bold">BATEAU</text>
-    
-    <!-- SAFRAN / BARRE -->
-    <rect x="195" y="260" width="10" height="25" fill="#424242"/>
-    <text x="200" y="300" text-anchor="middle" font-size="12">Safran</text>
-    
-    <!-- VOILE position "normale" -->
-    <line x1="200" y1="120" x2="260" y2="180" stroke="#d32f2f" stroke-width="4"/>
-    <text x="270" y="155" fill="#d32f2f" font-size="12">Voile</text>
-    
-    <!-- Flèches LOFFER et ABATTRE -->
-    <path d="M 200 180 A 50 50 0 0 1 160 140" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow)"/>
-    <text x="140" y="145" fill="#388e3c" font-weight="bold">LOFFER ↑</text>
-    
-    <path d="M 200 180 A 50 50 0 0 0 240 140" fill="none" stroke="#f57c00" stroke-width="2" marker-end="url(#arrow)"/>
-    <text x="245" y="145" fill="#f57c00" font-weight="bold">ABATTRE ↓</text>
-  </svg>
+    <svg viewBox="0 0 400 300" style="width:100%; max-width:400px; background:#e0f7fa; border-radius:8px; margin:10px 0;">
+      <defs>
+        <marker id="arrow45" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#0288d1"/>
+        </marker>
+      </defs>
+      <text x="200" y="25" text-anchor="middle" font-weight="bold" fill="#0288d1">VENT</text>
+      <line x1="200" y1="35" x2="200" y2="80" stroke="#0288d1" stroke-width="3" marker-end="url(#arrow45)"/>
+      <ellipse cx="200" cy="180" rx="40" ry="80" fill="#8d6e63" stroke="#5d4037" stroke-width="2"/>
+      <text x="200" y="185" text-anchor="middle" fill="white" font-weight="bold">BATEAU</text>
+      <rect x="195" y="260" width="10" height="25" fill="#424242"/>
+      <text x="200" y="300" text-anchor="middle" font-size="12">Safran</text>
+      <line x1="200" y1="120" x2="260" y2="180" stroke="#d32f2f" stroke-width="4"/>
+      <text x="270" y="155" fill="#d32f2f" font-size="12">Voile</text>
+      <path d="M 200 180 A 50 50 0 0 1 160 140" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow45)"/>
+      <text x="140" y="145" fill="#388e3c" font-weight="bold">LOFFER ↑</text>
+      <path d="M 200 180 A 50 50 0 0 0 240 140" fill="none" stroke="#f57c00" stroke-width="2" marker-end="url(#arrow45)"/>
+      <text x="245" y="145" fill="#f57c00" font-weight="bold">ABATTRE ↓</text>
+    </svg>
 
-  <details>
-    <summary><strong>LOFFER</strong> = Je rapproche mon nez du vent</summary>
-    <p>
-      <strong>À la barre :</strong> Tu pousses la barre <strong>sous le vent</strong> → le bateau tourne vers le vent.<br>
-      <strong>La voile :</strong> Tu dois <strong>border</strong> = tirer l’écoute, sinon la voile faseye.<br>
-      <strong>Effet :</strong> Le bateau gîte plus, il accélère... jusqu’à ce que tu sois face au vent = ça s’arrête.<br>
-      <strong>Le capitaine dit "On loffe" = "Serre le vent !"</strong>
-    </p>
-  </details>
+    <details>
+      <summary><strong>LOFFER</strong> = Je rapproche mon nez du vent</summary>
+      <p>
+        <strong>À la barre :</strong> Tu pousses la barre <strong>sous le vent</strong> → le bateau tourne vers le vent.<br>
+        <strong>La voile :</strong> Tu dois <strong>border</strong> = tirer l’écoute, sinon la voile faseye.<br>
+        <strong>Commandement :</strong> "On loffe" = "Serre le vent !"
+      </p>
+    </details>
 
-  <details>
-    <summary><strong>ABATTRE</strong> = Je m’éloigne du vent</summary>
-    <p>
-      <strong>À la barre :</strong> Tu tires la barre <strong>au vent</strong> → le bateau s’écarte du vent.<br>
-      <strong>La voile :</strong> Tu dois <strong>choquer</strong> = lâcher l’écoute, sinon tu freines.<br>
-      <strong>Effet :</strong> Le bateau se redresse, il est plus stable mais moins rapide au près.<br>
-      <strong>Le capitaine dit "On abat" = "Écarte-toi du vent !"</strong>
-    </p>
-  </details>
+    <details>
+      <summary><strong>ABATTRE</strong> = Je m’éloigne du vent</summary>
+      <p>
+        <strong>À la barre :</strong> Tu tires la barre <strong>au vent</strong> → le bateau s’écarte du vent.<br>
+        <strong>La voile :</strong> Tu dois <strong>choquer</strong> = lâcher l’écoute, sinon tu freines.<br>
+        <strong>Commandement :</strong> "On abat" = "Écarte-toi du vent !"
+      </p>
+    </details>
 
-  <details>
-    <summary><strong>Truc pour pas se tromper à la barre</strong></summary>
-    <p>
-      Regarde la voile : <br>
-      - Si elle faseye/claque → tu es trop loffé → <strong>abats</strong> ou <strong>borde</strong><br>
-      - Si tu veux remonter → <strong>loffe</strong> et <strong>borde</strong> en même temps<br>
-      - Si tu veux descendre → <strong>abats</strong> et <strong>choque</strong> en même temps<br><br>
-      <strong>Phrase magique :</strong> "Je loffe, je borde. J’abats, je choque."
-    </p>
-  </details>
+    <details>
+      <summary><strong>Truc pour pas se tromper</strong></summary>
+      <p>
+        <strong>Je loffe, je borde. J’abats, je choque.</strong><br>
+        Si la voile faseye ou claque → tu es trop loffé → abats ou borde.
+      </p>
+    </details>
+  </div>
 </div>
+
 
 
   <!-- ========== Leaflet · Cartes & WP ========== -->
