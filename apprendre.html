@@ -358,6 +358,25 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   -webkit-tap-highlight-color: transparent;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.q-card {
+  margin: 8px 4px;
+  padding: 10px;
+  scroll-margin: 0px;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  .q-card {
+    margin: 8px 2px;
+    padding: 8px;
+  }
 @media screen and (orientation:portrait) {
   #zoom-overlay::after{
     content:"↻ Tourne ton téléphone pour mieux voir";
