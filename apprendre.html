@@ -336,18 +336,30 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
 
 /* ========== Zoom sur image ========== */
 
+<style>
 #zoom-overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:1000
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  touch-action:none;
 }
+#zoom-img{
+  max-width:95%;
+  max-height:95%;
+  border-radius:8px;
+  object-fit:contain;
+}
+.q-card img {
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
 
 
 /* ========== AJOUT : Sommaire Cliquable ========== */
@@ -1784,6 +1796,27 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
 <script>
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
 </script>
-<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" src=""></div>
+<div id="zoom-overlay">
+  <img id="zoom-img" src="">
+</div>
+
+<script>
+const overlay = document.getElementById('zoom-overlay');
+const zoomImg = document.getElementById('zoom-img');
+
+function zoomImage(el){
+  zoomImg.src = el.src;
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+overlay.addEventListener('click', closeZoom);
+overlay.addEventListener('touchend', closeZoom);
+
+function closeZoom(){
+  overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+</script>
 </body>
 </html>
