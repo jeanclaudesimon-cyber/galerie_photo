@@ -358,7 +358,18 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   -webkit-tap-highlight-color: transparent;
 }
 
-
+@media screen and (orientation:portrait) {
+  #zoom-overlay::after{
+    content:"↻ Tourne ton téléphone pour mieux voir";
+    position:fixed;
+    bottom:20px;
+    left:0;
+    right:0;
+    text-align:center;
+    color:#fff;
+    font-size:14px;
+    opacity:0.7;
+  }
 
 /* ========== AJOUT : Sommaire Cliquable ========== */
 .sommaire {
