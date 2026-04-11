@@ -334,6 +334,22 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   scroll-margin-top: 350px;
 }
 
+/* ========== Zoom sur image ========== */
+
+#zoom-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:1000
+}
+
+
 /* ========== AJOUT : Sommaire Cliquable ========== */
 .sommaire {
   position: sticky;
@@ -526,6 +542,12 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
     </details>
   </nav>
   <script>
+ <!-- ==========fonction zoom image ========== -->
+
+ function zoomImage(el) {
+  zoomImg.src=el.src;overlay.style.display='flex'
+}
+
    function toggleSommaire() {
     document.getElementById('sommaire').classList.toggle('hidden');
   }
@@ -999,7 +1021,7 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
   <div class="r-block">
     <p>Voici les éléments essentiels d’un voilier, numérotés sur la photo. Retiens-les, le skipper va les utiliser toute la journée.</p>
     
-    <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/Vindo1.webp" alt="Anatomie d’un voilier : bôme, mât, génois, halebas, chariot d’écoute, hauban, barre franche, winch, lazy jack" style="max-width:100%; height:auto; border-radius:8px; margin:10px 0;">
+    <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/Vindo1.webp" alt="Anatomie d’un voilier : bôme, mât, génois, halebas, chariot d’écoute, hauban, barre franche, winch, lazy jack" onclick="zoomImage(this)" style="max-width:100%; height:auto; border-radius:8px; margin:10px 0; cursor:zoom-in;">
     
     <details>
       <summary><strong>① La Bôme</strong></summary>
@@ -1762,5 +1784,6 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
 <script>
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
 </script>
+<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" src=""></div>
 </body>
 </html>
