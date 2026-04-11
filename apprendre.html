@@ -1818,5 +1818,28 @@ function closeZoom(){
   document.body.style.overflow = '';
 }
 </script>
+<div id="zoom-overlay"></div>
+
+<script>
+(function() {
+  const overlay = document.getElementById('zoom-overlay');
+  document.body.style.overflow = '';
+  
+  window.zoomImage = function(el) {
+    overlay.innerHTML = '<img id="zoom-img" src="' + el.src + '" alt="">';
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeZoom() {
+    overlay.style.display = 'none';
+    overlay.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+  
+  overlay.addEventListener('click', closeZoom);
+  overlay.addEventListener('touchend', closeZoom);
+})();
+</script>
 </body>
 </html>
