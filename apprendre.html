@@ -337,22 +337,34 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
 /* ========== Zoom sur image ========== */
 
 
-#zoom-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.95);
-  display:none;
-  z-index:9999;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
+#zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
 }
-#zoom-img{
-  max-width:none;
-  max-height:none;
-  width:100%;
-  height:auto;
-  display:block;
-  margin:auto;
+#zoom-img {
+  max-width: 100%;
+  max-height: 100vh;
+  height: auto;
+  display: block;
+}
+#zoom-msg {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.8;
+}
+@media screen and (orientation: portrait) {
+  #zoom-msg { display: block; }
 }
 .q-card img {
   -webkit-tap-highlight-color: transparent;
@@ -582,12 +594,6 @@ html, body {
     </details>
   </nav>
   <script>
- <!-- ==========fonction zoom image ========== -->
-
- function zoomImage(el) {
-  zoomImg.src=el.src;overlay.style.display='flex'
-}
-
    function toggleSommaire() {
     document.getElementById('sommaire').classList.toggle('hidden');
   }
@@ -1824,50 +1830,30 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
 <script>
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('fr-BE');},1000);
 </script>
+
 <div id="zoom-overlay">
-  <img id="zoom-img" src="">
+  <div id="zoom-msg">↻ Tourne ton téléphone pour mieux voir</div>
+  <img id="zoom-img" src="" alt="">
 </div>
 
 <script>
 const overlay = document.getElementById('zoom-overlay');
 const zoomImg = document.getElementById('zoom-img');
 
-function zoomImage(el){
+window.zoomImage = function(el) {
   zoomImg.src = el.src;
   overlay.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 
-overlay.addEventListener('click', closeZoom);
-overlay.addEventListener('touchend', closeZoom);
-
-function closeZoom(){
+function closeZoom() {
   overlay.style.display = 'none';
+  zoomImg.src = '';
   document.body.style.overflow = '';
 }
-</script>
-<div id="zoom-overlay"></div>
 
-<script>
-(function() {
-  const overlay = document.getElementById('zoom-overlay');
-  document.body.style.overflow = '';
-  
-  window.zoomImage = function(el) {
-    overlay.innerHTML = '<img id="zoom-img" src="' + el.src + '" alt="">';
-    overlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-  
-  function closeZoom() {
-    overlay.style.display = 'none';
-    overlay.innerHTML = '';
-    document.body.style.overflow = '';
-  }
-  
-  overlay.addEventListener('click', closeZoom);
-  overlay.addEventListener('touchend', closeZoom);
-})();
+overlay.addEventListener('click', closeZoom);
+overlay.addEventListener('touchend', closeZoom);
 </script>
 </body>
 </html>
