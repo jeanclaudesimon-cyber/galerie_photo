@@ -53,7 +53,6 @@ main{max-width:1200px;margin:0 auto;padding:2rem}
 .mois-header h3{font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;color:var(--vert2)}
 .mois-count{font-size:11px;color:var(--muted);margin-left:auto}
 .videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
-.videos{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}/*ajout pour garder 4 grille plutot que de grosse vidéo*/
 .vid-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;transition:.2s}
 .vid-card:hover{border-color:var(--vert2)}
 .vid-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
@@ -64,9 +63,7 @@ main{max-width:1200px;margin:0 auto;padding:2rem}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
 .gal-item{border-radius:10px;overflow:hidden;border:1px solid var(--bdr);background:var(--card2);transition:.2s}
 .gal-item:hover{border-color:var(--vert2);transform:translateY(-2px)}
-/*.gal-item img{width:100%;height:180px;object-fit:cover}*/
-.gal-item img{width:100%;height:180px;object-fit:cover;transition:transform .3s ease;cursor:zoom-in}/*nouveau si marche pas enlever et remettre ce qui est encommentaire au dessus normal*/
-.gal-item:hover img{transform:scale(1.4)}/*nouveau si marche pas enlever*/
+.gal-item img{width:100%;height:180px;object-fit:cover}
 .gal-label{padding:6px 10px;font-size:11px;color:var(--muted)}
 .gal-empty{height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12px}
 .espece-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -140,13 +137,7 @@ En frottant son bec sur le bois elle dépose son odeur — c'est sa façon de di
 <strong>Elle nettoie peut-être simplement son bec</strong> après avoir manipulé des matériaux ! 😄</p>
       <h3>🐝 Délogement de l'intrus ☆ 20 mars 8h00 ☆</h3>
 <p>Un bourdon s'était installé près de l'entrée un soir et n'avait pas bougé jusqu'au lendemain matin. La mésange s'est accrochée près de l'entrée, <strong>immobile 20 secondes</strong> à observer l'intrus. Puis un coup de bec sec, elle descend, le tape encore et l'emporte dehors ! 😄</p>
- <h3>🪺 La ponte a commencée ☆ 11 avril 8h00 ☆ </h3>
-<p><strong>Grande nouvelle au nichoir !</strong> La ponte vient de commencer ce <strong>11 avril 2026</strong>. 
-Notre femelle mésange a déposé son <strong>premier œuf</strong> ce matin à 8h00, bien visible grâce à la caméra embarquée. 
-La ponte se poursuivra probablement à raison d'<strong>un œuf par jour</strong> jusqu'à atteindre 6 à 12 œufs au total. 
-Pendant cette période, elle ne couvera pas encore : l'incubation ne démarrera qu'une fois la ponte terminée pour que 
-tous les oisillons éclosent en même temps. <strong>Restez connectés</strong> sur le live pour ne rien manquer des prochains œufs !</p>    
-<div style="margin-top:.5rem">
+      <div style="margin-top:.5rem">
         <span class="tag tag-vert">🥚 Nidification 2026</span>
         <span class="tag tag-vert">🌿 Entrée ovale</span>
         <span class="tag tag-or">📷 Caméra Tapo C110</span>
@@ -167,12 +158,12 @@ tous les oisillons éclosent en même temps. <strong>Restez connectés</strong> 
       <div class="tl-icon">🌿</div>
       <div class="tl-desc">Exploration et choix du nichoir. Premières visites.</div>
     </div>
-    <div class="tl-month">
+    <div class="tl-month active">
       <div class="tl-label">En cours !</div><div class="tl-mois">MARS</div>
       <div class="tl-icon">🪺</div>
       <div class="tl-desc">Construction du nid. Mousse, herbes, poils. <strong>10 vidéos !</strong></div>
     </div>
-    <div class="tl-month active">
+    <div class="tl-month">
       <div class="tl-label">Mois</div><div class="tl-mois">AVR</div>
       <div class="tl-icon">🥚</div>
       <div class="tl-desc">Ponte : 6 à 12 œufs. Incubation ~14 jours.</div>
@@ -286,33 +277,12 @@ tous les oisillons éclosent en même temps. <strong>Restez connectés</strong> 
         <div class="vid-title">Enfin le nid se construit</div>
         <div class="vid-date">📅 Mars 2026</div>
       </div>
-      </div>
-  </div>
-  <div class="mois-section"></div>
-     <div class="mois-header">
-    <div class="mois-header" style="opacity:.5">
-      <span style="font-size:20px">🥚</span>
-      <h3>Avril 2026</h3>
-      <span class="mois-count">2 vidéos</span>
-      </div>
-      <div class="videos">
-       <div class="vid-card">
-      <div class="vid-embed">
-        <iframe src="https://www.youtube.com/embed/nusuyM8APZs" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="vid-info">
-        <div class="vid-title">La ponte a commencée, déja 🥚 1 oeufs</div>
-        <div class="vid-date">📅 Avril 2026</div>
-      </div>
     </div>
-    <div class="vid-card">
-      <div class="vid-embed">
-        <iframe src="https://www.youtube.com/embed/XS4qeRYDvak" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="vid-info">
-        <div class="vid-title">La ponte continue,🥚 3 oeufs</div>
-        <div class="vid-date">📅 Avril 2026</div>
-      </div>
+  </div>
+  <div class="mois-section">
+    <div class="mois-header" style="opacity:.5">
+      <span style="font-size:20px">🥚</span><h3>Avril 2026</h3>
+      <span class="mois-count">À venir</span>
     </div>
   </div>
   <div class="mois-section">
@@ -347,14 +317,6 @@ tous les oisillons éclosent en même temps. <strong>Restez connectés</strong> 
     <div class="gal-item">
       <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/1774531571542_1.jpg" alt="Types d'entrées">
       <div class="gal-label">📦 26 mars belle évolution du nid</div>
-    </div>
-    <div class="gal-item">
-      <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/oeuf1.webp" alt="Types d'entrées">
-      <div class="gal-label">📦 11 avril ponte du 1er oeuf</div>
-    </div>
-    <div class="gal-item">
-      <img src="https://raw.githubusercontent.com/jeanclaudesimon-cyber/galerie_photo/main/images/oeuf3b.webp" alt="Types d'entrées">
-      <div class="gal-label">📦 13 avril ponte du 3ème oeuf</div>
     </div>
   </div>
 
