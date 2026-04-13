@@ -63,7 +63,9 @@ main{max-width:1200px;margin:0 auto;padding:2rem}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
 .gal-item{border-radius:10px;overflow:hidden;border:1px solid var(--bdr);background:var(--card2);transition:.2s}
 .gal-item:hover{border-color:var(--vert2);transform:translateY(-2px)}
-.gal-item img{width:100%;height:180px;object-fit:cover}
+/*.gal-item img{width:100%;height:180px;object-fit:cover}*/
+.gal-item img{width:100%;height:180px;object-fit:cover;transition:transform .3s ease;cursor:zoom-in}/*nouveau si marche pas enlever et remettre ce qui est encommentaire au dessus normal*/
+.gal-item:hover img{transform:scale(1.4)}/*nouveau si marche pas enlever*/
 .gal-label{padding:6px 10px;font-size:11px;color:var(--muted)}
 .gal-empty{height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12px}
 .espece-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
