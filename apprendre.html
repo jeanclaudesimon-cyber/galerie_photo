@@ -343,14 +343,16 @@ main{max-width:1100px;margin:0 auto;padding:2rem}
   background: rgba(0,0,0,0.95);
   display: none;
   z-index: 9999;
-  align-items: center;
-  justify-content: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 #zoom-img {
-  max-width: 100%;
-  max-height: 100vh;
+  max-width: none;
+  width: 100%;
   height: auto;
   display: block;
+  margin: auto;
+  padding: 10px;
 }
 #zoom-msg {
   display: none;
