@@ -510,6 +510,7 @@ html, body {
         <li><a href="#q9">Q9 — Comment utiliser VS Code directement dans GitHub sans rien installer ?</a></li>
         <li><a href="#q10">Q10 — Comment ajouter des emojis dans le HTML ?</a></li>
         <li><a href="#q11">Q11 — Les commentaires HTML — comment ça marche ?</a></li>
+        <li><a href="#q49">449 — ?</a></li>
       </ul>
     </details>
     <details>
@@ -920,6 +921,71 @@ Deuxième texte.<span class="tag">&lt;/p&gt;</span>
       <div class="tip"><strong>Astuce :</strong> Utilise les commentaires pour marquer tes fermetures de div — tu ne te perdras plus jamais !</div>
     </div>
   </div>
+  <!--Q49-->
+  <div class="stitle">🎬 Vidéos — Gestion des Mois</div>
+
+<!-- Q : ACTIVER UN MOIS -->
+<div class="q-card" id="q-mois-activer">
+  <div class="q-block">
+    <span class="q-icon">❓</span>
+    <p>Comment activer le mois d'Avril (ou Mai, Juin...) quand j'ai de nouvelles vidéos à ajouter ?</p>
+  </div>
+  <div class="r-block">
+    <p>Il faut faire <strong>deux choses</strong> dans la section du mois concerné :</p>
+    <p><strong>1. Sur le header</strong> — retirer le <span style="color:var(--rouge)">style="opacity:.5"</span></p>
+    <p><strong>2. Sur la div videos</strong> — retirer le <span style="color:var(--rouge)">style="display:none"</span></p>
+    <div class="code-block">
+<span class="comm">/* AVANT — mois inactif */</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"mois-header"</span> <span class="ko">style="opacity:.5"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h3&gt;</span>Avril 2026<span class="tag">&lt;/h3&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="val">"mois-count"</span><span class="tag">&gt;</span>À venir<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"videos"</span> <span class="ko">style="display:none"</span><span class="tag">&gt;</span>
+  ...vidéos...
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comm">/* APRÈS — mois actif */</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"mois-header"</span><span class="tag">&gt;</span>  <span class="ok">← opacity:.5 supprimé</span>
+  <span class="tag">&lt;h3&gt;</span>Avril 2026<span class="tag">&lt;/h3&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="val">"mois-count"</span><span class="tag">&gt;</span>2 vidéos<span class="tag">&lt;/span&gt;</span>  <span class="ok">← mettre le bon nombre</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"videos"</span><span class="tag">&gt;</span>  <span class="ok">← display:none supprimé</span>
+  ...vidéos...
+<span class="tag">&lt;/div&gt;</span>
+    </div>
+    <div class="tip"><strong>Astuce :</strong> Mets aussi à jour le compteur <code>mois-count</code> avec le bon nombre de vidéos !</div>
+
+    <p style="margin-top:1rem"><strong>Comment ajouter une vidéo dans le mois ?</strong> Copie ce bloc et remplace <span style="color:var(--or)">XXXXXXXX</span> par l'ID YouTube :</p>
+    <div class="code-block">
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-embed"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;iframe</span> <span class="attr">src</span>=<span class="val">"https://www.youtube.com/embed/<span style="color:var(--or)">XXXXXXXX</span>"</span>
+      <span class="attr">allowfullscreen</span> <span class="attr">loading</span>=<span class="val">"lazy"</span><span class="tag">&gt;&lt;/iframe&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-info"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-title"</span><span class="tag">&gt;</span>Titre de la vidéo<span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"vid-date"</span><span class="tag">&gt;</span>📅 Avril 2026<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>  <span class="comm">← 4 &lt;/div&gt; pour fermer : vid-info, vid-card... c'est normal !</span>
+    </div>
+
+    <p style="margin-top:1rem"><strong>Comment ajouter un nouveau mois (ex: Juin) ?</strong></p>
+    <div class="code-block">
+<span class="comm">/* Structure complète d'un mois inactif à coller après Mai */</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"mois-section"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"mois-header"</span> <span class="ko">style="opacity:.5"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;span</span> <span class="attr">style</span>=<span class="val">"font-size:20px"</span><span class="tag">&gt;</span>🦅<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;h3&gt;</span>Juin 2026<span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="val">"mois-count"</span><span class="tag">&gt;</span>À venir<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"videos"</span> <span class="ko">style="display:none"</span><span class="tag">&gt;</span>
+    <span class="comm">&lt;!-- VIDÉOS JUIN : coller ici les blocs vid-card --&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+    </div>
+    <div class="tip"><strong>Règle d'or :</strong> Chaque <code>&lt;div&gt;</code> ouvert doit être fermé par un <code>&lt;/div&gt;</code>. Pour ne pas se perdre : <strong>mois-section</strong> contient <strong>mois-header</strong> + <strong>videos</strong>, et <strong>videos</strong> contient autant de <strong>vid-card</strong> que tu veux !</div>
+  </div>
+</div>
 </div>
 <!-- ========== Soeyangh ========== -->
   <div class="stitle">⛵ Soeyangh : les bases avant d’embarquer</div>
