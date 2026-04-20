@@ -387,6 +387,27 @@
   </div>
 </a>
 
+<script>
+(function(){
+  const URL_COMPTEUR = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8INOT4mXadg-q3MsF0HNt1RLL9FrNUOjm9Uc2_Z9Aix25diVj8aweqB9BBEtVnwEBR1ARiFiR6Dkb/pub?gid=0&single=true&output=csv';
+  const PROXY = 'https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url=';
+
+  fetch(PROXY + encodeURIComponent(URL_COMPTEUR))
+   .then(r => r.text())
+   .then(txt => {
+      const rows = txt.trim().split('\n').filter(l => l.trim()).slice(1);
+      const last = rows[rows.length - 1].split(',');
+      if(last[1]){
+        document.getElementById('index-alsace').textContent = parseFloat(last[1]).toLocaleString('fr-BE');
+        document.getElementById('date-alsace').textContent = `${last[2]} le ${last[0]}`;
+      }
+    })
+   .catch(() => {
+      document.getElementById('date-alsace').textContent = 'Erreur de chargement';
+    });
+})();
+</script>
+
 
 
 
