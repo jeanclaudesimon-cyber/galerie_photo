@@ -25,4 +25,272 @@ header{padding:1.1rem 2rem;border-bottom:1px solid var(--border);display:flex;al
 .update-info{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);text-align:right;line-height:1.4;}
 .btn-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all.2s;}
 .btn-icon:hover{border-color:var(--sun);color:var(--sun);}
-main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn
+main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn.35s ease;}
+.info-band{display:flex;gap:.4rem;flex-wrap:wrap;background:var(--card-bg);border:1px solid var(--card-border);border-radius:11px;padding:.65rem 1rem;margin-bottom:.9rem;align-items:center;}
+.chip{display:flex;align-items:center;gap:.3rem;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);padding:.18rem.48rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);}
+.chip strong{color:var(--sun);}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:.65rem;margin-bottom:.9rem;}
+.kpi{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.9rem 1rem;position:relative;overflow:hidden;transition:transform.2s,box-shadow.2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,170,255,0.09);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sun),var(--sun2));}
+.kpi-label{font-size:.58rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.28rem;}
+.kpi-value{font-size:1.45rem;font-weight:800;line-height:1.1;}
+.kpi-unit{font-size:.68rem;font-weight:400;color:var(--text2);margin-left:2px;}
+.kpi-sub{font-size:.58rem;font-family:'Space Mono',monospace;margin-top:.25rem;}
+.kpi-sub.up{color:var(--green);}.kpi-sub.down{color:var(--red);}.kpi-sub.neutral{color:var(--text3);}
+.kpi-icon{position:absolute;right:.8rem;top:.8rem;font-size:1.2rem;opacity:.11;}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:.85rem;margin-bottom:.85rem;}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.95rem 1.05rem;}
+.ct{font-size:.62rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;}
+.ct-l{display:flex;align-items:center;gap:.32rem;}
+canvas{max-height:210px;}
+.data-table{width:100%;border-collapse:collapse;font-size:.62rem;font-family:'Space Mono',monospace;}
+.data-table th{background:var(--glass);color:var(--text2);padding:.4rem.5rem;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+.data-table td{padding:.35rem.5rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.data-table tr:hover{background:rgba(255,255,255,0.03);}
+footer{text-align:center;padding:.9rem;font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text3);border-top:1px solid var(--border);position:relative;z-index:8;}
+@media(max-width:900px){.g21{grid-template-columns:1fr;}}
+@media(max-width:768px){main,header{padding:.85rem 1rem;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <a href="index.html" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;transition:.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text2)'">← Accueil</a>
+    <div class="sun-icon">⚡</div>
+    <div class="logo-text">
+      <h1>Compteur Alsace — Suivi conso</h1>
+      <p>Relevés manuels · Maison Alsace · Données temps réel Google Sheets</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="update-info" id="update-info">Chargement...</div>
+    <button class="btn-icon" onclick="toggleTheme()" title="Mode clair/sombre" id="theme-btn">🌙</button>
+    <button class="btn-icon" onclick="refreshData()" title="Actualiser">🔄</button>
+  </div>
+</header>
+<main id="main">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;gap:1rem;">
+    <div style="width:180px;height:3px;background:linear-gradient(90deg,var(--sun),var(--sun2),var(--sun));background-size:200%;animation:pulse 1.5s infinite;border-radius:999px;"></div>
+    <p style="font-family:'Space Mono',monospace;font-size:.72rem;color:var(--text3);">Chargement des données...</p>
+  </div>
+</main>
+<footer>⚡ Compteur Alsace · Données temps réel Google Sheets</footer>
+
+<script>
+const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8INOT4mXadg-q3MsF0HNt1RLL9FrNUOjm9Uc2_Z9Aix25diVj8aweqB9BBEtVnwEBR1ARiFiR6Dkb/pub?gid=0&single=true&output=csv';
+const PROXY = 'https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url=';
+let darkMode = true;
+let charts = {};
+
+function parseCSV(txt) {
+  txt = txt.replace(/^\uFEFF/, '').trim();
+  return txt.split('\n').filter(l => l.trim()).map(l => {
+    const cols=[];let cur='',inQ=false;
+    for(const c of l){if(c==='"'){inQ=!inQ;continue;}if(c===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=c;}
+    cols.push(cur.trim());
+    return cols;
+  });
+}
+
+function parseDate(d) {
+  const p = d.split('/');
+  return new Date(p[2], p[1]-1, p[0]);
+}
+
+function calcPeriodes(data) {
+  const periodes = [];
+  for (let i = 0; i < data.length - 1; i++) {
+    const actuel = data[i];
+    const suivant = data[i + 1];
+    const jours = Math.max(1, Math.round((suivant.dateObj - actuel.dateObj) / 86400000));
+    const conso = Math.round((suivant.index - actuel.index) * 10) / 10;
+    const moyJour = Math.round(conso / jours * 10) / 10;
+    let type = 'Inconnu';
+    if (actuel.type.toLowerCase().includes('arriv') && suivant.type.toLowerCase().includes('retour')) {
+      type = 'Séjour';
+    } else if (actuel.type.toLowerCase().includes('retour') && suivant.type.toLowerCase().includes('arriv')) {
+      type = 'Absence';
+    }
+    periodes.push({
+      debut: actuel.date,
+      fin: suivant.date,
+      jours,
+      conso,
+      moyJour,
+      type,
+      indexDebut: actuel.index,
+      indexFin: suivant.index
+    });
+  }
+  return periodes;
+}
+
+function render(data) {
+  Object.values(charts).forEach(c => {try{c.destroy()}catch(e){}});
+  charts = {};
+  const periodes = calcPeriodes(data);
+  const sejours = periodes.filter(p => p.type === 'Séjour');
+  const absences = periodes.filter(p => p.type === 'Absence');
+  const dernier = data[data.length - 1];
+  const consoTotal = Math.round((dernier.index - data[0].index) * 10) / 10;
+  const nbJoursTotal = Math.round((dernier.dateObj - data[0].dateObj) / 86400000);
+  const consoAbsences = absences.reduce((sum, a) => sum + a.conso, 0);
+  const joursAbsences = absences.reduce((sum, a) => sum + a.jours, 0);
+  const moyAbsence = joursAbsences > 0? Math.round(consoAbsences / joursAbsences * 10) / 10 : 0;
+  const moySejour = sejours.length? Math.round(sejours.reduce((s,p)=>s+p.conso,0) / sejours.reduce((s,p)=>s+p.jours,0) * 10) / 10 : 0;
+
+  document.getElementById('main').innerHTML = `
+    <div class="info-band">
+      <div class="chip">⚡ <strong>Index : ${dernier.index.toLocaleString('fr-BE')} kWh</strong></div>
+      <div class="chip">🏠 <strong>${sejours.length} séjours</strong> · ${Math.round(sejours.reduce((s,p)=>s+p.conso,0))} kWh</div>
+      <div class="chip">🚪 <strong>${absences.length} absences</strong> · ${consoAbsences.toLocaleString('fr-BE')} kWh</div>
+      <div class="chip">📈 Veille : <strong>${moyAbsence} kWh/j</strong></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-icon">⚡</div><div class="kpi-label">Index actuel</div>
+        <div class="kpi-value">${dernier.index.toLocaleString('fr-BE')}<span class="kpi-unit">kWh</span></div>
+        <div class="kpi-sub neutral">Relevé le ${dernier.date}</div>
+      </div>
+      <div class="kpi"><div class="kpi-icon">📊</div><div class="kpi-label">Conso totale</div>
+        <div class="kpi-value">${consoTotal.toLocaleString('fr-BE')}<span class="kpi-unit">kWh</span></div>
+        <div class="kpi-sub neutral">Depuis ${data[0].date}</div>
+      </div>
+      <div class="kpi"><div class="kpi-icon">🏠</div><div class="kpi-label">Moy. en séjour</div>
+        <div class="kpi-value">${moySejour}<span class="kpi-unit">kWh/j</span></div>
+        <div class="kpi-sub neutral">${sejours.length} séjours</div>
+      </div>
+      <div class="kpi"><div class="kpi-icon">🚪</div><div class="kpi-label">Moy. en absence</div>
+        <div class="kpi-value">${moyAbsence}<span class="kpi-unit">kWh/j</span></div>
+        <div class="kpi-sub ${moyAbsence > 2? 'down' : 'up'}">${consoAbsences.toLocaleString('fr-BE')} kWh total</div>
+      </div>
+    <div class="g21">
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>🏠</span>Conso par séjour</div></div>
+        <canvas id="cSejour"></canvas>
+      </div>
+      <div class="card">
+        <div class="ct"><div class="ct-l"><span>🚪</span>Conso de veille (absences)</div></div>
+        <canvas id="cAbsence"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct"><div class="ct-l"><span>📋</span>Historique complet</div></div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>Type</th><th>Période</th><th>Jours</th><th>Index début</th><th>Index fin</th><th>Conso</th><th>Moy/jour</th></tr></thead>
+          <tbody>${periodes.slice().reverse().map(p => `
+            <tr style="${p.type === 'Absence'? 'opacity:.7;' : ''}">
+              <td><span style="padding:2px 6px;border-radius:4px;font-size:.55rem;background:${p.type === 'Séjour'? 'rgba(0,170,255,0.2)' : 'rgba(255,255,255,0.1)'};color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text3)'}">${p.type === 'Séjour'? '🏠 Séjour' : '🚪 Absence'}</span></td>
+              <td>${p.debut} → ${p.fin}</td>
+              <td>${p.jours}</td>
+              <td>${p.indexDebut.toLocaleString('fr-BE')}</td>
+              <td>${p.indexFin.toLocaleString('fr-BE')}</td>
+              <td style="color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text2)'};font-weight:700">${p.conso}</td>
+              <td>${p.moyJour}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  charts.sejour = new Chart(document.getElementById('cSejour'), {
+    type: 'bar',
+    data: {
+      labels: sejours.map(s => s.debut.split('/').slice(0,2).join('/')),
+      datasets: [{
+        label: 'kWh/jour en séjour',
+        data: sejours.map(s => s.moyJour),
+        backgroundColor: 'rgba(0,170,255,0.7)',
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterLabel: (ctx) => {
+              const s = sejours[ctx.dataIndex];
+              return `${s.jours} jours · ${s.conso} kWh total`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 8 } }, grid: { display: false } },
+        y: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+
+  charts.absence = new Chart(document.getElementById('cAbsence'), {
+    type: 'bar',
+    data: {
+      labels: absences.map(a => a.debut.split('/').slice(0,2).join('/')),
+      datasets: [{
+        label: 'kWh/jour en absence',
+        data: absences.map(a => a.moyJour),
+        backgroundColor: absences.map(a => a.moyJour > 2? 'rgba(255,68,68,0.7)' : 'rgba(0,229,160,0.7)'),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterLabel: (ctx) => {
+              const a = absences[ctx.dataIndex];
+              return `${a.jours} jours · ${a.conso} kWh total`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 8 } }, grid: { display: false } },
+        y: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
+
+async function fetchData() {
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(URL_CSV));
+    const txt = await res.text();
+    const allRows = parseCSV(txt);
+    const rows = allRows.filter(r => r[0] && r[0]!== 'Date' && r[1] &&!isNaN(parseFloat(r[1])));
+    if (rows.length === 0) {
+      document.getElementById('main').innerHTML = `<div class="card"><p style="color:var(--red);text-align:center;">Aucune donnée valide trouvée</p></div>`;
+      return;
+    }
+    const data = rows.map(r => ({
+      date: r[0],
+      dateObj: parseDate(r[0]),
+      index: parseFloat(r[1]),
+      type: r[2] || '',
+      com: r[3] || ''
+    })).sort((a,b) => a.dateObj - b.dateObj);
+    render(data);
+    document.getElementById('update-info').innerHTML = `Actualisé<br>${new Date().toLocaleString('fr-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`;
+  } catch(e) {
+    document.getElementById('main').innerHTML = `<div class="card"><p style="text-align:center;color:var(--red);">Erreur de chargement</p><p style="font-size:.6rem;text-align:center;color:var(--text3);">${e.message}</p></div>`;
+  }
+}
+
+function toggleTheme() {
+  darkMode =!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('theme-btn').textContent = darkMode? '🌙' : '☀️';
+}
+
+function refreshData() { fetchData(); }
+
+fetchData();
+</script>
+</body>
+</html>
