@@ -371,19 +371,19 @@
     <div class="rc-sous">1/10 &amp; 1/18 · Modèles à l'Épreuve</div>
     <span class="rc-badge">🔒 Accès protégé</span>
   </a>
-<a href="compteur-alsace.html" style="text-decoration:none">
-  <div class="card" style="cursor:pointer;transition:all.2s;border-left:3px solid var(--blue);">
-    <div class="ct">
-      <div class="ct-l"><span>⚡</span>Compteur Alsace</div>
-      <span class="badge">Temps réel</span>
-    </div>
-    <div style="padding:.5rem 0;">
-      <div style="font-size:.58rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.28rem;">Dernier index</div>
-      <div style="font-size:1.45rem;font-weight:800;line-height:1.1;">
-        <span id="index-alsace">--</span><span style="font-size:.68rem;font-weight:400;color:var(--text2);margin-left:2px;">kWh</span>
-      </div>
-      <div style="font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);margin-top:.25rem;" id="date-alsace">Chargement...</div>
-    </div>
+<a href="compteur-alsace.html" class="tile" id="tile-alsace">
+  <div class="tile-bg"></div>
+  <div class="tile-content">
+    <svg viewBox="0 0 64 64" class="tile-icon">
+      <path d="M32 8 L36 18 L46 18 L38 26 L42 36 L32 30 L22 36 L26 26 L18 18 L28 18 Z" fill="none" stroke="white" stroke-width="2"/>
+      <circle cx="32" cy="32" r="20" fill="none" stroke="white" stroke-width="1.5" opacity=".4"/>
+      <path d="M32 32 L32 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <path d="M32 32 L42 38" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="32" cy="32" r="2.5" fill="white"/>
+    </svg>
+    <h3>Compteur Alsace</h3>
+    <p><span id="index-alsace">--</span> kWh — <span id="date-alsace">Chargement...</span></p>
+    <span class="tile-cta" id="tile-alsace-cta">Voir détails →</span>
   </div>
 </a>
 
@@ -393,8 +393,8 @@
   const PROXY = 'https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url=';
 
   fetch(PROXY + encodeURIComponent(URL_COMPTEUR))
-   .then(r => r.text())
-   .then(txt => {
+  .then(r => r.text())
+  .then(txt => {
       const rows = txt.trim().split('\n').filter(l => l.trim()).slice(1);
       const last = rows[rows.length - 1].split(',');
       if(last[1]){
@@ -402,8 +402,8 @@
         document.getElementById('date-alsace').textContent = `${last[2]} le ${last[0]}`;
       }
     })
-   .catch(() => {
-      document.getElementById('date-alsace').textContent = 'Erreur de chargement';
+  .catch(() => {
+      document.getElementById('date-alsace').textContent = 'Erreur';
     });
 })();
 </script>
