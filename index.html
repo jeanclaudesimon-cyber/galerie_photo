@@ -419,5 +419,21 @@
 </footer>
 
 <script src="js/home.js"></script>
+
+!-- Compteur de visites -->
+<div style="text-align:center;padding:.8rem;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);border-top:1px solid var(--border);margin-top:2rem;">
+  👁️ <span id="visites">...</span> visites depuis la création
+</div>
+
+<script>
+fetch('https://script.google.com/macros/s/AKfycbyhQq82PlNqlh-j3d50G-kY_frMBTjVZr-VSD6KYj5iMOwUuNArzBFaUf5YzidNpFaAJQ/exec')
+  .then(r => r.text())
+  .then(count => {
+    document.getElementById('visites').textContent = parseInt(count).toLocaleString('fr-FR');
+  })
+  .catch(() => {
+    document.getElementById('visites').textContent = 'N/A';
+  });
+</script>
 </body>
 </html>
