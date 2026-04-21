@@ -386,6 +386,28 @@
     <span class="tile-cta" id="tile-alsace-cta">Voir détails →</span>
   </div>
 </a>
+<a href="agenda.html" class="tile" id="tile-agenda">
+  <div class="tile-bg"></div>
+  <div class="tile-content">
+    <svg viewBox="0 0 64 64" class="tile-icon">
+      <!-- Calendrier style ligne -->
+      <rect x="14" y="16" width="36" height="36" rx="3" fill="none" stroke="white" stroke-width="2"/>
+      <line x1="14" y1="26" x2="50" y2="26" stroke="white" stroke-width="2"/>
+      <line x1="22" y1="12" x2="22" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <line x1="42" y1="12" x2="42" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <!-- Points dates -->
+      <circle cx="22" cy="34" r="1.5" fill="white"/>
+      <circle cx="32" cy="34" r="1.5" fill="white" opacity=".6"/>
+      <circle cx="42" cy="34" r="1.5" fill="white" opacity=".6"/>
+      <circle cx="22" cy="42" r="1.5" fill="white" opacity=".6"/>
+      <circle cx="32" cy="42" r="2.5" fill="white"/>
+      <circle cx="42" cy="42" r="1.5" fill="white" opacity=".6"/>
+    </svg>
+    <h3>Agenda</h3>
+    <p><span id="count-agenda">--</span> dates — <span id="next-agenda">Chargement...</span></p>
+    <span class="tile-cta" id="tile-agenda-cta">Voir dates →</span>
+  </div>
+</a>
 
 <script>
 (function(){
@@ -406,6 +428,27 @@
       document.getElementById('date-alsace').textContent = 'Erreur';
     });
 })();
+// Compteur Agenda pour la tuile
+const URL_AGENDA_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoAz7XEe0HoWl9Obx_IMHmYCa3Vje_APXUj_VTcxVxBeP81Q38hgLSKw83d5U9nHnLEc3YLLJEtRd_/pub?gid=0&single=true&output=csv';
+
+fetch(URL_AGENDA_CSV)
+.then(r => r.text())
+.then(csv => {
+  const lines = csv.trim().split('\n').slice(1); // enlève l’entête
+  const events = lines.filter(l => l.trim()).map(line => {
+    const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+    const date = (vals[0] || '').replace(/^"|"$/g, '').trim();
+    return date;
+  }).filter(Boolean);
+
+  document.getElementById('count-agenda').textContent = events.length;
+  document.getElementById('next-agenda').textContent = events[0] || 'Aucune date';
+})
+.catch(() => {
+  document.getElementById('count-agenda').textContent = '--';
+  document.getElementById('next-agenda').textContent = 'Erreur';
+});
+
 </script>
 
 
