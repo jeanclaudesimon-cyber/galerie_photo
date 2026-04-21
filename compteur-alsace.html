@@ -62,7 +62,6 @@ footer{text-align:center;padding:.9rem;font-family:'Space Mono',monospace;font-s
       <h1>Compteur Alsace — Suivi conso</h1>
       <p>Relevés manuels · Maison Alsace · Données temps réel Google Sheets</p>
     </div>
-  </div>
   <div class="header-right">
     <div class="update-info" id="update-info">Chargement...</div>
     <button class="btn-icon" onclick="toggleTheme()" title="Mode clair/sombre" id="theme-btn">🌙</button>
@@ -115,10 +114,10 @@ function calcPeriodes(data) {
     periodes.push({
       debut: actuel.date,
       fin: suivant.date,
-      jours,
-      conso,
-      moyJour,
-      type,
+      jours: jours,
+      conso: conso,
+      moyJour: moyJour,
+      type: type,
       indexDebut: actuel.index,
       indexFin: suivant.index
     });
@@ -127,84 +126,72 @@ function calcPeriodes(data) {
 }
 
 function render(data) {
-  Object.values(charts).forEach(c => {try{c.destroy()}catch(e){}});
+  Object.values(charts).forEach(function(c) { try { c.destroy(); } catch(e) {} });
   charts = {};
   const periodes = calcPeriodes(data);
-  const sejours = periodes.filter(p => p.type === 'Séjour');
-  const absences = periodes.filter(p => p.type === 'Absence');
+  const sejours = periodes.filter(function(p) { return p.type === 'Séjour'; });
+  const absences = periodes.filter(function(p) { return p.type === 'Absence'; });
   const dernier = data[data.length - 1];
   const consoTotal = Math.round((dernier.index - data[0].index) * 10) / 10;
-  const consoAbsences = absences.reduce((sum, a) => sum + a.conso, 0);
-  const joursAbsences = absences.reduce((sum, a) => sum + a.jours, 0);
+  const consoAbsences = absences.reduce(function(sum, a) { return sum + a.conso; }, 0);
+  const joursAbsences = absences.reduce(function(sum, a) { return sum + a.jours; }, 0);
   const moyAbsence = joursAbsences > 0? Math.round(consoAbsences / joursAbsences * 10) / 10 : 0;
-  const moySejour = sejours.length? Math.round(sejours.reduce((s,p)=>s+p.conso,0) / sejours.reduce((s,p)=>s+p.jours,0) * 10) / 10 : 0;
+  const moySejour = sejours.length? Math.round(sejours.reduce(function(s,p){return s+p.conso;},0) / sejours.reduce(function(s,p){return s+p.jours;},0) * 10) / 10 : 0;
 
-  document.getElementById('main').innerHTML = `
-    <div class="info-band">
-      <div class="chip">⚡ <strong>Index : ${dernier.index.toLocaleString('fr-BE')} kWh</strong></div>
-      <div class="chip">🏠 <strong>${sejours.length} séjours</strong> · ${Math.round(sejours.reduce((s,p)=>s+p.conso,0))} kWh</div>
-      <div class="chip">🚪 <strong>${absences.length} absences</strong> · ${consoAbsences.toLocaleString('fr-BE')} kWh</div>
-      <div class="chip">📈 Veille : <strong>${moyAbsence} kWh/j</strong></div>
-    </div>
-    <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-icon">⚡</div><div class="kpi-label">Index actuel</div>
-        <div class="kpi-value">${dernier.index.toLocaleString('fr-BE')}<span class="kpi-unit">kWh</span></div>
-        <div class="kpi-sub neutral">Relevé le ${dernier.date}</div>
-      </div>
-      <div class="kpi"><div class="kpi-icon">📊</div><div class="kpi-label">Conso totale</div>
-        <div class="kpi-value">${consoTotal.toLocaleString('fr-BE')}<span class="kpi-unit">kWh</span></div>
-        <div class="kpi-sub neutral">Depuis ${data[0].date}</div>
-      </div>
-      <div class="kpi"><div class="kpi-icon">🏠</div><div class="kpi-label">Moy. en séjour</div>
-        <div class="kpi-value">${moySejour}<span class="kpi-unit">kWh/j</span></div>
-        <div class="kpi-sub neutral">${sejours.length} séjours</div>
-      </div>
-      <div class="kpi"><div class="kpi-icon">🚪</div><div class="kpi-label">Moy. en absence</div>
-        <div class="kpi-value">${moyAbsence}<span class="kpi-unit">kWh/j</span></div>
-        <div class="kpi-sub ${moyAbsence > 2? 'down' : 'up'}">${consoAbsences.toLocaleString('fr-BE')} kWh total</div>
-      </div>
-    </div>
-    <div class="g21">
-      <div class="card">
-        <div class="ct"><div class="ct-l"><span>🏠</span>Conso par séjour</div></div>
-        <canvas id="cSejour"></canvas>
-      </div>
-      <div class="card">
-        <div class="ct"><div class="ct-l"><span>🚪</span>Conso de veille (absences)</div></div>
-        <canvas id="cAbsence"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ct"><div class="ct-l"><span>📋</span>Historique complet</div></div>
-      <div style="overflow-x:auto;">
-        <table class="data-table">
-          <thead><tr><th>Type</th><th>Période</th><th>Jours</th><th>Index début</th><th>Index fin</th><th>Conso</th><th>Moy/jour</th></tr></thead>
-          <tbody>${periodes.slice().reverse().map(p => {
-            const dataIdx = data.findIndex(d => d.date === p.debut);
-            const note = data[dataIdx]?.com || '';
-            return `
-            <tr style="${p.type === 'Absence'? 'opacity:.7;' : ''}">
-              <td><span style="padding:2px 6px;border-radius:4px;font-size:.55rem;background:${p.type === 'Séjour'? 'rgba(0,170,255,0.2)' : 'rgba(255,255,255,0.1)'};color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text3)'}">${p.type === 'Séjour'? '🏠 Séjour' : '🚪 Absence'}</span></td>
-              <td>${p.debut} → ${p.fin}${note? `<br><span style="font-size:.5rem;color:var(--text3);font-style:italic;">📝 ${note}</span>` : ''}</td>
-              <td>${p.jours}</td>
-              <td>${p.indexDebut.toLocaleString('fr-BE')}</td>
-              <td>${p.indexFin.toLocaleString('fr-BE')}</td>
-              <td style="color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text2)'};font-weight:700">${p.conso}</td>
-              <td>${p.moyJour}</td>
-            </tr>`}).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
+  let html = '<div class="info-band">';
+  html += '<div class="chip">⚡ <strong>Index : ' + dernier.index.toLocaleString('fr-BE') + ' kWh</strong></div>';
+  html += '<div class="chip">🏠 <strong>' + sejours.length + ' séjours</strong> · ' + Math.round(sejours.reduce(function(s,p){return s+p.conso;},0)) + ' kWh</div>';
+  html += '<div class="chip">🚪 <strong>' + absences.length + ' absences</strong> · ' + consoAbsences.toLocaleString('fr-BE') + ' kWh</div>';
+  html += '<div class="chip">📈 Veille : <strong>' + moyAbsence + ' kWh/j</strong></div>';
+  html += '</div>';
+
+  html += '<div class="kpi-grid">';
+  html += '<div class="kpi"><div class="kpi-icon">⚡</div><div class="kpi-label">Index actuel</div>';
+  html += '<div class="kpi-value">' + dernier.index.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
+  html += '<div class="kpi-sub neutral">Relevé le ' + dernier.date + '</div></div>';
+  html += '<div class="kpi"><div class="kpi-icon">📊</div><div class="kpi-label">Conso totale</div>';
+  html += '<div class="kpi-value">' + consoTotal.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
+  html += '<div class="kpi-sub neutral">Depuis ' + data[0].date + '</div></div>';
+  html += '<div class="kpi"><div class="kpi-icon">🏠</div><div class="kpi-label">Moy. en séjour</div>';
+  html += '<div class="kpi-value">' + moySejour + '<span class="kpi-unit">kWh/j</span></div>';
+  html += '<div class="kpi-sub neutral">' + sejours.length + ' séjours</div></div>';
+  html += '<div class="kpi"><div class="kpi-icon">🚪</div><div class="kpi-label">Moy. en absence</div>';
+  html += '<div class="kpi-value">' + moyAbsence + '<span class="kpi-unit">kWh/j</span></div>';
+  html += '<div class="kpi-sub ' + (moyAbsence > 2? 'down' : 'up') + '">' + consoAbsences.toLocaleString('fr-BE') + ' kWh total</div></div>';
+  html += '</div>';
+
+  html += '<div class="g21">';
+  html += '<div class="card"><div class="ct"><div class="ct-l"><span>🏠</span>Conso par séjour</div></div><canvas id="cSejour"></canvas></div>';
+  html += '<div class="card"><div class="ct"><div class="ct-l"><span>🚪</span>Conso de veille (absences)</div></div><canvas id="cAbsence"></canvas></div>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="ct"><div class="ct-l"><span>📋</span>Historique complet</div></div>';
+  html += '<div style="overflow-x:auto;"><table class="data-table"><thead><tr><th>Type</th><th>Période</th><th>Jours</th><th>Index début</th><th>Index fin</th><th>Conso</th><th>Moy/jour</th></tr></thead><tbody>';
+
+  periodes.slice().reverse().forEach(function(p) {
+    const dataIdx = data.findIndex(function(d) { return d.date === p.debut; });
+    const note = data[dataIdx] && data[dataIdx].com? data[dataIdx].com : '';
+    html += '<tr style="' + (p.type === 'Absence'? 'opacity:.7;' : '') + '">';
+    html += '<td><span style="padding:2px 6px;border-radius:4px;font-size:.55rem;background:' + (p.type === 'Séjour'? 'rgba(0,170,255,0.2)' : 'rgba(255,255,255,0.1)') + ';color:' + (p.type === 'Séjour'? 'var(--blue)' : 'var(--text3)') + '">' + (p.type === 'Séjour'? '🏠 Séjour' : '🚪 Absence') + '</span></td>';
+    html += '<td>' + p.debut + ' → ' + p.fin + (note? '<br><span style="font-size:.5rem;color:var(--text3);font-style:italic;">📝 ' + note + '</span>' : '') + '</td>';
+    html += '<td>' + p.jours + '</td>';
+    html += '<td>' + p.indexDebut.toLocaleString('fr-BE') + '</td>';
+    html += '<td>' + p.indexFin.toLocaleString('fr-BE') + '</td>';
+    html += '<td style="color:' + (p.type === 'Séjour'? 'var(--blue)' : 'var(--text2)') + ';font-weight:700">' + p.conso + '</td>';
+    html += '<td>' + p.moyJour + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div></div>';
+  document.getElementById('main').innerHTML = html;
 
   charts.sejour = new Chart(document.getElementById('cSejour'), {
     type: 'bar',
     data: {
-      labels: sejours.map(s => s.debut.split('/').slice(0,2).join('/')),
+      labels: sejours.map(function(s) { return s.debut.split('/').slice(0,2).join('/'); }),
       datasets: [{
         label: 'kWh/jour en séjour',
-        data: sejours.map(s => s.moyJour),
+        data: sejours.map(function(s) { return s.moyJour; }),
         backgroundColor: 'rgba(0,170,255,0.7)',
         borderRadius: 6
       }]
@@ -215,11 +202,13 @@ function render(data) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            afterLabel: (ctx) => {
+            afterLabel: function(ctx) {
               const s = sejours[ctx.dataIndex];
-              const dataIdx = data.findIndex(d => d.date === s.debut);
-              const note = data[dataIdx]?.com || '';
-              return [`${s.jours} jours · ${s.conso} kWh total`, note? `📝 ${note}` : ''].filter(Boolean);
+              const dataIdx = data.findIndex(function(d) { return d.date === s.debut; });
+              const note = data[dataIdx] && data[dataIdx].com? data[dataIdx].com : '';
+              const lines = [s.jours + ' jours · ' + s.conso + ' kWh total'];
+              if (note) lines.push('📝 ' + note);
+              return lines;
             }
           }
         }
@@ -234,11 +223,11 @@ function render(data) {
   charts.absence = new Chart(document.getElementById('cAbsence'), {
     type: 'bar',
     data: {
-      labels: absences.map(a => a.debut.split('/').slice(0,2).join('/')),
+      labels: absences.map(function(a) { return a.debut.split('/').slice(0,2).join('/'); }),
       datasets: [{
         label: 'kWh/jour en absence',
-        data: absences.map(a => a.moyJour),
-        backgroundColor: absences.map(a => a.moyJour > 2? 'rgba(255,68,68,0.7)' : 'rgba(0,229,160,0.7)'),
+        data: absences.map(function(a) { return a.moyJour; }),
+        backgroundColor: absences.map(function(a) { return a.moyJour > 2? 'rgba(255,68,68,0.7)' : 'rgba(0,229,160,0.7)'; }),
         borderRadius: 6
       }]
     },
@@ -248,43 +237,13 @@ function render(data) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            afterLabel: (ctx) => {
+            afterLabel: function(ctx) {
               const a = absences[ctx.dataIndex];
-              const dataIdx = data.findIndex(d => d.date === a.debut);
-              const note = data[dataIdx]?.com || '';
-              return [`${a.jours} jours · ${a.conso} kWh total`, note? `📝 ${note}` : ''].filter(Boolean);
-            }
-          }
-        }
-      },
-      scales: {
-        x: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 8 } }, grid: { display: false } },
-        y: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
-      }
-    }
-  });
-}
-
-  charts.absence = new Chart(document.getElementById('cAbsence'), {
-    type: 'bar',
-    data: {
-      labels: absences.map(a => a.debut.split('/').slice(0,2).join('/')),
-      datasets: [{
-        label: 'kWh/jour en absence',
-        data: absences.map(a => a.moyJour),
-        backgroundColor: absences.map(a => a.moyJour > 2? 'rgba(255,68,68,0.7)' : 'rgba(0,229,160,0.7)'),
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            afterLabel: (ctx) => {
-              const a = absences[ctx.dataIndex];
-              return `${a.jours} jours · ${a.conso} kWh total`;
+              const dataIdx = data.findIndex(function(d) { return d.date === a.debut; });
+              const note = data[dataIdx] && data[dataIdx].com? data[dataIdx].com : '';
+              const lines = [a.jours + ' jours · ' + a.conso + ' kWh total'];
+              if (note) lines.push('📝 ' + note);
+              return lines;
             }
           }
         }
@@ -302,22 +261,24 @@ async function fetchData() {
     const res = await fetch(PROXY + encodeURIComponent(URL_CSV));
     const txt = await res.text();
     const allRows = parseCSV(txt);
-    const rows = allRows.filter(r => r[0] && r[0]!== 'Date' && r[1] &&!isNaN(parseFloat(r[1])));
+    const rows = allRows.filter(function(r) { return r[0] && r[0]!== 'Date' && r[1] &&!isNaN(parseFloat(r[1])); });
     if (rows.length === 0) {
-      document.getElementById('main').innerHTML = `<div class="card"><p style="color:var(--red);text-align:center;">Aucune donnée valide trouvée</p></div>`;
+      document.getElementById('main').innerHTML = '<div class="card"><p style="color:var(--red);text-align:center;">Aucune donnée valide trouvée</p></div>';
       return;
     }
-    const data = rows.map(r => ({
-      date: r[0],
-      dateObj: parseDate(r[0]),
-      index: parseFloat(r[1]),
-      type: r[2] || '',
-      com: r[3] || ''
-    })).sort((a,b) => a.dateObj - b.dateObj);
+    const data = rows.map(function(r) {
+      return {
+        date: r[0],
+        dateObj: parseDate(r[0]),
+        index: parseFloat(r[1]),
+        type: r[2] || '',
+        com: r[3] || ''
+      };
+    }).sort(function(a,b) { return a.dateObj - b.dateObj; });
     render(data);
-    document.getElementById('update-info').innerHTML = `Actualisé<br>${new Date().toLocaleString('fr-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`;
+    document.getElementById('update-info').innerHTML = 'Actualisé<br>' + new Date().toLocaleString('fr-BE', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
   } catch(e) {
-    document.getElementById('main').innerHTML = `<div class="card"><p style="text-align:center;color:var(--red);">Erreur de chargement</p><p style="font-size:.6rem;text-align:center;color:var(--text3);">${e.message}</p></div>`;
+    document.getElementById('main').innerHTML = '<div class="card"><p style="text-align:center;color:var(--red);">Erreur de chargement</p><p style="font-size:.6rem;text-align:center;color:var(--text3);">' + e.message + '</p></div>';
   }
 }
 
