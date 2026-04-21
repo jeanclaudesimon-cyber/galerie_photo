@@ -132,14 +132,46 @@ function render(data) {
   const sejours = periodes.filter(function(p) { return p.type === 'Séjour'; });
   const absences = periodes.filter(function(p) { return p.type === 'Absence'; });
   const dernier = data[data.length - 1];
-  const consoTotal = Math.round((dernier.index - data[0].index) * 10) / 10;
+  const premier = data[0];
+  const consoTotal = Math.round((dernier.index - premier.index) * 10) / 10;
   const consoAbsences = absences.reduce(function(sum, a) { return sum + a.conso; }, 0);
   const joursAbsences = absences.reduce(function(sum, a) { return sum + a.jours; }, 0);
   const moyAbsence = joursAbsences > 0? Math.round(consoAbsences / joursAbsences * 10) / 10 : 0;
   const moySejour = sejours.length? Math.round(sejours.reduce(function(s,p){return s+p.conso;},0) / sejours.reduce(function(s,p){return s+p.jours;},0) * 10) / 10 : 0;
 
+  // --- Calcul Année en cours ---
+  const dateDernier = new Date(dernier.date);
+  const anneeActuelle = dateDernier.getFullYear();
+  const moisJourDernier = (dateDernier.getMonth() + 1).toString().padStart(2, '0') + '-' + dateDernier.getDate().toString().padStart(2, '0');
+
+  const dataAnneeN = data.filter(function(d) {
+    return new Date(d.date).getFullYear() === anneeActuelle;
+  });
+  let consoAnneeN = 0;
+  if (dataAnneeN.length > 1) {
+    consoAnneeN = Math.round((dataAnneeN[dataAnneeN.length - 1].index - dataAnneeN[0].index) * 10) / 10;
+  }
+
+  // --- Calcul Année N-1 sur la même période ---
+  const anneePrec = anneeActuelle - 1;
+  const dateFinPrec = anneePrec + '-' + moisJourDernier;
+  const dataAnneeN1 = data.filter(function(d) {
+    return new Date(d.date).getFullYear() === anneePrec && d.date <= dateFinPrec;
+  });
+  let consoAnneeN1 = 0;
+  if (dataAnneeN1.length > 1) {
+    consoAnneeN1 = Math.round((dataAnneeN1[dataAnneeN1.length - 1].index - dataAnneeN1[0].index) * 10) / 10;
+  }
+
+  let diff = consoAnneeN - consoAnneeN1;
+  let pct = consoAnneeN1 > 0? Math.round(diff / consoAnneeN1 * 1000) / 10 : 0;
+  let fleche = diff >= 0? '▲' : '▼';
+  let couleur = diff >= 0? '#d32f2f' : '#388e3c'; // rouge si +, vert si -
+
   let html = '<div class="info-band">';
-  html += '<div class="chip">⚡ <strong>Index : ' + dernier.index.toLocaleString('fr-BE') + ' kWh</strong></div>';
+  html += '<div class="chip">⚡ <strong>Total : ' + consoTotal.toLocaleString('fr-BE') + ' kWh</strong></div>';
+  html += '<div class="chip">📅 <strong>' + anneeActuelle + ' : ' + consoAnneeN.toLocaleString('fr-BE') + ' kWh</strong></div>';
+  html += '<div class="chip">📊 <strong>vs ' + anneePrec + ' : <span style="color:' + couleur + '">' + fleche + ' ' + Math.abs(diff).toLocaleString('fr-BE') + ' kWh (' + pct + '%)</span></strong></div>';
   html += '<div class="chip">🏠 <strong>' + sejours.length + ' séjours</strong> · ' + Math.round(sejours.reduce(function(s,p){return s+p.conso;},0)) + ' kWh</div>';
   html += '<div class="chip">🚪 <strong>' + absences.length + ' absences</strong> · ' + consoAbsences.toLocaleString('fr-BE') + ' kWh</div>';
   html += '<div class="chip">📈 Veille : <strong>' + moyAbsence + ' kWh/j</strong></div>';
