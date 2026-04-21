@@ -140,38 +140,59 @@ function render(data) {
   const moySejour = sejours.length? Math.round(sejours.reduce(function(s,p){return s+p.conso;},0) / sejours.reduce(function(s,p){return s+p.jours;},0) * 10) / 10 : 0;
 
   // --- Calcul Année en cours ---
-  const dateDernier = new Date(dernier.date);
-  const anneeActuelle = dateDernier.getFullYear();
-  const moisJourDernier = (dateDernier.getMonth() + 1).toString().padStart(2, '0') + '-' + dateDernier.getDate().toString().padStart(2, '0');
+  const dataTrie = [...data].sort((a,b) => a.dateObj - b.dateObj);
+  const anneeActuelle = dernier.dateObj.getFullYear();
 
-  const dataAnneeN = data.filter(function(d) {
-    return new Date(d.date).getFullYear() === anneeActuelle;
-  });
+  // Index au 31/12 N-1
+  const idxDebutAnnee = dataTrie.findLastIndex(d => d.dateObj.getFullYear() < anneeActuelle);
+  const indexDebutAnnee = idxDebutAnnee >= 0? dataTrie[idxDebutAnnee].index : premier.index;
+
+  // Conso année N
+  const dataAnneeN = dataTrie.filter(d => d.dateObj.getFullYear() === anneeActuelle);
   let consoAnneeN = 0;
-  if (dataAnneeN.length > 1) {
-    consoAnneeN = Math.round((dataAnneeN[dataAnneeN.length - 1].index - dataAnneeN[0].index) * 10) / 10;
+  if (dataAnneeN.length > 0) {
+    consoAnneeN = Math.round((dataAnneeN[dataAnneeN.length - 1].index - indexDebutAnnee) * 10) / 10;
   }
 
-  // --- Calcul Année N-1 sur la même période ---
+  // --- Calcul Année N-1 complète ---
   const anneePrec = anneeActuelle - 1;
-  const dateFinPrec = anneePrec + '-' + moisJourDernier;
-  const dataAnneeN1 = data.filter(function(d) {
-    return new Date(d.date).getFullYear() === anneePrec && d.date <= dateFinPrec;
-  });
+  const idxDebutPrec = dataTrie.findLastIndex(d => d.dateObj.getFullYear() < anneePrec);
+  const indexDebutPrec = idxDebutPrec >= 0? dataTrie[idxDebutPrec].index : premier.index;
+
+  const dataAnneeN1 = dataTrie.filter(d => d.dateObj.getFullYear() === anneePrec);
   let consoAnneeN1 = 0;
-  if (dataAnneeN1.length > 1) {
-    consoAnneeN1 = Math.round((dataAnneeN1[dataAnneeN1.length - 1].index - dataAnneeN1[0].index) * 10) / 10;
+  if (dataAnneeN1.length > 0) {
+    consoAnneeN1 = Math.round((dataAnneeN1[dataAnneeN1.length - 1].index - indexDebutPrec) * 10) / 10;
   }
 
-  let diff = consoAnneeN - consoAnneeN1;
-  let pct = consoAnneeN1 > 0? Math.round(diff / consoAnneeN1 * 1000) / 10 : 0;
-  let fleche = diff >= 0? '▲' : '▼';
-  let couleur = diff >= 0? '#d32f2f' : '#388e3c'; // rouge si +, vert si -
+  // Pour le graphique : cumul mois par mois
+  function getCumulMensuel(annee) {
+    const dataAnnee = dataTrie.filter(d => d.dateObj.getFullYear() === annee);
+    if (dataAnnee.length === 0) return Array(12).fill(0);
+    const idxDebut = dataTrie.findLastIndex(d => d.dateObj.getFullYear() < annee);
+    const indexDebut = idxDebut >= 0? dataTrie[idxDebut].index : premier.index;
+
+    const cumul = Array(12).fill(0);
+    let dernierIndex = indexDebut;
+    dataAnnee.forEach(d => {
+      const mois = d.dateObj.getMonth();
+      cumul[mois] = Math.round((d.index - indexDebut) * 10) / 10;
+      dernierIndex = d.index;
+    });
+    // Remplir les mois suivants avec la dernière valeur
+    for (let i = 0; i < 12; i++) {
+      if (cumul[i] === 0 && i > 0) cumul[i] = cumul[i-1];
+    }
+    return cumul;
+  }
+
+  const cumulN = getCumulMensuel(anneeActuelle);
+  const cumulN1 = getCumulMensuel(anneePrec);
 
   let html = '<div class="info-band">';
   html += '<div class="chip">⚡ <strong>Total : ' + consoTotal.toLocaleString('fr-BE') + ' kWh</strong></div>';
   html += '<div class="chip">📅 <strong>' + anneeActuelle + ' : ' + consoAnneeN.toLocaleString('fr-BE') + ' kWh</strong></div>';
-  html += '<div class="chip">📊 <strong>vs ' + anneePrec + ' : <span style="color:' + couleur + '">' + fleche + ' ' + Math.abs(diff).toLocaleString('fr-BE') + ' kWh (' + pct + '%)</span></strong></div>';
+  html += '<div class="chip">📅 <strong>' + anneePrec + ' : ' + consoAnneeN1.toLocaleString('fr-BE') + ' kWh</strong></div>';
   html += '<div class="chip">🏠 <strong>' + sejours.length + ' séjours</strong> · ' + Math.round(sejours.reduce(function(s,p){return s+p.conso;},0)) + ' kWh</div>';
   html += '<div class="chip">🚪 <strong>' + absences.length + ' absences</strong> · ' + consoAbsences.toLocaleString('fr-BE') + ' kWh</div>';
   html += '<div class="chip">📈 Veille : <strong>' + moyAbsence + ' kWh/j</strong></div>';
@@ -181,16 +202,30 @@ function render(data) {
   html += '<div class="kpi"><div class="kpi-icon">⚡</div><div class="kpi-label">Index actuel</div>';
   html += '<div class="kpi-value">' + dernier.index.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
   html += '<div class="kpi-sub neutral">Relevé le ' + dernier.date + '</div></div>';
+
   html += '<div class="kpi"><div class="kpi-icon">📊</div><div class="kpi-label">Conso totale</div>';
   html += '<div class="kpi-value">' + consoTotal.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
   html += '<div class="kpi-sub neutral">Depuis ' + data[0].date + '</div></div>';
+
+  html += '<div class="kpi"><div class="kpi-icon">📅</div><div class="kpi-label">Année ' + anneeActuelle + '</div>';
+  html += '<div class="kpi-value">' + consoAnneeN.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
+  html += '<div class="kpi-sub neutral">Du 01/01 au ' + dernier.date + '</div></div>';
+
+  html += '<div class="kpi"><div class="kpi-icon">📅</div><div class="kpi-label">Année ' + anneePrec + '</div>';
+  html += '<div class="kpi-value">' + consoAnneeN1.toLocaleString('fr-BE') + '<span class="kpi-unit">kWh</span></div>';
+  html += '<div class="kpi-sub neutral">Total année complète</div></div>';
+
   html += '<div class="kpi"><div class="kpi-icon">🏠</div><div class="kpi-label">Moy. en séjour</div>';
   html += '<div class="kpi-value">' + moySejour + '<span class="kpi-unit">kWh/j</span></div>';
   html += '<div class="kpi-sub neutral">' + sejours.length + ' séjours</div></div>';
+
   html += '<div class="kpi"><div class="kpi-icon">🚪</div><div class="kpi-label">Moy. en absence</div>';
   html += '<div class="kpi-value">' + moyAbsence + '<span class="kpi-unit">kWh/j</span></div>';
   html += '<div class="kpi-sub ' + (moyAbsence > 2? 'down' : 'up') + '">' + consoAbsences.toLocaleString('fr-BE') + ' kWh total</div></div>';
   html += '</div>';
+
+  // Nouveau graphique comparatif
+  html += '<div class="card" style="margin-bottom:.85rem;"><div class="ct"><div class="ct-l"><span>📊</span>Évolution ' + anneePrec + ' vs ' + anneeActuelle + '</div></div><canvas id="cComparatif"></canvas></div>';
 
   html += '<div class="g21">';
   html += '<div class="card"><div class="ct"><div class="ct-l"><span>🏠</span>Conso par séjour</div></div><canvas id="cSejour"></canvas></div>';
@@ -216,6 +251,53 @@ function render(data) {
 
   html += '</tbody></table></div></div>';
   document.getElementById('main').innerHTML = html;
+
+  // Graphique comparatif 2025 vs 2026
+  const mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+  charts.comparatif = new Chart(document.getElementById('cComparatif'), {
+    type: 'line',
+    data: {
+      labels: mois,
+      datasets: [
+        {
+          label: anneePrec.toString(),
+          data: cumulN1,
+          borderColor: 'rgba(255,255,255,0.4)',
+          backgroundColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 3
+        },
+        {
+          label: anneeActuelle.toString(),
+          data: cumulN,
+          borderColor: 'rgba(0,170,255,1)',
+          backgroundColor: 'rgba(0,170,255,0.2)',
+          borderWidth: 3,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: 'rgba(0,170,255,1)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true, labels: { color: 'rgba(255,255,255,0.6)', font: { family: 'Space Mono', size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('fr-BE') + ' kWh';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
 
   charts.sejour = new Chart(document.getElementById('cSejour'), {
     type: 'bar',
