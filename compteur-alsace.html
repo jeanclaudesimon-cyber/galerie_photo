@@ -179,16 +179,19 @@ function render(data) {
       <div style="overflow-x:auto;">
         <table class="data-table">
           <thead><tr><th>Type</th><th>Période</th><th>Jours</th><th>Index début</th><th>Index fin</th><th>Conso</th><th>Moy/jour</th></tr></thead>
-          <tbody>${periodes.slice().reverse().map(p => `
+          <tbody>${periodes.slice().reverse().map(p => {
+            const dataIdx = data.findIndex(d => d.date === p.debut);
+            const note = data[dataIdx]?.com || '';
+            return `
             <tr style="${p.type === 'Absence'? 'opacity:.7;' : ''}">
               <td><span style="padding:2px 6px;border-radius:4px;font-size:.55rem;background:${p.type === 'Séjour'? 'rgba(0,170,255,0.2)' : 'rgba(255,255,255,0.1)'};color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text3)'}">${p.type === 'Séjour'? '🏠 Séjour' : '🚪 Absence'}</span></td>
-              <td>${p.debut} → ${p.fin}</td>
+              <td>${p.debut} → ${p.fin}${note? `<br><span style="font-size:.5rem;color:var(--text3);font-style:italic;">📝 ${note}</span>` : ''}</td>
               <td>${p.jours}</td>
               <td>${p.indexDebut.toLocaleString('fr-BE')}</td>
               <td>${p.indexFin.toLocaleString('fr-BE')}</td>
               <td style="color:${p.type === 'Séjour'? 'var(--blue)' : 'var(--text2)'};font-weight:700">${p.conso}</td>
               <td>${p.moyJour}</td>
-            </tr>`).join('')}
+            </tr>`}).join('')}
           </tbody>
         </table>
       </div>
@@ -214,7 +217,9 @@ function render(data) {
           callbacks: {
             afterLabel: (ctx) => {
               const s = sejours[ctx.dataIndex];
-              return `${s.jours} jours · ${s.conso} kWh total`;
+              const dataIdx = data.findIndex(d => d.date === s.debut);
+              const note = data[dataIdx]?.com || '';
+              return [`${s.jours} jours · ${s.conso} kWh total`, note? `📝 ${note}` : ''].filter(Boolean);
             }
           }
         }
@@ -225,6 +230,40 @@ function render(data) {
       }
     }
   });
+
+  charts.absence = new Chart(document.getElementById('cAbsence'), {
+    type: 'bar',
+    data: {
+      labels: absences.map(a => a.debut.split('/').slice(0,2).join('/')),
+      datasets: [{
+        label: 'kWh/jour en absence',
+        data: absences.map(a => a.moyJour),
+        backgroundColor: absences.map(a => a.moyJour > 2? 'rgba(255,68,68,0.7)' : 'rgba(0,229,160,0.7)'),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterLabel: (ctx) => {
+              const a = absences[ctx.dataIndex];
+              const dataIdx = data.findIndex(d => d.date === a.debut);
+              const note = data[dataIdx]?.com || '';
+              return [`${a.jours} jours · ${a.conso} kWh total`, note? `📝 ${note}` : ''].filter(Boolean);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 8 } }, grid: { display: false } },
+        y: { ticks: { color: 'rgba(255,255,255,0.38)', font: { family: 'Space Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
 
   charts.absence = new Chart(document.getElementById('cAbsence'), {
     type: 'bar',
