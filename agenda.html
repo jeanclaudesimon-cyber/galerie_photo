@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agenda – ZINZIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.4;padding:1rem;max-width:600px;margin:0 auto}
+.header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.back{color:var(--text2);text-decoration:none;font-size:.65rem}
+.back:hover{color:var(--acc)}
+  h1{font-size:1rem;font-weight:700;letter-spacing:.1em}
+.filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem}
+.filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
+.filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
+.event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
+.event:hover{border-color:var(--text2)}
+.event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
+.event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
+.event-title{font-size:.8rem;margin-bottom:.3rem}
+.event-lieu{color:var(--text2);font-size:.65rem}
+.event-note{color:var(--text3);font-size:.6rem;margin-top:.5rem;font-style:italic}
+.loading{color:var(--text2);text-align:center;padding:2rem}
+.empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>AGENDA</h1>
+    <a href="index.html" class="back">← RETOUR</a>
+  </div>
+
+  <div id="filters" class="filters"></div>
+  <div id="events" class="loading">Chargement...</div>
+
+<script>
+const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoAz7XEe0HoWl9Obx_IMHmYCa3Vje_APXUj_VTcxVxBeP81Q38hgLSKw83d5U9nHnLEc3YLLJEtRd_/pub?gid=0&single=true&output=csv';
+
+// 15 COULEURS - Change les noms si besoin
+const TYPE_COLORS = {
+  'concert': '#ff3b30',
+  'résidence': '#007aff',
+  'stage': '#34c759',
+  'sortie': '#ff9500',
+  'atelier': '#af52de',
+  'expo': '#ff2d55',
+  'festival': '#5ac8fa',
+  'conférence': '#ffcc00',
+  'masterclass': '#32d74b',
+  'tournage': '#bf5af2',
+  'création': '#ff6482',
+  'rencontre': '#64d2ff',
+  'projection': '#ffd60a',
+  'performance': '#30d158',
+  'autre': '#8e8e93'
+};
+
+let allEvents = [];
+let currentFilter = 'tout';
+
+function normalize(str) {
+  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+}
+
+function getColor(type) {
+  return TYPE_COLORS[normalize(type)] || TYPE_COLORS['autre'];
+}
+
+function parseDate(str) {
+  // Gère "12/05/2026", "Mai 2026", "2026", "12 mai 2026"
+  const clean = str.trim();
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(clean)) {
+    const [d,m,y] = clean.split('/');
+    return new Date(y, m-1, d);
+  }
+  if(/^\d{4}$/.test(clean)) return new Date(clean, 0, 1);
+  const months = {'janvier':0,'février':1,'mars':2,'avril':3,'mai':4,'juin':5,'juillet':6,'août':7,'septembre':8,'octobre':9,'novembre':10,'décembre':11};
+  const match = clean.match(/(\w+)\s+(\d{4})/);
+  if(match && months[normalize(match[1])]!== undefined) {
+    return new Date(match[2], months[normalize(match[1])], 1);
+  }
+  return new Date(clean); // dernier recours
+}
+
+function renderFilters(types) {
+  const container = document.getElementById('filters');
+  const allBtn = `<button class="filter ${currentFilter==='tout'?'active':''}" data-type="tout">TOUT</button>`;
+  const btns = types.map(t => {
+    const color = getColor(t);
+    const active = currentFilter === normalize(t)? 'active' : '';
+    return `<button class="filter ${active}" data-type="${normalize(t)}" style="border-color:${color}">${t}</button>`;
+  }).join('');
+  container.innerHTML = allBtn + btns;
+
+  container.querySelectorAll('.filter').forEach(btn => {
+    btn.onclick = () => {
+      currentFilter = btn.dataset.type;
+      renderFilters(types);
+      renderEvents();
+    };
+  });
+}
+
+function renderEvents() {
+  const container = document.getElementById('events');
+  let events = [...allEvents];
+
+  // Filtre par catégorie
+  if(currentFilter!== 'tout') {
+    events = events.filter(e => normalize(e.type) === currentFilter);
+  }
+
+  // TRI PAR DATE CHRONOLOGIQUE
+  events.sort((a,b) => parseDate(a.date) - parseDate(b.date));
+
+  if(events.length === 0){
+    container.className = 'empty';
+    container.textContent = 'Aucun événement dans cette catégorie.';
+    return;
+  }
+
+  container.className = '';
+  container.innerHTML = events.map(e => {
+    const color = getColor(e.type);
+    return `
+    <div class="event" style="border-left-color:${color}">
+      <div class="event-date">${e.date}</div>
+      ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
+      <div class="event-title">${e.titre}</div>
+      ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
+      ${e.note? `<div class="event-note">${e.note}</div>` : ''}
+    </div>
+  `}).join('');
+}
+
+fetch(URL_CSV)
+.then(r => r.text())
+.then(csv => {
+    const lines = csv.trim().split('\n');
+    allEvents = lines.slice(1).map(line => {
+      const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+      const clean = vals.map(v => v.replace(/^"|"$/g, '').trim());
+      return {
+        date: clean[0] || '',
+        type: clean[1] || '',
+        titre: clean[2] || '',
+        lieu: clean[3] || '',
+        note: clean[4] || ''
+      };
+    }).filter(e => e.date && e.titre);
+
+    // Récupère toutes les catégories uniques
+    const types = [...new Set(allEvents.map(e => e.type).filter(Boolean))];
+    renderFilters(types);
+    renderEvents();
+  })
+.catch(err => {
+    document.getElementById('events').className = 'empty';
+    document.getElementById('events').textContent = 'Erreur de chargement. Vérifie que le Sheet est publié.';
+    console.error(err);
+  });
+</script>
+</body>
+</html>
