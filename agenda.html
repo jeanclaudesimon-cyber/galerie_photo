@@ -30,7 +30,7 @@
 </head>
 <body>
   <div class="header">
-    <h1>AGENDA</h1>
+    <h1 ondblclick="login()" style="cursor:default;user-select:none">AGENDA</h1>
     <a href="index.html" class="back">← RETOUR</a>
   </div>
 
@@ -55,7 +55,7 @@ const TYPE_COLORS = {
   'voyage': '#5ac8fa', // Bleu clair
   'perso': '#ffcc00', // Jaune
   'admin': '#ff3b30', // Rouge
-  'dentiste': '#64d2ff', // Cyan
+  'anniverssaire': '#64d2ff', // Cyan
   'brouillon': '#8e8e93', // Gris
   'autre': '#8e8e93' // Gris par défaut
 };
@@ -109,7 +109,11 @@ function renderFilters(types) {
     return `<button class="filter ${active}" data-type="${normalize(t)}" style="border-color:${color}">${hidden}${t}</button>`;
   }).join('');
 
-  const adminBtn = isAdmin? `<button class="filter" onclick="logout()" style="border-color:#ff375f">🔓 LOGOUT</button>` : `<button class="filter" onclick="login()" style="border-color:#555">🔒 ADMIN</button>`;
+  // Affiche LOGOUT que si admin, sinon rien
+  let adminBtn = '';
+  if(isAdmin) {
+    adminBtn = `<button class="filter" onclick="logout()" style="border-color:#ff375f">🔓 LOGOUT</button>`;
+  }
 
   container.innerHTML = allBtn + btns + adminBtn;
 
