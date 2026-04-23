@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet de Bateau</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      margin: 0;
+      padding: 20px;
+    }
+  .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid #334155;
+    }
+    h1 {
+      color: #38bdf8;
+      margin-top: 0;
+      text-align: center;
+    }
+    h2 {
+      color: #38bdf8;
+      font-size: 18px;
+      margin-top: 0;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 8px;
+    }
+  .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+  .stat {
+      background: #0f172a;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+  .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #f8fafc;
+    }
+  .stat-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+    th { color: #38bdf8; }
+    td { color: #cbd5e1; }
+  .checklist {
+      list-style: none;
+      padding: 0;
+    }
+  .checklist li {
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
+    }
+  .checklist li:before {
+      content: "☐ ";
+      color: #38bdf8;
+      margin-right: 8px;
+    }
+  .noeuds {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+  .noeud {
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  .noeud strong {
+      color: #f8fafc;
+      display: block;
+      margin-bottom: 4px;
+    }
+  .loading {
+      text-align: center;
+      color: #64748b;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>⛵ Carnet de Bateau</h1>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="total-sorties">-</div>
+          <div class="stat-label">Sorties</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="total-heures">-</div>
+          <div class="stat-label">Heures</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="total-km">-</div>
+          <div class="stat-label">Kilomètres</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="derniere-date">-</div>
+          <div class="stat-label">Dernière sortie</div>
+        </div>
+      </div>
+
+      <table id="table-sorties">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Lieu</th>
+            <th>Durée</th>
+            <th>Distance</th>
+            <th>Météo</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-sorties">
+          <tr><td colspan="6" class="loading">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>✅ Check-list Sécurité avant départ</h2>
+      <ul class="checklist">
+        <li>Gilets de sauvetage pour tous à bord</li>
+        <li>Extincteur vérifié et accessible</li>
+        <li>Fusées de détresse valides</li>
+        <li>VHF chargée + test radio</li>
+        <li>Ancre + chaîne + bout de mouillage</li>
+        <li>Pompe de cale fonctionnelle</li>
+        <li>Trousse de secours complète</li>
+        <li>Feux de navigation OK</li>
+        <li>Météo consultée + marées</li>
+        <li>Carburant niveau + réserve</li>
+        <li>Téléphone chargé étanche</li>
+        <li>Prévenir quelqu’un à terre</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🪢 Nœuds indispensables</h2>
+      <div class="noeuds">
+        <div class="noeud">
+          <strong>Nœud de chaise</strong>
+          Amarrage, ne glisse pas, se défait facilement
+        </div>
+        <div class="noeud">
+          <strong>Nœud de cabestan</strong>
+          Amarrer à un taquet rapidement
+        </div>
+        <div class="noeud">
+          <strong>Nœud de taquet</strong>
+          Bloquer une écoute sur un taquet
+        </div>
+        <div class="noeud">
+          <strong>Nœud plat</strong>
+          Joindre 2 bouts même diamètre
+        </div>
+        <div class="noeud">
+          <strong>Nœud en huit</strong>
+          Nœud d’arrêt en bout d’écoute
+        </div>
+        <div class="noeud">
+          <strong>Tour mort + 2 demi-clés</strong>
+          Amarrer sur un anneau ou une bite
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // REMPLACE CA PAR TON LIEN CSV
+    const SHEET_URL = 'COLLE_ICI_TON_LIEN_CSV_BATEAU';
+
+    async function loadData() {
+      try {
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+        const lines = text.split('\n').filter(l => l.trim());
+        const rows = lines.slice(1);
+
+        let totalHeures = 0;
+        let totalKm = 0;
+        let derniereDate = '-';
+        let tbody = '';
+
+        rows.forEach(row => {
+          const cols = row.split(',');
+          const date = cols[0] || '';
+          const lieu = cols[1] || '';
+          const duree = parseFloat(cols[2]) || 0;
+          const distance = parseFloat(cols[3]) || 0;
+          const meteo = cols[4] || '';
+          const notes = cols[5] || '';
+
+          totalHeures += duree;
+          totalKm += distance;
+          if(date) derniereDate = date;
+
+          tbody += `
+            <tr>
+              <td>${date}</td>
+              <td>${lieu}</td>
+              <td>${duree} h</td>
+              <td>${distance} km</td>
+              <td>${meteo}</td>
+              <td>${notes}</td>
+            </tr>
+          `;
+        });
+
+        document.getElementById('total-sorties').textContent = rows.length;
+        document.getElementById('total-heures').textContent = totalHeures.toFixed(1);
+        document.getElementById('total-km').textContent = totalKm.toFixed(0);
+        document.getElementById('derniere-date').textContent = derniereDate;
+        document.getElementById('tbody-sorties').innerHTML = tbody || '<tr><td colspan="6">Aucune sortie</td></tr>';
+
+      } catch(e) {
+        document.getElementById('tbody-sorties').innerHTML = '<tr><td colspan="6">Erreur de chargement 😕 Vérifie le lien CSV</td></tr>';
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
