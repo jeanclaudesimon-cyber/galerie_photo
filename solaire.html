@@ -311,7 +311,9 @@ async function fetchAll() {
     document.getElementById('update-info').innerHTML=`Données statiques<br>(hors ligne)`;
     loadStatic();
   }
-  buildTabs(); renderYear();
+  buildTabs();
+updateWeekSelect(curYear, new Date().getMonth());
+renderYear();
 }
 
 function loadStatic() {
@@ -536,13 +538,9 @@ function renderYear(){
             </select>
           </div>
           <select class="week-sel" id="sel-week" onchange="renderDayChart()">
-            <option value="all">Vue globale</option>
-            <option value="0">S1 (1–7)</option>
-            <option value="1">S2 (8–14)</option>
-            <option value="2">S3 (15–21)</option>
-            <option value="3">S4 (22–28)</option>
-            <option value="4">S5 (29+)</option>
-          </select>
+  <option value="all">Vue globale</option>
+  <!-- Les semaines se génèrent en JS -->
+</select>
         </div>
         <canvas id="cWeek"></canvas>
       </div>
@@ -648,35 +646,102 @@ function renderCharts(d,prev,prevLbl,totalAC,totalInj){
   });
   charts.history=new Chart(document.getElementById('cHistory').getContext('2d'),{type:'line',data:{labels:hLbl,datasets:[{label:'Production (kWh)',data:hVal,borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,0.06)',borderWidth:2,pointRadius:1.5,tension:.4,fill:true}]},options:{...baseOpts('kWh'),scales:{x:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:7},maxRotation:45},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}},y:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:8}},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}}}}});
 }
+JavaScript
+// ===== SEMAINES RÉELLES DYNAMIQUES =====
+function updateWeekSelect(year, monthIndex) {
+  const sel = document.getElementById('sel-week');
+  sel.innerHTML = '<option value="all">Vue globale</option>';
 
+  const firstDay = new Date(year, monthIndex, 1);
+  const lastDay = new Date(year, monthIndex + 1, 0);
+
+  // Lundi de la semaine qui contient le 1er du mois
+  let current = new Date(firstDay);
+  const dayOfWeek = current.getDay();
+  const mondayOffset = dayOfWeek === 0? 6 : dayOfWeek - 1;
+  current.setDate(current.getDate() - mondayOffset);
+
+  let weekIndex = 0;
+  while(current <= lastDay) {
+    const monday = new Date(current);
+    const sunday = new Date(current);
+    sunday.setDate(monday.getDate() + 6);
+
+    // Coupe si la semaine déborde du mois
+    const displayStart = monday < firstDay? firstDay : monday;
+    const displayEnd = sunday > lastDay? lastDay : sunday;
+
+    if(displayStart <= lastDay && displayEnd >= firstDay) {
+      const label = `S${weekIndex + 1} (${displayStart.getDate()}-${displayEnd.getDate()}/${monthIndex+1})`;
+      sel.innerHTML += `<option value="${weekIndex}">${label}</option>`;
+      weekIndex++;
+    }
+    current.setDate(current.getDate() + 7);
+  }
+}
 function renderWeekCharts(){
   const selM=document.getElementById('sel-month');
   const selW=document.getElementById('sel-week');
   if(!selM)return;
   const mIdx=parseInt(selM.value);
   const wVal=selW?selW.value:'all';
+
+  // Met à jour le select semaines quand on change de mois
+  updateWeekSelect(curYear, mIdx);
+
   if(charts.week){try{charts.week.destroy();}catch(e){}}
   const d=pData[curYear];
   const days=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
+
   if(wVal==='all'){
-    const ws=[[],[],[],[],[]];
-    if(days&&days.length>0){
-      days.forEach(({day,prod})=>{ws[Math.min(Math.floor((day-1)/7),4)].push(prod);});
-    } else if(d&&d.monthly[mIdx]){
-      const avg=d.monthly[mIdx]/4.3;
-      ws[0]=[avg];ws[1]=[avg*1.1];ws[2]=[avg*.95];ws[3]=[avg*1.05];ws[4]=[avg*.4];
+    // Vue globale : calcul des vraies semaines du mois
+    const firstDay = new Date(curYear, mIdx, 1);
+    const lastDay = new Date(curYear, mIdx + 1, 0);
+    let current = new Date(firstDay);
+    const dayOfWeek = current.getDay();
+    const mondayOffset = dayOfWeek === 0? 6 : dayOfWeek - 1;
+    current.setDate(current.getDate() - mondayOffset);
+
+    const weekTotals = [];
+    const weekLabels = [];
+    let weekIndex = 0;
+
+    while(current <= lastDay) {
+      const monday = new Date(current);
+      const sunday = new Date(current);
+      sunday.setDate(monday.getDate() + 6);
+
+      const displayStart = monday < firstDay? firstDay : monday;
+      const displayEnd = sunday > lastDay? lastDay : sunday;
+
+      if(displayStart <= lastDay && displayEnd >= firstDay) {
+        let total = 0;
+        if(days) {
+          days.forEach(({day,prod})=>{
+            const date = new Date(curYear, mIdx, day);
+            if(date >= monday && date <= sunday) total += prod;
+          });
+        } else if(d&&d.monthly[mIdx]){
+          total = d.monthly[mIdx] / 4.3; // approximation
+        }
+        weekTotals.push(Math.round(total*10)/10);
+        weekLabels.push(`S${weekIndex+1} (${displayStart.getDate()}-${displayEnd.getDate()})`);
+        weekIndex++;
+      }
+      current.setDate(current.getDate() + 7);
     }
-    const vals=ws.map(w=>Math.round(w.reduce((a,b)=>a+b,0)*10)/10);
-    const maxV=Math.max(...vals.filter(x=>x>0))||1;
+
+    const maxV=Math.max(...weekTotals.filter(x=>x>0))||1;
     charts.week=new Chart(document.getElementById('cWeek').getContext('2d'),{
       type:'bar',
-      data:{labels:['S1 (1–7)','S2 (8–14)','S3 (15–21)','S4 (22–28)','S5 (29+)'],datasets:[{label:'Production (kWh)',data:vals,backgroundColor:vals.map(v=>v===Math.max(...vals)?'rgba(255,122,0,0.9)':'rgba(255,184,0,0.62)'),borderRadius:8,borderSkipped:false}]},
+      data:{labels:weekLabels,datasets:[{label:'Production (kWh)',data:weekTotals,backgroundColor:weekTotals.map(v=>v===Math.max(...weekTotals)?'rgba(255,122,0,0.9)':'rgba(255,184,0,0.62)'),borderRadius:8,borderSkipped:false}]},
       options:{...baseOpts('kWh'),plugins:{...baseOpts('kWh').plugins,tooltip:{callbacks:{label:ctx=>` ${ctx.raw} kWh`}}}}
     });
   } else {
     renderDayChart();
   }
 }
+
 
 function renderDayChart(){
   const selM=document.getElementById('sel-month');
@@ -685,13 +750,27 @@ function renderDayChart(){
   const mIdx=parseInt(selM.value);
   const wIdx=parseInt(selW.value);
   if(isNaN(wIdx))return renderWeekCharts();
+
   if(charts.week){try{charts.week.destroy();}catch(e){}}
   const d=pData[curYear];
   const allDays=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
-  const dMin=wIdx*7+1, dMax=wIdx===4?31:(wIdx+1)*7;
+
+  // Calcul des vraies dates de la semaine sélectionnée
+  const firstDay = new Date(curYear, mIdx, 1);
+  const dayOfWeek = firstDay.getDay();
+  const mondayOffset = dayOfWeek === 0? 6 : dayOfWeek - 1;
+  const firstMonday = new Date(firstDay);
+  firstMonday.setDate(firstDay.getDate() - mondayOffset);
+
+  const weekStart = new Date(firstMonday);
+  weekStart.setDate(firstMonday.getDate() + wIdx * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+
   const isDark=!document.body.classList.contains('light');
   const tc=isDark?'rgba(255,255,255,0.38)':'rgba(0,0,0,0.4)';
   const gc=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
+
   if(!allDays||allDays.length===0){
     document.getElementById('cWeek').getContext('2d').clearRect(0,0,500,220);
     const p=document.createElement('p');p.className='no-data-note';p.textContent=`Pas de données journalières pour ${MONTHS_F[mIdx]} ${curYear}`;
@@ -702,7 +781,13 @@ function renderDayChart(){
     const canvas=document.getElementById('cWeek');canvas.style.display='block';
     const nd=canvas.nextSibling;if(nd&&nd.className==='no-data-note')nd.remove();
   }
-  const weekDays=allDays.filter(({day})=>day>=dMin&&day<=dMax).sort((a,b)=>a.day-b.day);
+
+  // Filtre les jours de la vraie semaine
+  const weekDays=allDays.filter(({day})=>{
+    const date = new Date(curYear, mIdx, day);
+    return date >= weekStart && date <= weekEnd;
+  }).sort((a,b)=>a.day-b.day);
+
   const lbls=weekDays.map(({day})=>`${String(day).padStart(2,'0')}/${String(mIdx+1).padStart(2,'0')}`);
 
   // =====================================================================
