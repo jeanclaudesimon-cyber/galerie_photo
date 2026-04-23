@@ -24,6 +24,8 @@
 .event.past{opacity:.5}
 .event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
 .event.done.event-title{text-decoration:line-through;opacity:.6}
+.event.private{opacity:.6}
+.event.private .event-title::before{content:'🔒 '}
 .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
 .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
 .event-title{font-size:.8rem;margin-bottom:.3rem}
@@ -303,8 +305,7 @@ function renderEvents() {
     const todoIcon = isDone? '☑ ' : isTodo? '☐ ' : '';
     const dateId = normalize(e.date).replace(/\//g,'-');
     return `
-    <div class="event ${status} ${isDone?'done':''}" id="event-${dateId}-${i}" style="border-left-color:${color}${isPrivate && isAdmin? ';opacity:.85' : ''}">
-      <div class="event-date">${e.date} ${isPrivate && isAdmin? '🔒' : ''}</div>
+    <div class="event ${status} ${isDone?'done':''} ${isPrivate && isAdmin?'private':''}" id="event-${dateId}-${i}" style="border-left-color:${color}">
       ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
       <div class="event-title">${todoIcon}${e.titre}</div>
       ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
@@ -316,18 +317,44 @@ function renderEvents() {
 }
 
 function exportPDF() {
-  const element = document.getElementById('events');
+  const source = document.getElementById('events');
+  const clone = source.cloneNode(true);
+  
+  // Force N&B + compact sur le clone
+  clone.style.background = '#fff';
+  clone.style.color = '#000';
+  clone.querySelectorAll('.event').forEach(el => {
+    el.style.background = '#fff';
+    el.style.color = '#000';
+    el.style.border = 'none';
+    el.style.borderBottom = '0.5pt solid #999';
+    el.style.padding = '2mm 0';
+    el.style.margin = '0';
+    el.style.opacity = '1';
+    el.style.boxShadow = 'none';
+    el.style.borderLeft = 'none';
+  });
+  clone.querySelectorAll('.event-date,.event-type,.event-title,.event-lieu,.event-note').forEach(el => {
+    el.style.color = '#000';
+  });
+  clone.querySelectorAll('.event-type').forEach(el => {
+    el.style.border = 'none';
+    el.style.padding = '0';
+    el.innerHTML = '[' + el.innerHTML + '] ';
+  });
+  
   let suffix = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]}-${currentYear}` : `S${currentWeek}-${currentYear}`;
   if(currentFilter==='todo') suffix += '-A-FAIRE';
   if(currentFilter==='done') suffix += '-FAIT';
+  
   const opt = {
-    margin: 10,
+    margin: 5,
     filename: `agenda-zinzin-${suffix}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, backgroundColor: '#ffffff' },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
-  html2pdf().set(opt).from(element).save();
+  html2pdf().set(opt).from(clone).save();
 }
 
 function focusDateFromURL() {
