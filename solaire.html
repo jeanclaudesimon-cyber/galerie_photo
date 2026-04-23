@@ -312,8 +312,7 @@ async function fetchAll() {
     loadStatic();
   }
   buildTabs();
-updateWeekSelect(curYear, new Date().getMonth());
-renderYear();
+  renderYear();
 }
 
 function loadStatic() {
@@ -446,6 +445,7 @@ function renderYear(){
   if(!d){
     document.getElementById('main').innerHTML=`<div class="card"><div class="future-box"><div class="icon">🔮</div><h3>Données à venir pour ${curYear}</h3><p>Commence à saisir tes relevés dans Google Sheets — le tableau de bord se met à jour automatiquement !</p></div></div>`;
     return;
+    updateWeekSelect(curYear, parseInt(document.getElementById('sel-month').value));
   }
   const roi=computeROI();
   const valM=d.monthly.filter(x=>x);
@@ -581,6 +581,7 @@ function renderYear(){
   renderCharts(d,prev,prevLbl,totalAC,totalInj);
   renderSunshine();
   renderWeekCharts();
+  updateWeekSelect(curYear, parseInt(document.getElementById('sel-month').value));
 }
 
 function renderKPIs(d,prev,prevLbl,diff,totalAC,totalInj,rend,prog,savings){
