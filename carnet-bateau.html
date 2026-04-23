@@ -12,11 +12,11 @@
       margin: 0;
       padding: 20px;
     }
-  .container {
-      max-width: 900px;
+ .container {
+      max-width: 1000px;
       margin: 0 auto;
     }
-  .card {
+ .card {
       background: #1e293b;
       border-radius: 12px;
       padding: 24px;
@@ -35,27 +35,63 @@
       border-bottom: 1px solid #334155;
       padding-bottom: 8px;
     }
-  .stats {
+ .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 16px;
       margin: 20px 0;
     }
-  .stat {
+ .stat {
       background: #0f172a;
       padding: 16px;
       border-radius: 8px;
       text-align: center;
     }
-  .stat-value {
+ .stat-value {
       font-size: 24px;
       font-weight: bold;
       color: #f8fafc;
     }
-  .stat-label {
+ .stat-label {
       font-size: 12px;
       color: #94a3b8;
       margin-top: 4px;
+    }
+ .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+ .link {
+      background: #0f172a;
+      padding: 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      transition: all 0.2s;
+      display: block;
+    }
+ .link:hover {
+      background: #334155;
+      border-color: #38bdf8;
+    }
+ .link-title {
+      font-weight: bold;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+ .link-desc {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+ .badge {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
     }
     table {
       width: 100%;
@@ -70,36 +106,7 @@
     }
     th { color: #38bdf8; }
     td { color: #cbd5e1; }
-  .checklist {
-      list-style: none;
-      padding: 0;
-    }
-  .checklist li {
-      padding: 8px 0;
-      border-bottom: 1px solid #334155;
-    }
-  .checklist li:before {
-      content: "☐ ";
-      color: #38bdf8;
-      margin-right: 8px;
-    }
-  .noeuds {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-    }
-  .noeud {
-      background: #0f172a;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-  .noeud strong {
-      color: #f8fafc;
-      display: block;
-      margin-bottom: 4px;
-    }
-  .loading {
+ .loading {
       text-align: center;
       color: #64748b;
       padding: 20px 0;
@@ -137,68 +144,56 @@
             <th>Lieu</th>
             <th>Durée</th>
             <th>Distance</th>
-            <th>Météo</th>
             <th>Notes</th>
           </tr>
         </thead>
         <tbody id="tbody-sorties">
-          <tr><td colspan="6" class="loading">Chargement...</td></tr>
+          <tr><td colspan="5" class="loading">Chargement...</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="card">
-      <h2>✅ Check-list Sécurité avant départ</h2>
-      <ul class="checklist">
-        <li>Gilets de sauvetage pour tous à bord</li>
-        <li>Extincteur vérifié et accessible</li>
-        <li>Fusées de détresse valides</li>
-        <li>VHF chargée + test radio</li>
-        <li>Ancre + chaîne + bout de mouillage</li>
-        <li>Pompe de cale fonctionnelle</li>
-        <li>Trousse de secours complète</li>
-        <li>Feux de navigation OK</li>
-        <li>Météo consultée + marées</li>
-        <li>Carburant niveau + réserve</li>
-        <li>Téléphone chargé étanche</li>
-        <li>Prévenir quelqu’un à terre</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>🪢 Nœuds indispensables</h2>
-      <div class="noeuds">
-        <div class="noeud">
-          <strong>Nœud de chaise</strong>
-          Amarrage, ne glisse pas, se défait facilement
-        </div>
-        <div class="noeud">
-          <strong>Nœud de cabestan</strong>
-          Amarrer à un taquet rapidement
-        </div>
-        <div class="noeud">
-          <strong>Nœud de taquet</strong>
-          Bloquer une écoute sur un taquet
-        </div>
-        <div class="noeud">
-          <strong>Nœud plat</strong>
-          Joindre 2 bouts même diamètre
-        </div>
-        <div class="noeud">
-          <strong>Nœud en huit</strong>
-          Nœud d’arrêt en bout d’écoute
-        </div>
-        <div class="noeud">
-          <strong>Tour mort + 2 demi-clés</strong>
-          Amarrer sur un anneau ou une bite
-        </div>
+      <h2>🔗 Liens utiles</h2>
+      <div class="links">
+        <a href="https://www.navionics.com" target="_blank" class="link">
+          <div class="link-title">Navionics <span class="badge">Payant</span></div>
+          <div class="link-desc">Cartes marines détaillées</div>
+        </a>
+        <a href="https://www.meteoconsult.fr/marine" target="_blank" class="link">
+          <div class="link-title">Météo Consult Marine</div>
+          <div class="link-desc">Prévisions mer, vent, houle</div>
+        </a>
+        <a href="https://maree.shom.fr" target="_blank" class="link">
+          <div class="link-title">SHOM - Marées</div>
+          <div class="link-desc">Horaires et coefficients marées</div>
+        </a>
+        <a href="https://www.vigicrues.gouv.fr" target="_blank" class="link">
+          <div class="link-title">Vigicrues</div>
+          <div class="link-desc">Niveaux cours d’eau en temps réel</div>
+        </a>
+        <a href="https://www.boatindustry.fr" target="_blank" class="link">
+          <div class="link-title">BoatIndustry</div>
+          <div class="link-desc">Actu nautisme, essais bateaux</div>
+        </a>
+        <a href="https://www.blocmarine.com" target="_blank" class="link">
+          <div class="link-title">Bloc Marine</div>
+          <div class="link-desc">Guide ports, mouillages</div>
+        </a>
+        <a href="https://www.windy.com" target="_blank" class="link">
+          <div class="link-title">Windy</div>
+          <div class="link-desc">Vent, vagues, météo animée</div>
+        </a>
+        <a href="https://www.marinetraffic.com" target="_blank" class="link">
+          <div class="link-title">MarineTraffic</div>
+          <div class="link-desc">Trafic maritime en direct AIS</div>
+        </a>
       </div>
     </div>
 
   </div>
 
   <script>
-    // REMPLACE CA PAR TON LIEN CSV
     const SHEET_URL = 'COLLE_ICI_TON_LIEN_CSV_BATEAU';
 
     async function loadData() {
@@ -219,8 +214,7 @@
           const lieu = cols[1] || '';
           const duree = parseFloat(cols[2]) || 0;
           const distance = parseFloat(cols[3]) || 0;
-          const meteo = cols[4] || '';
-          const notes = cols[5] || '';
+          const notes = cols[4] || '';
 
           totalHeures += duree;
           totalKm += distance;
@@ -232,7 +226,6 @@
               <td>${lieu}</td>
               <td>${duree} h</td>
               <td>${distance} km</td>
-              <td>${meteo}</td>
               <td>${notes}</td>
             </tr>
           `;
@@ -242,10 +235,10 @@
         document.getElementById('total-heures').textContent = totalHeures.toFixed(1);
         document.getElementById('total-km').textContent = totalKm.toFixed(0);
         document.getElementById('derniere-date').textContent = derniereDate;
-        document.getElementById('tbody-sorties').innerHTML = tbody || '<tr><td colspan="6">Aucune sortie</td></tr>';
+        document.getElementById('tbody-sorties').innerHTML = tbody || '<tr><td colspan="5">Aucune sortie</td></tr>';
 
       } catch(e) {
-        document.getElementById('tbody-sorties').innerHTML = '<tr><td colspan="6">Erreur de chargement 😕 Vérifie le lien CSV</td></tr>';
+        document.getElementById('tbody-sorties').innerHTML = '<tr><td colspan="5">Erreur de chargement 😕</td></tr>';
       }
     }
 
