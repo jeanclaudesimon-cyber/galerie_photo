@@ -24,8 +24,8 @@
  .event.past{opacity:.5}
  .event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
  .event.done.event-title{text-decoration:line-through;opacity:.6}
- .event.private{opacity:.6}
- .event.private.event-title::before{content:'🔒 '}
+ .event.private{}
+.event-type.private::before{content:'🔒 ';margin-right:.2rem}
  .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
  .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
  .event-title{font-size:.8rem;margin-bottom:.3rem}
@@ -261,9 +261,9 @@ function renderEvents() {
     const todoIcon = isDone? '☑ ' : isTodo? '☐ ' : '';
     const dateId = normalize(e.date).replace(/\//g,'-');
     return `
-    <div class="event ${status} ${isDone?'done':''} ${isPrivate && isAdmin?'private':''}" id="event-${dateId}-${i}" style="border-left-color:${color}">
+    <div class="event ${status} ${isDone?'done':''}" id="event-${dateId}-${i}" style="border-left-color:${color}">
       <div class="event-date">${e.date}</div>
-      ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
+      ${e.type? `<div class="event-type ${isPrivate && isAdmin?'private':''}" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
       <div class="event-title">${todoIcon}${e.titre}</div>
       ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
       ${e.note? `<div class="event-note">${e.note}</div>` : ''}
