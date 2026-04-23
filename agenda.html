@@ -64,6 +64,10 @@ const ADMIN_KEY = 'Simouns212'; // ← CHANGE TON MOT DE PASSE
 
 let allEvents = [];
 let currentFilter = 'tout';
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let currentWeek = getWeekNumber(new Date());
+let currentView = 'year'; // year | month | week
 let isAdmin = false;
 
 function normalize(str) {
@@ -89,6 +93,32 @@ function parseDate(str) {
   return new Date(clean);
 }
 
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+}
+
+function getDateRange(view, year, month, week) {
+  const start = new Date(year, 0, 1);
+  const end = new Date(year, 11, 31, 23, 59);
+
+  if(view === 'month') {
+    start.setMonth(month, 1);
+    end.setMonth(month + 1, 0);
+  }
+
+  if(view === 'week') {
+    const jan1 = new Date(year, 0, 1);
+    const days = (week - 1) * 7 - jan1.getDay() + 1;
+    start.setTime(jan1.getTime() + days * 86400000);
+    end.setTime(start.getTime() + 6 * 86400000);
+  }
+
+  return {start, end};
+}
+
 function checkAdmin() {
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('admin') === ADMIN_KEY || localStorage.getItem('zinzin_admin') === '1') {
@@ -98,7 +128,72 @@ function checkAdmin() {
   }
 }
 
-function renderFilters(types) {
+function renderControls() {
+  const years = [...new Set(allEvents.map(e => parseDate(e.date).getFullYear()))].sort((a,b) => b - a);
+  if(!years.includes(currentYear)) years.unshift(currentYear);
+
+  const yearSelect = `<select id="yearSelect" style="font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit">
+    ${years.map(y => `<option value="${y}" ${y===currentYear?'selected':''}>${y}</option>`).join('')}
+  </select>`;
+
+  const viewBtns = `
+    <button class="filter ${currentView==='year'?'active':''}" data-view="year">ANNÉE</button>
+    <button class="filter ${currentView==='month'?'active':''}" data-view="month">MOIS</button>
+    <button class="filter ${currentView==='week'?'active':''}" data-view="week">SEMAINE</button>
+  `;
+
+  let monthNav = '';
+  if(currentView === 'month') {
+    const monthNames = ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'];
+    monthNav = `
+      <button class="filter" onclick="changeMonth(-1)">‹</button>
+      <span style="font-size:.6rem;color:var(--text);padding:.2rem.5rem">${monthNames[currentMonth]}</span>
+      <button class="filter" onclick="changeMonth(1)">›</button>
+    `;
+  }
+
+  let weekNav = '';
+  if(currentView === 'week') {
+    weekNav = `
+      <button class="filter" onclick="changeWeek(-1)">‹</button>
+      <span style="font-size:.6rem;color:var(--text);padding:.2rem.5rem">S${currentWeek}</span>
+      <button class="filter" onclick="changeWeek(1)">›</button>
+    `;
+  }
+
+  document.getElementById('filters').innerHTML = yearSelect + viewBtns + monthNav + weekNav + '<div style="width:100%;height:1px"></div>';
+
+  document.getElementById('yearSelect').onchange = e => {
+    currentYear = parseInt(e.target.value);
+    renderEvents();
+  };
+
+  document.querySelectorAll('[data-view]').forEach(btn => {
+    btn.onclick = () => {
+      currentView = btn.dataset.view;
+      renderControls();
+      renderEvents();
+    };
+  });
+}
+
+function changeMonth(delta) {
+  currentMonth += delta;
+  if(currentMonth < 0) { currentMonth = 11; currentYear--; }
+  if(currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderControls();
+  renderEvents();
+}
+
+function changeWeek(delta) {
+  currentWeek += delta;
+  if(currentWeek < 1) { currentWeek = 52; currentYear--; }
+  if(currentWeek > 52) { currentWeek = 1; currentYear++; }
+  renderControls();
+  renderEvents();
+}
+
+function renderTypeFilters(types) {
   const container = document.getElementById('filters');
   const allBtn = `<button class="filter ${currentFilter==='tout'?'active':''}" data-type="tout">TOUT</button>`;
   const btns = types.map(t => {
@@ -109,18 +204,17 @@ function renderFilters(types) {
     return `<button class="filter ${active}" data-type="${normalize(t)}" style="border-color:${color}">${hidden}${t}</button>`;
   }).join('');
 
-  // Affiche LOGOUT que si admin, sinon rien
   let adminBtn = '';
   if(isAdmin) {
     adminBtn = `<button class="filter" onclick="logout()" style="border-color:#ff375f">🔓 LOGOUT</button>`;
   }
 
-  container.innerHTML = allBtn + btns + adminBtn;
+  container.innerHTML += allBtn + btns + adminBtn;
 
-  container.querySelectorAll('.filter[data-type]').forEach(btn => {
+  container.querySelectorAll('[data-type]').forEach(btn => {
     btn.onclick = () => {
       currentFilter = btn.dataset.type;
-      renderFilters(types);
+      renderTypeFilters(types);
       renderEvents();
     };
   });
@@ -145,22 +239,30 @@ function renderEvents() {
   const container = document.getElementById('events');
   let events = [...allEvents];
 
-  // Si pas admin : garde QUE les 3 types publics
+  // Filtre public/privé
   if(!isAdmin) {
     events = events.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
   }
+
+  // Filtre par période
+  const {start, end} = getDateRange(currentView, currentYear, currentMonth, currentWeek);
+  events = events.filter(e => {
+    const d = parseDate(e.date);
+    return d >= start && d <= end;
+  });
 
   // Filtre par catégorie
   if(currentFilter!== 'tout') {
     events = events.filter(e => normalize(e.type) === currentFilter);
   }
 
-  // TRI PAR DATE
+  // Tri par date
   events.sort((a,b) => parseDate(a.date) - parseDate(b.date));
 
   if(events.length === 0){
     container.className = 'empty';
-    container.textContent = isAdmin? 'Aucun événement dans cette catégorie.' : 'Aucun événement public.';
+    const viewText = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]} ${currentYear}` : `S${currentWeek} ${currentYear}`;
+    container.textContent = `Aucun événement ${viewText}`;
     return;
   }
 
@@ -197,13 +299,13 @@ fetch(URL_CSV)
       };
     }).filter(e => e.date && e.titre);
 
-    // Récupère toutes les catégories
     let types = [...new Set(allEvents.map(e => e.type).filter(Boolean))];
     if(!isAdmin) {
       types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
     }
 
-    renderFilters(types);
+    renderControls();
+    renderTypeFilters(types);
     renderEvents();
   })
 .catch(err => {
