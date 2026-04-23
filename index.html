@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simoun's Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/home.css">
   <style>
     #tile-mazout .tile-bg { border-top: 2px solid #E8621A; }
@@ -21,142 +23,172 @@
     #tile-voilier-cta { color: #c8a84b; }
     #tile-velo .tile-bg { border-top: 2px solid #4fc3f7; }
     #tile-velo-cta { color: #4fc3f7; }
-    /* ═══════════════════════════════════════
-   TUILE CUISINE — La Cuisine de JC
-═══════════════════════════════════════ */
-.tuile-cuisine {
-  width: 320px;
-  background: #ffffff;
-  border: 3px solid #e67627;
-  border-radius: 16px;
-  padding: 1.4rem 1.6rem;
-  cursor: pointer;
-  transition: transform .25s, box-shadow .25s;
-  text-decoration: none;
-  display: block;
-}
-.tuile-cuisine:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(230,118,39,.25); }
-.cuisine-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
-.cuisine-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 4px;
-  color: #e67627;
-  text-transform: uppercase;
-  margin-bottom: .5rem;
-}
-.cuisine-titre-box {
-  background: #e67627;
-  border-radius: 8px;
-  padding: .5rem .9rem;
-  margin-bottom: .4rem;
-  display: inline-block;
-}
-.cuisine-titre {
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
-  color: #000000;
-  font-weight: 700;
-  line-height: 1.3;
-}
-.cuisine-sous-box {
-  background: #e67627;
-  border-radius: 8px;
-  padding: .35rem .9rem;
-  display: inline-block;
-  margin-bottom: .8rem;
-}
-.cuisine-sous {
-  font-family: 'Crimson Pro', serif;
-  font-size: .9rem;
-  color: #000000;
-  font-style: italic;
-}
-.cuisine-badge {
-  display: inline-block;
-  background: #fff5ee;
-  border: 1px solid #e67627;
-  color: #e67627;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  padding: 3px 10px;
-  border-radius: 3px;
-}
-/* ═══════════════════════════════════════
-   TUILE RC — Off-Road Obsession
-═══════════════════════════════════════ */
-.tuile-rc {
-  width: 320px;
-  background: #244fed;
-  border: 3px solid #0f1a42;
-  border-radius: 16px;
-  padding: 1.4rem 1.6rem;
-  cursor: pointer;
-  transition: transform .25s, box-shadow .25s;
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  display: block;
-}
-.tuile-rc:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,26,66,.6); }
-.tuile-rc::before {
-  content: '';
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 120px; height: 120px;
-  background: rgba(255,255,255,.06);
-  border-radius: 50%;
-}
-.tuile-rc::after {
-  content: '';
-  position: absolute;
-  bottom: -20px; left: -20px;
-  width: 80px; height: 80px;
-  background: rgba(255,255,255,.04);
-  border-radius: 50%;
-}
-.rc-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
-.rc-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 4px;
-  color: rgba(255,255,255,.6);
-  text-transform: uppercase;
-  margin-bottom: .3rem;
-}
-.rc-titre {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
-  color: #ffffff;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: .2rem;
-}
-.rc-sous {
-  font-family: 'Crimson Pro', serif;
-  font-size: .9rem;
-  color: rgba(255,255,255,.7);
-  font-style: italic;
-}
-.rc-badge {
-  margin-top: .8rem;
-  display: inline-block;
-  background: rgba(255,255,255,.15);
-  border: 1px solid rgba(255,255,255,.3);
-  color: #fff;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  padding: 3px 10px;
-  border-radius: 3px;
-}
-
+    #tile-bateau .tile-bg { border-top: 2px solid #5ac8fa; }
+    #tile-bateau-cta { color: #5ac8fa; }
+    #tile-partitions .tile-bg { border-top: 2px solid #af52de; }
+    #tile-partitions-cta { color: #af52de; }
+    #tile-inventaire .tile-bg { border-top: 2px solid #8e8e93; }
+    #tile-inventaire-cta { color: #8e8e93; }
+    #tile-alsace .tile-bg { border-top: 2px solid #ffcc00; }
+    #tile-alsace-cta { color: #ffcc00; }
+    #tile-agenda .tile-bg { border-top: 2px solid #34c759; }
+    #tile-agenda-cta { color: #34c759; }
+    
+    .tuile-cuisine {
+      width: 320px;
+      background: #ffffff;
+      border: 3px solid #e67627;
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      text-decoration: none;
+      display: block;
+    }
+    .tuile-cuisine:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(230,118,39,.25); }
+    .cuisine-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
+    .cuisine-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: #e67627;
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .cuisine-titre-box {
+      background: #e67627;
+      border-radius: 8px;
+      padding: .5rem .9rem;
+      margin-bottom: .4rem;
+      display: inline-block;
+    }
+    .cuisine-titre {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: #000000;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .cuisine-sous-box {
+      background: #e67627;
+      border-radius: 8px;
+      padding: .35rem .9rem;
+      display: inline-block;
+      margin-bottom: .8rem;
+    }
+    .cuisine-sous {
+      font-family: 'Crimson Pro', serif;
+      font-size: .9rem;
+      color: #000000;
+      font-style: italic;
+    }
+    .cuisine-badge {
+      display: inline-block;
+      background: #fff5ee;
+      border: 1px solid #e67627;
+      color: #e67627;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    
+    .tuile-rc {
+      width: 320px;
+      background: #244fed;
+      border: 3px solid #0f1a42;
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+    }
+    .tuile-rc:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,26,66,.6); }
+    .tuile-rc::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,.06);
+      border-radius: 50%;
+    }
+    .tuile-rc::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: -20px;
+      width: 80px; height: 80px;
+      background: rgba(255,255,.04);
+      border-radius: 50%;
+    }
+    .rc-icon { font-size: 2.4rem; margin-bottom: .6rem; display: block; }
+    .rc-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,.6);
+      text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+    .rc-titre {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: #ffffff;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: .2rem;
+    }
+    .rc-sous {
+      font-family: 'Crimson Pro', serif;
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      font-style: italic;
+    }
+    .rc-badge {
+      margin-top: .8rem;
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    
+    #admin-indicator {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #ff375f;
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: .55rem;
+      padding: .3rem .6rem;
+      border-radius: 3px;
+      font-weight: 700;
+      z-index: 999;
+      cursor: pointer;
+      display: none;
+    }
+    #admin-indicator.show { display: block; }
+    
+    .tile.private { display: none; }
+    .tile.private.show { display: block; }
+    .tuile-cuisine.private { display: none; }
+    .tuile-cuisine.private.show { display: block; }
+    .tuile-rc.private { display: none; }
+    .tuile-rc.private.show { display: block; }
   </style>
 </head>
 <body>
 
 <canvas id="particles"></canvas>
+<div id="admin-indicator" onclick="logout()">🔓 ADMIN</div>
 
 <section id="hero">
   <div id="hero-left">
@@ -167,15 +199,15 @@
   </div>
   <div id="hero-right">
     <p id="hero-label">PHOTOGRAPHE &nbsp;·&nbsp; AQUARELLISTE</p>
-    <h1 id="hero-name">Jean-Claude<br><span>Simon</span></h1>
+    <h1 id="hero-name" ondblclick="login()" style="cursor:default;user-select:none">Jean-Claude<br><span>Simon</span></h1>
     <div id="hero-line"></div>
     <p id="hero-desc">Passionné de photographie animalière et de paysages, je capture les instants fugaces de la nature. Nikon D7500 et Z6 en main, je parcours l'Alsace, la Belgique et l'Europe à la recherche de la lumière parfaite. Aquarelliste autodidacte, je transpose sur le papier ce que l'objectif saisit dans le temps.</p>
     <div id="hero-icons">
       <svg viewBox="0 0 64 64" class="icon-photo"><rect x="8" y="18" width="48" height="34" rx="4" fill="none" stroke="white" stroke-width="2"/><circle cx="32" cy="35" r="10" fill="none" stroke="white" stroke-width="2"/><circle cx="32" cy="35" r="5" fill="none" stroke="white" stroke-width="1.5"/><path d="M22 18 l4-6 h12 l4 6" fill="none" stroke="white" stroke-width="2"/><circle cx="50" cy="24" r="2" fill="white"/></svg>
-      <svg viewBox="0 0 64 64" class="icon-photo"><circle cx="32" cy="32" r="22" fill="none" stroke="white" stroke-width="2"/><circle cx="32" cy="32" r="14" fill="none" stroke="white" stroke-width="1.5"/><circle cx="32" cy="32" r="6" fill="none" stroke="white" stroke-width="1.5"/><line x1="32" y1="10" x2="32" y2="18" stroke="white" stroke-width="1.5"/><line x1="32" y1="46" x2="32" y2="54" stroke="white" stroke-width="1.5"/><line x1="10" y1="32" x2="18" y2="32" stroke="white" stroke-width="1.5"/><line x1="46" y1="32" x2="54" y2="32" stroke="white" stroke-width="1.5"/></svg>
+      <svg viewBox="0 0 64" class="icon-photo"><circle cx="32" cy="32" r="22" fill="none" stroke="white" stroke-width="2"/><circle cx="32" cy="32" r="14" fill="none" stroke="white" stroke-width="1.5"/><circle cx="32" cy="32" r="6" fill="none" stroke="white" stroke-width="1.5"/><line x1="32" y1="10" x2="32" y2="18" stroke="white" stroke-width="1.5"/><line x1="32" y1="46" x2="32" y2="54" stroke="white" stroke-width="1.5"/><line x1="10" y1="32" x2="18" y2="32" stroke="white" stroke-width="1.5"/><line x1="46" y1="32" x2="54" y2="32" stroke="white" stroke-width="1.5"/></svg>
       <svg viewBox="0 0 64 64" class="icon-photo"><circle cx="32" cy="32" r="22" fill="none" stroke="white" stroke-width="2"/><path d="M32 10 L38 26 L54 26 L42 36 L46 52 L32 42 L18 52 L22 36 L10 26 L26 26 Z" fill="none" stroke="white" stroke-width="1.5"/></svg>
-      <svg viewBox="0 0 64 64" class="icon-photo"><line x1="32" y1="10" x2="32" y2="38" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="14" y2="56" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="50" y2="56" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="32" y2="56" stroke="white" stroke-width="2"/><rect x="18" y="6" width="28" height="16" rx="3" fill="none" stroke="white" stroke-width="2"/><line x1="20" y1="44" x2="44" y2="44" stroke="white" stroke-width="1.5"/></svg>
-      <svg viewBox="0 0 64 64" class="icon-photo"><path d="M8 36 Q20 20 32 28 Q44 36 56 20" fill="none" stroke="white" stroke-width="2"/><path d="M32 28 Q36 18 44 16 Q40 24 38 28" fill="none" stroke="white" stroke-width="1.5"/><circle cx="46" cy="15" r="2" fill="white"/></svg>
+      <svg viewBox="0 0 64" class="icon-photo"><line x1="32" y1="10" x2="32" y2="38" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="14" y2="56" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="50" y2="56" stroke="white" stroke-width="2"/><line x1="32" y1="38" x2="32" y2="56" stroke="white" stroke-width="2"/><rect x="18" y="6" width="28" height="16" rx="3" fill="none" stroke="white" stroke-width="2"/><line x1="20" y1="44" x2="44" y2="44" stroke="white" stroke-width="1.5"/></svg>
+      <svg viewBox="0 0 64" class="icon-photo"><path d="M8 36 Q20 20 32 28 Q44 36 56 20" fill="none" stroke="white" stroke-width="2"/><path d="M32 28 Q36 18 44 16 Q40 24 38 28" fill="none" stroke="white" stroke-width="1.5"/><circle cx="46" cy="15" r="2" fill="white"/></svg>
     </div>
   </div>
 </section>
@@ -225,21 +257,21 @@
       </div>
     </a>
 
-    <a href="solaire.html" class="tile" id="tile-solaire">
+    <a href="solaire.html" class="tile private" id="tile-solaire">
       <div class="tile-bg"></div>
       <div class="tile-content">
         <svg viewBox="0 0 64 64" class="tile-icon"><circle cx="32" cy="32" r="10" fill="none" stroke="white" stroke-width="2"/><line x1="32" y1="6" x2="32" y2="14" stroke="white" stroke-width="2"/><line x1="32" y1="50" x2="32" y2="58" stroke="white" stroke-width="2"/><line x1="6" y1="32" x2="14" y2="32" stroke="white" stroke-width="2"/><line x1="50" y1="32" x2="58" y2="32" stroke="white" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="20" stroke="white" stroke-width="2"/><line x1="44" y1="44" x2="50" y2="50" stroke="white" stroke-width="2"/><line x1="50" y1="14" x2="44" y2="20" stroke="white" stroke-width="2"/><line x1="20" y1="44" x2="14" y2="50" stroke="white" stroke-width="2"/></svg>
-        <h3>Suivi Solaire</h3>
+        <h3>Suivi Solaire 🔒</h3>
         <p>Production photovoltaïque — Saint-Léger en temps réel</p>
         <span class="tile-cta">Voir →</span>
       </div>
     </a>
 
-    <a href="dashboard_mazout.html" class="tile" id="tile-mazout">
+    <a href="dashboard_mazout.html" class="tile private" id="tile-mazout">
       <div class="tile-bg"></div>
       <div class="tile-content">
         <svg viewBox="0 0 64 64" class="tile-icon"><ellipse cx="32" cy="18" rx="18" ry="8" fill="none" stroke="white" stroke-width="2"/><line x1="14" y1="18" x2="14" y2="46" stroke="white" stroke-width="2"/><line x1="50" y1="18" x2="50" y2="46" stroke="white" stroke-width="2"/><ellipse cx="32" cy="46" rx="18" ry="8" fill="none" stroke="white" stroke-width="2"/><line x1="32" y1="10" x2="32" y2="4" stroke="white" stroke-width="2"/><line x1="32" y1="4" x2="40" y2="4" stroke="white" stroke-width="2"/><line x1="40" y1="4" x2="40" y2="10" stroke="white" stroke-width="1.5"/><line x1="14" y1="34" x2="50" y2="34" stroke="white" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/><line x1="14" y1="26" x2="50" y2="26" stroke="white" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/></svg>
-        <h3>Suivi Mazout</h3>
+        <h3>Suivi Mazout 🔒</h3>
         <p>Consommation chaudière — citerne 2500L en temps réel</p>
         <span class="tile-cta" id="tile-mazout-cta">Voir →</span>
       </div>
@@ -260,6 +292,26 @@
         <h3>Guitare Basse</h3>
         <p>Partitions, accords en temps réel et théorie musicale</p>
         <span class="tile-cta" id="tile-guitare-cta">Jouer →</span>
+      </div>
+    </a>
+
+    <a href="partitions.html" class="tile private" id="tile-partitions">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="14" y="12" width="36" height="40" rx="2" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="20" y1="20" x2="44" y2="20" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="26" x2="44" y2="26" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="32" x2="44" y2="32" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="38" x2="44" y2="38" stroke="white" stroke-width="1.5"/>
+          <line x1="20" y1="44" x2="38" y2="44" stroke="white" stroke-width="1.5"/>
+          <circle cx="24" cy="20" r="1.5" fill="white"/>
+          <circle cx="24" cy="26" r="1.5" fill="white"/>
+          <circle cx="24" cy="32" r="1.5" fill="white"/>
+        </svg>
+        <h3>Partitions 🔒</h3>
+        <p>PDF basse, guitare, piano — accès rapide</p>
+        <span class="tile-cta" id="tile-partitions-cta">Ouvrir →</span>
       </div>
     </a>
 
@@ -303,120 +355,192 @@
     </a>
 
     <a href="voilier.html" class="tile" id="tile-voilier">
-  <div class="tile-bg"></div>
-  <div class="tile-content">
-    <svg viewBox="0 0 64 64" class="tile-icon">
-      <path d="M32 8 L32 48" stroke="white" stroke-width="2" fill="none"/>
-      <path d="M32 8 L52 38 L12 38 Z" stroke="white" stroke-width="1.5" fill="none" opacity=".8"/>
-      <path d="M8 52 L56 52" stroke="white" stroke-width="2"/>
-      <path d="M12 52 Q32 44 52 52" stroke="white" stroke-width="1" fill="none" opacity=".5"/>
-    </svg>
-    <h3>Soejangh</h3>
-    <p>Journal de bord · Vindo 40 · Pays-Bas</p>
-    <span class="tile-cta" id="tile-voilier-cta">Explorer →</span>
-  </div>
-</a>
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <path d="M32 8 L32 48" stroke="white" stroke-width="2" fill="none"/>
+          <path d="M32 8 L52 38 L12 38 Z" stroke="white" stroke-width="1.5" fill="none" opacity=".8"/>
+          <path d="M8 52 L56 52" stroke="white" stroke-width="2"/>
+          <path d="M12 52 Q32 44 52" stroke="white" stroke-width="1" fill="none" opacity=".5"/>
+        </svg>
+        <h3>Soejangh</h3>
+        <p>Journal de bord · Vindo 40 · Pays-Bas</p>
+        <span class="tile-cta" id="tile-voilier-cta">Explorer →</span>
+      </div>
+    </a>
 
-<a href="carte-navigation.html" class="tile" id="tile-carte-navigation">
-  <div class="tile-bg"></div>
-  <div class="tile-content">
-    <svg viewBox="0 0 64 64" class="tile-icon">
-      <path d="M32 8 L32 48" stroke="white" stroke-width="2" fill="none"/>
-      <path d="M32 8 L52 38 L12 38 Z" stroke="white" stroke-width="1.5" fill="none" opacity=".8"/>
-      <path d="M8 52 L56 52" stroke="white" stroke-width="2"/>
-      <path d="M12 52 Q32 44 52 52" stroke="white" stroke-width="1" fill="none" opacity=".5"/>
-    </svg>
-    <h3>Soejangh — Navigation</h3>
-    <p>Calcul de route · Waypoints · Météo</p>
-    <span class="tile-cta" id="tile-carte-navigation-cta">Explorer →</span>
-  </div>
-</a>
+    <a href="carnet-bateau.html" class="tile" id="tile-bateau">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <path d="M8 44 L56 44" stroke="white" stroke-width="2"/>
+          <path d="M12 44 Q32 36 52 44" stroke="white" stroke-width="1" fill="none" opacity=".5"/>
+          <path d="M32 12 L32 44" stroke="white" stroke-width="2"/>
+          <path d="M32 12 L48 36 L16 36 Z" stroke="white" stroke-width="1.5" fill="none" opacity=".8"/>
+          <circle cx="32" cy="28" r="2" fill="white" opacity=".6"/>
+        </svg>
+        <h3>Carnet Bateau</h3>
+        <p>Logs, check-lists, marées & nœuds marins</p>
+        <span class="tile-cta" id="tile-bateau-cta">Naviguer →</span>
+      </div>
+    </a>
 
-<a href="velo.html" class="tile" id="tile-velo">
-  <div class="tile-bg"></div>
-  <div class="tile-content">
-    <svg viewBox="0 0 64 64" class="tile-icon">
-      <circle cx="14" cy="44" r="8" fill="none" stroke="white" stroke-width="2"/>
-      <circle cx="50" cy="44" r="8" fill="none" stroke="white" stroke-width="2"/>
-      <circle cx="38" cy="16" r="3" fill="white" opacity=".8"/>
-      <polyline points="38,19 38,30 28,44" fill="none" stroke="white" stroke-width="2"/>
-      <polyline points="38,30 50,44" fill="none" stroke="white" stroke-width="2"/>
-      <polyline points="22,30 14,44" fill="none" stroke="white" stroke-width="2"/>
-      <line x1="22" y1="30" x2="38" y2="30" stroke="white" stroke-width="1.5" opacity=".6"/>
-      <line x1="28" y1="20" x2="22" y2="30" stroke="white" stroke-width="1.5" opacity=".5"/>
-    </svg>
-    <h3>Vélo Électrique</h3>
-    <p>Trajets & aventures — Belgique & Alsace</p>
-    <span class="tile-cta" id="tile-velo-cta">Explorer →</span>
-  </div>
-</a>
+    <a href="carte-navigation.html" class="tile" id="tile-carte-navigation">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 64 64" class="tile-icon">
+          <path d="M32 8 L32 48" stroke="white" stroke-width="2" fill="none"/>
+          <path d="M32 8 L52 38 L12 38 Z" stroke="white" stroke-width="1.5" fill="none" opacity=".8"/>
+          <path d="M8 52 L56 52" stroke="white" stroke-width="2"/>
+          <path d="M12 52 Q32 44 52 52" stroke="white" stroke-width="1" fill="none" opacity=".5"/>
+        </svg>
+        <h3>Soejangh — Navigation</h3>
+        <p>Calcul de route · Waypoints · Météo</p>
+        <span class="tile-cta" id="tile-carte-navigation-cta">Explorer →</span>
+      </div>
+    </a>
 
-<a href="cuisine.html" class="tuile-cuisine">
-    <span class="cuisine-icon">🍳</span>
-    <div class="cuisine-label">Carnet de recettes</div>
-    <div class="cuisine-titre-box">
-      <div class="cuisine-titre">La Cuisine de JC</div>
-    </div><br>
-    <div class="cuisine-sous-box">
-      <div class="cuisine-sous">Plaisirs Gourmands &amp; Marmite &amp; Mystères</div>
-    </div>
-    <br>
-    <span class="cuisine-badge">🚧 À venir</span>
-  </a>
+    <a href="velo.html" class="tile" id="tile-velo">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <circle cx="14" cy="44" r="8" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="50" cy="44" r="8" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="38" cy="16" r="3" fill="white" opacity=".8"/>
+          <polyline points="38,19 38,30 28,44" fill="none" stroke="white" stroke-width="2"/>
+          <polyline points="38,30 50,44" fill="none" stroke="white" stroke-width="2"/>
+          <polyline points="22,30 14,44" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="22" y1="30" x2="38" y2="30" stroke="white" stroke-width="1.5" opacity=".6"/>
+          <line x1="28" y1="20" x2="22" y2="30" stroke="white" stroke-width="1.5" opacity=".5"/>
+        </svg>
+        <h3>Vélo Électrique</h3>
+        <p>Trajets & aventures — Belgique & Alsace</p>
+        <span class="tile-cta" id="tile-velo-cta">Explorer →</span>
+      </div>
+    </a>
 
-  <a href="rc.html" class="tuile-rc">
-    <span class="rc-icon">🏎️</span>
-    <div class="rc-label">Collection privée</div>
-    <div class="rc-titre">Off-Road Obsession</div>
-    <div class="rc-sous">1/10 &amp; 1/18 · Modèles à l'Épreuve</div>
-    <span class="rc-badge">🔒 Accès protégé</span>
-  </a>
-<a href="compteur-alsace.html" class="tile" id="tile-alsace">
-  <div class="tile-bg"></div>
-  <div class="tile-content">
-    <svg viewBox="0 0 64 64" class="tile-icon">
-      <path d="M32 8 L36 18 L46 18 L38 26 L42 36 L32 30 L22 36 L26 26 L18 18 L28 18 Z" fill="none" stroke="white" stroke-width="2"/>
-      <circle cx="32" cy="32" r="20" fill="none" stroke="white" stroke-width="1.5" opacity=".4"/>
-      <path d="M32 32 L32 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      <path d="M32 32 L42 38" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
-      <circle cx="32" cy="32" r="2.5" fill="white"/>
-    </svg>
-    <h3>Compteur Alsace</h3>
-    <p><span id="index-alsace">--</span> kWh — <span id="date-alsace">Chargement...</span></p>
-    <span class="tile-cta" id="tile-alsace-cta">Voir détails →</span>
+    <a href="cuisine.html" class="tuile-cuisine">
+        <span class="cuisine-icon">🍳</span>
+        <div class="cuisine-label">Carnet de recettes</div>
+        <div class="cuisine-titre-box">
+          <div class="cuisine-titre">La Cuisine de JC</div>
+        </div><br>
+        <div class="cuisine-sous-box">
+          <div class="cuisine-sous">Plaisirs Gourmands &amp; Marmite &amp; Mystères</div>
+        </div>
+        <br>
+        <span class="cuisine-badge">🚧 À venir</span>
+      </a>
+
+      <a href="rc.html" class="tuile-rc private">
+        <span class="rc-icon">🏎️</span>
+        <div class="rc-label">Collection privée</div>
+        <div class="rc-titre">Off-Road Obsession 🔒</div>
+        <div class="rc-sous">1/10 &amp; 1/18 · Modèles à l'Épreuve</div>
+        <span class="rc-badge">🔒 Accès protégé</span>
+      </a>
+<a href="inventaire-photo.html" class="tile private" id="tile-inventaire">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="8" y="18" width="48" height="34" rx="4" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="32" cy="35" r="10" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="32" cy="35" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+          <path d="M22 18 l4-6 h12 l4 6" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="8" y1="28" x2="56" y2="28" stroke="white" stroke-width="1" opacity=".3"/>
+        </svg>
+        <h3>Inventaire Photo 🔒</h3>
+        <p>Matos, n° série, prix — assurance</p>
+        <span class="tile-cta" id="tile-inventaire-cta">Ouvrir →</span>
+      </div>
+    </a>
+
+    <a href="compteur-alsace.html" class="tile private" id="tile-alsace">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <path d="M32 8 L36 18 L46 18 L38 26 L42 36 L32 30 L22 36 L26 26 L18 18 L28 18 Z" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="32" cy="32" r="20" fill="none" stroke="white" stroke-width="1.5" opacity=".4"/>
+          <path d="M32 32 L32 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <path d="M32 32 L42 38" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+          <circle cx="32" cy="32" r="2.5" fill="white"/>
+        </svg>
+        <h3>Compteur Alsace 🔒</h3>
+        <p><span id="index-alsace">--</span> kWh — <span id="date-alsace">Chargement...</span></p>
+        <span class="tile-cta" id="tile-alsace-cta">Voir détails →</span>
+      </div>
+    </a>
+
+    <a href="agenda.html" class="tile" id="tile-agenda">
+      <div class="tile-bg"></div>
+      <div class="tile-content">
+        <svg viewBox="0 0 64 64" class="tile-icon">
+          <rect x="14" y="16" width="36" height="36" rx="3" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="14" y1="26" x2="50" y2="26" stroke="white" stroke-width="2"/>
+          <line x1="22" y1="12" x2="22" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="42" y1="12" x2="42" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="22" cy="34" r="1.5" fill="white"/>
+          <circle cx="32" cy="34" r="1.5" fill="white" opacity=".6"/>
+          <circle cx="42" cy="34" r="1.5" fill="white" opacity=".6"/>
+          <circle cx="22" cy="42" r="1.5" fill="white" opacity=".6"/>
+          <circle cx="32" cy="42" r="2.5" fill="white"/>
+          <circle cx="42" cy="42" r="1.5" fill="white" opacity=".6"/>
+        </svg>
+        <h3>Agenda</h3>
+        <p><span id="count-agenda">--</span> dates — <span id="next-agenda">Chargement...</span></p>
+        <span class="tile-cta" id="tile-agenda-cta">Voir dates →</span>
+      </div>
+    </a>
+
   </div>
-</a>
-<a href="agenda.html" class="tile" id="tile-agenda">
-  <div class="tile-bg"></div>
-  <div class="tile-content">
-    <svg viewBox="0 0 64 64" class="tile-icon">
-      <!-- Calendrier style ligne -->
-      <rect x="14" y="16" width="36" height="36" rx="3" fill="none" stroke="white" stroke-width="2"/>
-      <line x1="14" y1="26" x2="50" y2="26" stroke="white" stroke-width="2"/>
-      <line x1="22" y1="12" x2="22" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      <line x1="42" y1="12" x2="42" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      <!-- Points dates -->
-      <circle cx="22" cy="34" r="1.5" fill="white"/>
-      <circle cx="32" cy="34" r="1.5" fill="white" opacity=".6"/>
-      <circle cx="42" cy="34" r="1.5" fill="white" opacity=".6"/>
-      <circle cx="22" cy="42" r="1.5" fill="white" opacity=".6"/>
-      <circle cx="32" cy="42" r="2.5" fill="white"/>
-      <circle cx="42" cy="42" r="1.5" fill="white" opacity=".6"/>
-    </svg>
-    <h3>Agenda</h3>
-    <p><span id="count-agenda">--</span> dates — <span id="next-agenda">Chargement...</span></p>
-    <span class="tile-cta" id="tile-agenda-cta">Voir dates →</span>
-  </div>
-</a>
+</section>
+
+<footer id="footer">
+  <p>© 2025 Jean-Claude Simon · <span>jeanclaudesimon-cyber.github.io</span></p>
+</footer>
+
+<script src="js/home.js"></script>
+
+<!-- Compteur de visites -->
+<div style="text-align:center;padding:.8rem;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);border-top:1px solid var(--border);margin-top:2rem;">
+  👁️ <span id="visites">...</span> visites depuis la création
+</div>
 
 <script>
+// Système Admin
+const ADMIN_KEY = 'Simouns212';
+
+function login(){
+  const pwd = prompt('Mot de passe admin :');
+  if(pwd === ADMIN_KEY){
+    localStorage.setItem('zinzin_admin','1');
+    updateView();
+  } else if(pwd) {
+    alert('Nope');
+  }
+}
+
+function logout(){
+  localStorage.removeItem('zinzin_admin');
+  updateView();
+}
+
+function updateView(){
+  const isAdmin = localStorage.getItem('zinzin_admin') === '1';
+  document.querySelectorAll('.private').forEach(el => {
+    el.classList.toggle('show', isAdmin);
+  });
+  document.getElementById('admin-indicator')?.classList.toggle('show', isAdmin);
+}
+
+// Compteur Alsace
 (function(){
   const URL_COMPTEUR = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8INOT4mXadg-q3MsF0HNt1RLL9FrNUOjm9Uc2_Z9Aix25diVj8aweqB9BBEtVnwEBR1ARiFiR6Dkb/pub?gid=0&single=true&output=csv';
   const PROXY = 'https://script.google.com/macros/s/AKfycby1_ojYH3POROe-1zADooNhb2sDjD9Nilm6jwpqhUOkkiai8Oj10-tcDUMxRPXupuxIQA/exec?url=';
 
   fetch(PROXY + encodeURIComponent(URL_COMPTEUR))
-  .then(r => r.text())
-  .then(txt => {
+ .then(r => r.text())
+ .then(txt => {
       const rows = txt.trim().split('\n').filter(l => l.trim()).slice(1);
       const last = rows[rows.length - 1].split(',');
       if(last[1]){
@@ -424,17 +548,18 @@
         document.getElementById('date-alsace').textContent = `${last[2]} le ${last[0]}`;
       }
     })
-  .catch(() => {
+ .catch(() => {
       document.getElementById('date-alsace').textContent = 'Erreur';
     });
 })();
-// Compteur Agenda pour la tuile
+
+// Compteur Agenda
 const URL_AGENDA_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoAz7XEe0HoWl9Obx_IMHmYCa3Vje_APXUj_VTcxVxBeP81Q38hgLSKw83d5U9nHnLEc3YLLJEtRd_/pub?gid=0&single=true&output=csv';
 
 fetch(URL_AGENDA_CSV)
 .then(r => r.text())
 .then(csv => {
-  const lines = csv.trim().split('\n').slice(1); // enlève l’entête
+  const lines = csv.trim().split('\n').slice(1);
   const events = lines.filter(l => l.trim()).map(line => {
     const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
     const date = (vals[0] || '').replace(/^"|"$/g, '').trim();
@@ -449,34 +574,18 @@ fetch(URL_AGENDA_CSV)
   document.getElementById('next-agenda').textContent = 'Erreur';
 });
 
-</script>
-
-
-
-
-  </div>
-</section>
-
-<footer id="footer">
-  <p>© 2025 Jean-Claude Simon · <span>jeanclaudesimon-cyber.github.io</span></p>
-</footer>
-
-<script src="js/home.js"></script>
-
-!-- Compteur de visites -->
-<div style="text-align:center;padding:.8rem;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);border-top:1px solid var(--border);margin-top:2rem;">
-  👁️ <span id="visites">...</span> visites depuis la création
-</div>
-
-<script>
+// Compteur de visites
 fetch('https://script.google.com/macros/s/AKfycbyhQq82PlNqlh-j3d50G-kY_frMBTjVZr-VSD6KYj5iMOwUuNArzBFaUf5YzidNpFaAJQ/exec')
-  .then(r => r.text())
-  .then(count => {
+ .then(r => r.text())
+ .then(count => {
     document.getElementById('visites').textContent = parseInt(count).toLocaleString('fr-FR');
   })
-  .catch(() => {
+ .catch(() => {
     document.getElementById('visites').textContent = 'N/A';
   });
+
+document.addEventListener('DOMContentLoaded', updateView);
 </script>
+
 </body>
 </html>
