@@ -32,15 +32,43 @@
 .loading{color:var(--text2);text-align:center;padding:2rem}
 .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
 
-  /* PDF / IMPRESSION CLAIR */
-  @media print{
-    :root{--bg:#fff;--bg2:#fff;--border:#000;--text:#000;--text2:#333;--text3:#666;--acc:#000}
-   .header,.filters,#searchWrap,.no-print{display:none!important}
-    body{padding:0;max-width:100%;background:#fff;color:#000}
-   .event{background:#fff;border:1px solid #000;border-left:3px solid #000;page-break-inside:avoid;margin-bottom:0;border-bottom:1px solid #f00}
-   .event:last-child{border-bottom:1px solid #000}
-   .event-type{border-color:#000;color:#000}
+  /* PDF / IMPRESSION COMPACT N&B */
+@media print{
+  :root{
+    --bg:#fff;--bg2:#fff;--border:#000;--text:#000;
+    --text2:#000;--text3:#000;--acc:#000
   }
+ .header,.filters,#searchWrap,.no-print{display:none!important}
+  body{
+    padding:5mm;max-width:100%;background:#fff;color:#000;
+    font-size:9pt;line-height:1.2
+  }
+ .event{
+    background:#fff!important;
+    border:none!important;
+    border-left:none!important;
+    border-bottom:0.5pt solid #999!important;
+    padding:2mm 0!important;
+    margin-bottom:0!important;
+    page-break-inside:avoid;
+    box-shadow:none!important;
+    opacity:1!important
+  }
+ .event:last-child{border-bottom:none!important}
+ .event.past,.event.today,.event.future{opacity:1!important}
+ .event.done .event-title{text-decoration:line-through}
+ .event-date{color:#000!important;font-weight:700;font-size:8pt;margin-bottom:1mm}
+ .event-type{
+    display:inline-block;font-size:7pt;padding:0;
+    border:none!important;color:#000!important;
+    margin-bottom:1mm;text-transform:uppercase
+  }
+ .event-type::before{content:'['}
+ .event-type::after{content:'] '}
+ .event-title{font-size:9pt;margin-bottom:0.5mm;color:#000!important}
+ .event-lieu{color:#000!important;font-size:8pt}
+ .event-note{color:#000!important;font-size:8pt;margin-top:0.5mm;font-style:italic}
+}
 </style>
 </head>
 <body>
@@ -110,8 +138,9 @@ function formatDateFR(d) {
 function getEventStatus(dateStr) {
   const d = parseDate(dateStr);
   const today = new Date();
-  today.setHours(0,0,0,0);
+  // Force minuit sur les 2 pour comparer que la date
   d.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
   if(d < today) return 'past';
   if(d.getTime() === today.getTime()) return 'today';
   return 'future';
