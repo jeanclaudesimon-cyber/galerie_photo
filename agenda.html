@@ -7,29 +7,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-
-:root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
+  :root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.4;padding:1rem;max-width:600px;margin:0 auto}
- .header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
- .back{color:var(--text2);text-decoration:none;font-size:.65rem}
- .back:hover{color:var(--acc)}
+.header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.back{color:var(--text2);text-decoration:none;font-size:.65rem}
+.back:hover{color:var(--acc)}
   h1{font-size:1rem;font-weight:700;letter-spacing:.1em}
- .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
- .filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
- .filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
- .event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
- .event:hover{border-color:var(--text2)}
- .event.highlight{animation:flash 2s ease}
+.filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
+.filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
+.event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
+.event:hover{border-color:var(--text2)}
+.event.highlight{animation:flash 2s ease}
   @keyframes flash{0%,100%{border-color:var(--border)} 50%{border-color:var(--acc)}}
- .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
- .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
- .event-title{font-size:.8rem;margin-bottom:.3rem}
- .event-lieu{color:var(--text2);font-size:.65rem}
- .event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
- .loading{color:var(--text2);text-align:center;padding:2rem}
- .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
-  @media print{.header,.filters,#searchWrap,.no-print{display:none!important} body{padding:0;max-width:100%}.event{page-break-inside:avoid}}
+.event.past{opacity:.5}
+.event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
+.event.done.event-title{text-decoration:line-through;opacity:.6}
+.event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
+.event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
+.event-title{font-size:.8rem;margin-bottom:.3rem}
+.event-lieu{color:var(--text2);font-size:.65rem}
+.event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
+.loading{color:var(--text2);text-align:center;padding:2rem}
+.empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+
+  /* PDF / IMPRESSION CLAIR */
+  @media print{
+    :root{--bg:#fff;--bg2:#fff;--border:#000;--text:#000;--text2:#333;--text3:#666;--acc:#000}
+   .header,.filters,#searchWrap,.no-print{display:none!important}
+    body{padding:0;max-width:100%;background:#fff;color:#000}
+   .event{background:#fff;border:1px solid #000;border-left:3px solid #000;page-break-inside:avoid;margin-bottom:0;border-bottom:1px solid #f00}
+   .event:last-child{border-bottom:1px solid #000}
+   .event-type{border-color:#000;color:#000}
+  }
 </style>
 </head>
 <body>
@@ -53,17 +64,9 @@ const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoAz7XEe0HoWl9
 const PUBLIC_TYPES = ['concert', 'repetition', 'reunion'];
 
 const TYPE_COLORS = {
-  'concert': '#ff375f',
-  'repetition': '#5e5ce6',
-  'reunion': '#30d158',
-  'rdv': '#ff9500',
-  'vacances': '#af52de',
-  'voyage': '#5ac8fa',
-  'resto': '#ffcc00',
-  'admin': '#ff3b30',
-  'anniverssaire': '#64d2ff',
-  'brouillon': '#8e8e93',
-  'autre': '#8e8e93'
+  'concert': '#ff375f','repetition': '#5e5ce6','reunion': '#30d158','rdv': '#ff9500',
+  'vacances': '#af52de','voyage': '#5ac8fa','resto': '#ffcc00','admin': '#ff3b30',
+  'anniverssaire': '#64d2ff','brouillon': '#8e8e93','autre': '#8e8e93'
 };
 
 const ADMIN_KEY = 'Simouns212';
@@ -104,6 +107,16 @@ function formatDateFR(d) {
   return d.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
 
+function getEventStatus(dateStr) {
+  const d = parseDate(dateStr);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  if(d < today) return 'past';
+  if(d.getTime() === today.getTime()) return 'today';
+  return 'future';
+}
+
 function getWeekNumber(d) {
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
@@ -114,23 +127,16 @@ function getWeekNumber(d) {
 function getDateRange(view, year, month, week) {
   const start = new Date(year, 0, 1);
   const end = new Date(year, 11, 31, 23, 59);
-
   if(view === 'month') {
-    start.setMonth(month, 1);
-    start.setHours(0,0,0,0);
-    end.setMonth(month + 1, 0);
-    end.setHours(23,59,59,999);
+    start.setMonth(month, 1);start.setHours(0,0,0,0);
+    end.setMonth(month + 1, 0);end.setHours(23,59,59,999);
   }
-
   if(view === 'week') {
     const jan1 = new Date(year, 0, 1);
     const days = (week - 1) * 7 - jan1.getDay() + 1;
-    start.setTime(jan1.getTime() + days * 86400000);
-    start.setHours(0,0,0,0);
-    end.setTime(start.getTime() + 6 * 86400000);
-    end.setHours(23,59,59,999);
+    start.setTime(jan1.getTime() + days * 86400000);start.setHours(0,0,0,0);
+    end.setTime(start.getTime() + 6 * 86400000);end.setHours(23,59,59,999);
   }
-
   return {start, end};
 }
 
@@ -146,50 +152,35 @@ function checkAdmin() {
 function renderControls() {
   const years = [...new Set(allEvents.map(e => parseDate(e.date).getFullYear()))].sort((a,b) => b - a);
   if(!years.includes(currentYear)) years.unshift(currentYear);
-
   const yearSelect = `<select id="yearSelect" style="font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit">
     ${years.map(y => `<option value="${y}" ${y===currentYear?'selected':''}>${y}</option>`).join('')}
   </select>`;
-
   const viewBtns = `
     <button class="filter ${currentView==='year'?'active':''}" data-view="year">ANNÉE</button>
     <button class="filter ${currentView==='month'?'active':''}" data-view="month">MOIS</button>
     <button class="filter ${currentView==='week'?'active':''}" data-view="week">SEMAINE</button>
   `;
-
   let monthNav = '';
   if(currentView === 'month') {
     const monthNames = ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'];
-    monthNav = `
-      <button class="filter" onclick="changeMonth(-1)">‹</button>
+    monthNav = `<button class="filter" onclick="changeMonth(-1)">‹</button>
       <span style="font-size:.6rem;color:var(--text);padding:.2rem.5rem">${monthNames[currentMonth]}</span>
-      <button class="filter" onclick="changeMonth(1)">›</button>
-    `;
+      <button class="filter" onclick="changeMonth(1)">›</button>`;
   }
-
   let weekNav = '';
   if(currentView === 'week') {
-    weekNav = `
-      <button class="filter" onclick="changeWeek(-1)">‹</button>
+    weekNav = `<button class="filter" onclick="changeWeek(-1)">‹</button>
       <span style="font-size:.6rem;color:var(--text);padding:.2rem.5rem">S${currentWeek}</span>
-      <button class="filter" onclick="changeWeek(1)">›</button>
-    `;
+      <button class="filter" onclick="changeWeek(1)">›</button>`;
   }
-
   document.getElementById('controls').innerHTML = yearSelect + viewBtns + monthNav + weekNav;
-
-  document.getElementById('yearSelect').onchange = e => {
-    currentYear = parseInt(e.target.value);
-    renderEvents();
-  };
-
+  document.getElementById('yearSelect').onchange = e => {currentYear = parseInt(e.target.value);renderEvents();};
   document.querySelectorAll('#controls [data-view]').forEach(btn => {
     btn.onclick = () => {
       currentView = btn.dataset.view;
       currentSearch = '';
       document.getElementById('searchInput').value = '';
-      renderControls();
-      renderEvents();
+      renderControls();renderEvents();
     };
   });
 }
@@ -198,21 +189,21 @@ function changeMonth(delta) {
   currentMonth += delta;
   if(currentMonth < 0) { currentMonth = 11; currentYear--; }
   if(currentMonth > 11) { currentMonth = 0; currentYear++; }
-  renderControls();
-  renderEvents();
+  renderControls();renderEvents();
 }
 
 function changeWeek(delta) {
   currentWeek += delta;
   if(currentWeek < 1) { currentWeek = 52; currentYear--; }
   if(currentWeek > 52) { currentWeek = 1; currentYear++; }
-  renderControls();
-  renderEvents();
+  renderControls();renderEvents();
 }
 
 function renderTypeFilters(types) {
   const container = document.getElementById('filters');
   const allBtn = `<button class="filter ${currentFilter==='tout'?'active':''}" data-type="tout">TOUT</button>`;
+  const todoBtn = `<button class="filter ${currentFilter==='todo'?'active':''}" data-type="todo">À FAIRE</button>`;
+  const doneBtn = `<button class="filter ${currentFilter==='done'?'active':''}" data-type="done">FAIT</button>`;
   const btns = types.map(t => {
     const color = getColor(t);
     const active = currentFilter === normalize(t)? 'active' : '';
@@ -220,53 +211,40 @@ function renderTypeFilters(types) {
     const hidden = isPrivate? '🔒' : '';
     return `<button class="filter ${active}" data-type="${normalize(t)}" style="border-color:${color}">${hidden}${t}</button>`;
   }).join('');
-
   let adminBtn = '';
-  if(isAdmin) {
-    adminBtn = `<button class="filter" onclick="logout()" style="border-color:#ff375f">🔓 LOGOUT</button>`;
-  }
-
-  container.innerHTML = allBtn + btns + adminBtn;
-
+  if(isAdmin) adminBtn = `<button class="filter" onclick="logout()" style="border-color:#ff375f">🔓 LOGOUT</button>`;
+  container.innerHTML = allBtn + todoBtn + doneBtn + btns + adminBtn;
   container.querySelectorAll('[data-type]').forEach(btn => {
     btn.onclick = () => {
       currentFilter = btn.dataset.type;
-      renderTypeFilters(types);
-      renderEvents();
+      renderTypeFilters(types);renderEvents();
     };
   });
 }
 
 function login() {
   const pass = prompt('Mot de passe admin :');
-  if(pass === ADMIN_KEY) {
-    localStorage.setItem('zinzin_admin', '1');
-    location.reload();
-  } else if(pass) {
-    alert('Mauvais mot de passe');
-  }
+  if(pass === ADMIN_KEY) {localStorage.setItem('zinzin_admin', '1');location.reload();}
+  else if(pass) {alert('Mauvais mot de passe');}
 }
 
-function logout() {
-  localStorage.removeItem('zinzin_admin');
-  location.reload();
-}
+function logout() {localStorage.removeItem('zinzin_admin');location.reload();}
 
 function renderEvents() {
   const container = document.getElementById('events');
   let events = [...allEvents];
-
-  if(!isAdmin) {
-    events = events.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
-  }
-
+  if(!isAdmin) events = events.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
   const {start, end} = getDateRange(currentView, currentYear, currentMonth, currentWeek);
   events = events.filter(e => {
     const d = parseDate(e.date);
     return d >= start && d <= end;
   });
 
-  if(currentFilter!== 'tout') {
+  if(currentFilter === 'todo') {
+    events = events.filter(e => e.todo && e.todo.trim()!== '' && (!e.fait || e.fait.trim()===''));
+  } else if(currentFilter === 'done') {
+    events = events.filter(e => e.fait && e.fait.trim()!== '');
+  } else if(currentFilter!== 'tout') {
     events = events.filter(e => normalize(e.type) === currentFilter);
   }
 
@@ -290,12 +268,16 @@ function renderEvents() {
   container.innerHTML = events.map((e,i) => {
     const color = getColor(e.type);
     const isPrivate =!PUBLIC_TYPES.includes(normalize(e.type));
+    const status = getEventStatus(e.date);
+    const isTodo = e.todo && e.todo.trim()!== '';
+    const isDone = e.fait && e.fait.trim()!== '';
+    const todoIcon = isDone? '☑ ' : isTodo? '☐ ' : '';
     const dateId = normalize(e.date).replace(/\//g,'-');
     return `
-    <div class="event" id="event-${dateId}-${i}" style="border-left-color:${color}${isPrivate && isAdmin? ';opacity:.85' : ''}">
+    <div class="event ${status} ${isDone?'done':''}" id="event-${dateId}-${i}" style="border-left-color:${color}${isPrivate && isAdmin? ';opacity:.85' : ''}">
       <div class="event-date">${e.date} ${isPrivate && isAdmin? '🔒' : ''}</div>
       ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
-      <div class="event-title">${e.titre}</div>
+      <div class="event-title">${todoIcon}${e.titre}</div>
       ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
       ${e.note? `<div class="event-note">${e.note}</div>` : ''}
     </div>
@@ -304,124 +286,83 @@ function renderEvents() {
   focusDateFromURL();
 }
 
-// UPGRADE 1: RECHERCHE - déjà câblé dans renderEvents
-
-// UPGRADE 2: EXPORT PDF
 function exportPDF() {
   const element = document.getElementById('events');
-  const viewText = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]}-${currentYear}` : `S${currentWeek}-${currentYear}`;
+  let suffix = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]}-${currentYear}` : `S${currentWeek}-${currentYear}`;
+  if(currentFilter==='todo') suffix += '-A-FAIRE';
+  if(currentFilter==='done') suffix += '-FAIT';
   const opt = {
     margin: 10,
-    filename: `agenda-zinzin-${viewText}.pdf`,
+    filename: `agenda-zinzin-${suffix}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, backgroundColor: '#0a0a0a' },
+    html2canvas: { scale: 2, backgroundColor: '#ffffff' },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
   html2pdf().set(opt).from(element).save();
 }
 
-// UPGRADE 3: LIENS DIRECTS?date=25/12/2026
 function focusDateFromURL() {
   const params = new URLSearchParams(window.location.search);
-  const dateCible = params.get('date'); // format attendu: 25/12/2026
+  const dateCible = params.get('date');
   if (!dateCible) return;
-
-  // Switch sur la bonne année/mois/semaine
   const d = parseDate(dateCible);
-  currentYear = d.getFullYear();
-  currentMonth = d.getMonth();
-  currentWeek = getWeekNumber(d);
-  currentView = 'month'; // force vue mois pour être sûr de voir l'event
-
+  currentYear = d.getFullYear();currentMonth = d.getMonth();currentWeek = getWeekNumber(d);currentView = 'month';
   renderControls();
-
-  // Scroll + highlight après rendu
   setTimeout(() => {
     const dateId = normalize(dateCible).replace(/\//g,'-');
     const el = document.querySelector(`[id^="event-${dateId}"]`);
-    if(el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.classList.add('highlight');
-    }
+    if(el) {el.scrollIntoView({ behavior: 'smooth', block: 'center' });el.classList.add('highlight');}
   }, 100);
 }
 
-// UPGRADE 4: NOTIFS NAVIGATEUR LA VEILLE
 function requestNotifPermission() {
-  if (!('Notification' in window)) {
-    alert('Notifications non supportées par ce navigateur');
-    return;
-  }
+  if (!('Notification' in window)) {alert('Notifications non supportées');return;}
   Notification.requestPermission().then(perm => {
     if(perm === 'granted') {
-      alert('Rappels activés! Laisse la page ouverte en fond pour check chaque jour.');
-      checkEventsDemain();
-      // Check toutes les heures si page reste ouverte
-      setInterval(checkEventsDemain, 3600000);
+      alert('Rappels activés!');
+      checkEventsDemain();setInterval(checkEventsDemain, 3600000);
     }
   });
 }
 
 function checkEventsDemain() {
   if(Notification.permission!== 'granted') return;
-
-  const demain = new Date();
-  demain.setDate(demain.getDate() + 1);
-  const demainStr = formatDateFR(demain); // 25/12/2026
-
+  const demain = new Date();demain.setDate(demain.getDate() + 1);
+  const demainStr = formatDateFR(demain);
   const notifKey = 'notif_' + demainStr;
-  if(localStorage.getItem(notifKey)) return; // déjà notifié aujourd'hui
-
-  const eventsDemain = allEvents.filter(e => e.date === demainStr);
+  if(localStorage.getItem(notifKey)) return;
+  let eventsDemain = allEvents.filter(e => e.date === demainStr);
   if(!isAdmin) eventsDemain = eventsDemain.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
-
   eventsDemain.forEach(e => {
-    new Notification('AGENDA DEMAIN', {
-      body: `${e.titre} ${e.lieu? '- ' + e.lieu : ''}`,
-      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">📅</text></svg>'
-    });
+    new Notification('AGENDA DEMAIN', {body: `${e.titre} ${e.lieu? '- ' + e.lieu : ''}`});
   });
-
   if(eventsDemain.length > 0) localStorage.setItem(notifKey, '1');
 }
 
-// INIT
 fetch(URL_CSV)
 .then(r => r.text())
 .then(csv => {
     checkAdmin();
-
     const lines = csv.trim().split('\n');
     allEvents = lines.slice(1).map(line => {
       const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
       const clean = vals.map(v => v.replace(/^"|"$/g, '').trim());
       return {
-        date: clean[0] || '',
-        type: clean[1] || '',
-        titre: clean[2] || '',
-        lieu: clean[3] || '',
-        note: clean[4] || ''
+        date: clean[0] || '',type: clean[1] || '',titre: clean[2] || '',
+        lieu: clean[3] || '',note: clean[4] || '',todo: clean[5] || '',fait: clean[6] || ''
       };
     }).filter(e => e.date && e.titre);
 
     let types = [...new Set(allEvents.map(e => e.type).filter(Boolean))];
-    if(!isAdmin) {
-      types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
-    }
+    if(!isAdmin) types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
 
-    // Bind des nouveaux boutons
     document.getElementById('searchInput').addEventListener('input', e => {
-        currentSearch = normalize(e.target.value);
-        renderEvents();
+        currentSearch = normalize(e.target.value);renderEvents();
     });
     document.getElementById('pdfBtn').onclick = exportPDF;
     document.getElementById('notifBtn').onclick = requestNotifPermission;
 
-    renderControls();
-    renderTypeFilters(types);
-    renderEvents();
-
-    // Check notif au chargement si déjà autorisé
+    renderControls();renderTypeFilters(types);renderEvents();
     if(Notification.permission === 'granted') checkEventsDemain();
   })
 .catch(err => {
