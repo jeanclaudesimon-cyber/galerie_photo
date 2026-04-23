@@ -10,67 +10,67 @@
   :root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.4;padding:1rem;max-width:600px;margin:0 auto}
-.header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
-.back{color:var(--text2);text-decoration:none;font-size:.65rem}
-.back:hover{color:var(--acc)}
+  .header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+  .back{color:var(--text2);text-decoration:none;font-size:.65rem}
+  .back:hover{color:var(--acc)}
   h1{font-size:1rem;font-weight:700;letter-spacing:.1em}
-.filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
-.filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
-.filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
-.event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
-.event:hover{border-color:var(--text2)}
-.event.highlight{animation:flash 2s ease}
+  .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+  .filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
+  .filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
+  .event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
+  .event:hover{border-color:var(--text2)}
+  .event.highlight{animation:flash 2s ease}
   @keyframes flash{0%,100%{border-color:var(--border)} 50%{border-color:var(--acc)}}
-.event.past{opacity:.5}
-.event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
-.event.done.event-title{text-decoration:line-through;opacity:.6}
-.event.private{opacity:.6}
-.event.private .event-title::before{content:'🔒 '}
-.event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
-.event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
-.event-title{font-size:.8rem;margin-bottom:.3rem}
-.event-lieu{color:var(--text2);font-size:.65rem}
-.event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
-.loading{color:var(--text2);text-align:center;padding:2rem}
-.empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+  .event.past{opacity:.5}
+  .event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
+  .event.done .event-title{text-decoration:line-through;opacity:.6}
+  .event.private{opacity:.6}
+  .event.private .event-title::before{content:'🔒 '}
+  .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
+  .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
+  .event-title{font-size:.8rem;margin-bottom:.3rem}
+  .event-lieu{color:var(--text2);font-size:.65rem}
+  .event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
+  .loading{color:var(--text2);text-align:center;padding:2rem}
+  .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
 
   /* PDF / IMPRESSION COMPACT N&B */
-@media print{
-  :root{
-    --bg:#fff;--bg2:#fff;--border:#000;--text:#000;
-    --text2:#000;--text3:#000;--acc:#000
+  @media print{
+    :root{
+      --bg:#fff;--bg2:#fff;--border:#000;--text:#000;
+      --text2:#000;--text3:#000;--acc:#000
+    }
+   .header,.filters,#searchWrap,.no-print{display:none!important}
+    body{
+      padding:5mm;max-width:100%;background:#fff;color:#000;
+      font-size:9pt;line-height:1.2
+    }
+   .event{
+      background:#fff!important;
+      border:none!important;
+      border-left:none!important;
+      border-bottom:0.5pt solid #999!important;
+      padding:2mm 0!important;
+      margin-bottom:0!important;
+      page-break-inside:avoid;
+      box-shadow:none!important;
+      opacity:1!important
+    }
+   .event:last-child{border-bottom:none!important}
+   .event.past,.event.today,.event.future{opacity:1!important}
+   .event.done .event-title{text-decoration:line-through}
+   .event-date{color:#000!important;font-weight:700;font-size:8pt;margin-bottom:1mm}
+   .event-type{
+      display:inline-block;font-size:7pt;padding:0;
+      border:none!important;color:#000!important;
+      margin-bottom:1mm;text-transform:uppercase
+    }
+   .event-type::before{content:'['}
+   .event-type::after{content:'] '}
+   .event-title{font-size:9pt;margin-bottom:0.5mm;color:#000!important}
+   .event-lieu{color:#000!important;font-size:8pt}
+   .event-note{color:#000!important;font-size:8pt;margin-top:0.5mm;font-style:italic}
   }
- .header,.filters,#searchWrap,.no-print{display:none!important}
-  body{
-    padding:5mm;max-width:100%;background:#fff;color:#000;
-    font-size:9pt;line-height:1.2
-  }
- .event{
-    background:#fff!important;
-    border:none!important;
-    border-left:none!important;
-    border-bottom:0.5pt solid #999!important;
-    padding:2mm 0!important;
-    margin-bottom:0!important;
-    page-break-inside:avoid;
-    box-shadow:none!important;
-    opacity:1!important
-  }
- .event:last-child{border-bottom:none!important}
- .event.past,.event.today,.event.future{opacity:1!important}
- .event.done .event-title{text-decoration:line-through}
- .event-date{color:#000!important;font-weight:700;font-size:8pt;margin-bottom:1mm}
- .event-type{
-    display:inline-block;font-size:7pt;padding:0;
-    border:none!important;color:#000!important;
-    margin-bottom:1mm;text-transform:uppercase
-  }
- .event-type::before{content:'['}
- .event-type::after{content:'] '}
- .event-title{font-size:9pt;margin-bottom:0.5mm;color:#000!important}
- .event-lieu{color:#000!important;font-size:8pt}
- .event-note{color:#000!important;font-size:8pt;margin-top:0.5mm;font-style:italic}
-}
 </style>
 </head>
 <body>
