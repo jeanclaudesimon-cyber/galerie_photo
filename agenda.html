@@ -5,26 +5,31 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AGENDA - ZINZIN</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-  :root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
+
+:root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.4;padding:1rem;max-width:600px;margin:0 auto}
-.header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
-.back{color:var(--text2);text-decoration:none;font-size:.65rem}
-.back:hover{color:var(--acc)}
+ .header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+ .back{color:var(--text2);text-decoration:none;font-size:.65rem}
+ .back:hover{color:var(--acc)}
   h1{font-size:1rem;font-weight:700;letter-spacing:.1em}
-.filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
-.filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
-.filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
-.event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
-.event:hover{border-color:var(--text2)}
-.event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
-.event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
-.event-title{font-size:.8rem;margin-bottom:.3rem}
-.event-lieu{color:var(--text2);font-size:.65rem}
-.event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
-.loading{color:var(--text2);text-align:center;padding:2rem}
-.empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+ .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+ .filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
+ .filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
+ .event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
+ .event:hover{border-color:var(--text2)}
+ .event.highlight{animation:flash 2s ease}
+  @keyframes flash{0%,100%{border-color:var(--border)} 50%{border-color:var(--acc)}}
+ .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
+ .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
+ .event-title{font-size:.8rem;margin-bottom:.3rem}
+ .event-lieu{color:var(--text2);font-size:.65rem}
+ .event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
+ .loading{color:var(--text2);text-align:center;padding:2rem}
+ .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+  @media print{.header,.filters,#searchWrap,.no-print{display:none!important} body{padding:0;max-width:100%}.event{page-break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -33,8 +38,13 @@
     <a href="index.html" class="back">← RETOUR</a>
   </div>
 
-  <div id="controls" class="filters"></div>
-  <div id="filters" class="filters"></div>
+  <div id="controls" class="filters no-print"></div>
+  <div id="searchWrap" class="filters no-print">
+    <input type="text" id="searchInput" placeholder="RECHERCHER: TITRE, LIEU, NOTE, DATE..." style="flex:1;min-width:200px;font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;text-transform:uppercase">
+    <button class="filter" id="pdfBtn">PDF</button>
+    <button class="filter" id="notifBtn">RAPPELS</button>
+  </div>
+  <div id="filters" class="filters no-print"></div>
   <div id="events" class="loading">Chargement...</div>
 
 <script>
@@ -60,6 +70,7 @@ const ADMIN_KEY = 'Simouns212';
 
 let allEvents = [];
 let currentFilter = 'tout';
+let currentSearch = '';
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let currentWeek = getWeekNumber(new Date());
@@ -87,6 +98,10 @@ function parseDate(str) {
     return new Date(match[2], months[normalize(match[1])], 1);
   }
   return new Date(clean);
+}
+
+function formatDateFR(d) {
+  return d.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
 
 function getWeekNumber(d) {
@@ -171,6 +186,8 @@ function renderControls() {
   document.querySelectorAll('#controls [data-view]').forEach(btn => {
     btn.onclick = () => {
       currentView = btn.dataset.view;
+      currentSearch = '';
+      document.getElementById('searchInput').value = '';
       renderControls();
       renderEvents();
     };
@@ -253,6 +270,13 @@ function renderEvents() {
     events = events.filter(e => normalize(e.type) === currentFilter);
   }
 
+  if(currentSearch) {
+    events = events.filter(e => {
+        const haystack = `${e.titre} ${e.lieu} ${e.note} ${e.date}`;
+        return normalize(haystack).includes(currentSearch);
+    });
+  }
+
   events.sort((a,b) => parseDate(a.date) - parseDate(b.date));
 
   if(events.length === 0){
@@ -263,11 +287,12 @@ function renderEvents() {
   }
 
   container.className = '';
-  container.innerHTML = events.map(e => {
+  container.innerHTML = events.map((e,i) => {
     const color = getColor(e.type);
     const isPrivate =!PUBLIC_TYPES.includes(normalize(e.type));
+    const dateId = normalize(e.date).replace(/\//g,'-');
     return `
-    <div class="event" style="border-left-color:${color}${isPrivate && isAdmin? ';opacity:.85' : ''}">
+    <div class="event" id="event-${dateId}-${i}" style="border-left-color:${color}${isPrivate && isAdmin? ';opacity:.85' : ''}">
       <div class="event-date">${e.date} ${isPrivate && isAdmin? '🔒' : ''}</div>
       ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
       <div class="event-title">${e.titre}</div>
@@ -275,8 +300,92 @@ function renderEvents() {
       ${e.note? `<div class="event-note">${e.note}</div>` : ''}
     </div>
   `}).join('');
+
+  focusDateFromURL();
 }
 
+// UPGRADE 1: RECHERCHE - déjà câblé dans renderEvents
+
+// UPGRADE 2: EXPORT PDF
+function exportPDF() {
+  const element = document.getElementById('events');
+  const viewText = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]}-${currentYear}` : `S${currentWeek}-${currentYear}`;
+  const opt = {
+    margin: 10,
+    filename: `agenda-zinzin-${viewText}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, backgroundColor: '#0a0a0a' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save();
+}
+
+// UPGRADE 3: LIENS DIRECTS?date=25/12/2026
+function focusDateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const dateCible = params.get('date'); // format attendu: 25/12/2026
+  if (!dateCible) return;
+
+  // Switch sur la bonne année/mois/semaine
+  const d = parseDate(dateCible);
+  currentYear = d.getFullYear();
+  currentMonth = d.getMonth();
+  currentWeek = getWeekNumber(d);
+  currentView = 'month'; // force vue mois pour être sûr de voir l'event
+
+  renderControls();
+
+  // Scroll + highlight après rendu
+  setTimeout(() => {
+    const dateId = normalize(dateCible).replace(/\//g,'-');
+    const el = document.querySelector(`[id^="event-${dateId}"]`);
+    if(el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('highlight');
+    }
+  }, 100);
+}
+
+// UPGRADE 4: NOTIFS NAVIGATEUR LA VEILLE
+function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    alert('Notifications non supportées par ce navigateur');
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    if(perm === 'granted') {
+      alert('Rappels activés! Laisse la page ouverte en fond pour check chaque jour.');
+      checkEventsDemain();
+      // Check toutes les heures si page reste ouverte
+      setInterval(checkEventsDemain, 3600000);
+    }
+  });
+}
+
+function checkEventsDemain() {
+  if(Notification.permission!== 'granted') return;
+
+  const demain = new Date();
+  demain.setDate(demain.getDate() + 1);
+  const demainStr = formatDateFR(demain); // 25/12/2026
+
+  const notifKey = 'notif_' + demainStr;
+  if(localStorage.getItem(notifKey)) return; // déjà notifié aujourd'hui
+
+  const eventsDemain = allEvents.filter(e => e.date === demainStr);
+  if(!isAdmin) eventsDemain = eventsDemain.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
+
+  eventsDemain.forEach(e => {
+    new Notification('AGENDA DEMAIN', {
+      body: `${e.titre} ${e.lieu? '- ' + e.lieu : ''}`,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">📅</text></svg>'
+    });
+  });
+
+  if(eventsDemain.length > 0) localStorage.setItem(notifKey, '1');
+}
+
+// INIT
 fetch(URL_CSV)
 .then(r => r.text())
 .then(csv => {
@@ -300,9 +409,20 @@ fetch(URL_CSV)
       types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
     }
 
+    // Bind des nouveaux boutons
+    document.getElementById('searchInput').addEventListener('input', e => {
+        currentSearch = normalize(e.target.value);
+        renderEvents();
+    });
+    document.getElementById('pdfBtn').onclick = exportPDF;
+    document.getElementById('notifBtn').onclick = requestNotifPermission;
+
     renderControls();
     renderTypeFilters(types);
     renderEvents();
+
+    // Check notif au chargement si déjà autorisé
+    if(Notification.permission === 'granted') checkEventsDemain();
   })
 .catch(err => {
     document.getElementById('events').className = 'empty';
