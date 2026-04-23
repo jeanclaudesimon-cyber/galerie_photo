@@ -10,66 +10,45 @@
   :root{--bg:#0a0a0a;--bg2:#111;--border:#222;--text:#e0e0e0;--text2:#888;--text3:#555;--acc:#fff}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.4;padding:1rem;max-width:600px;margin:0 auto}
-  .header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
-  .back{color:var(--text2);text-decoration:none;font-size:.65rem}
-  .back:hover{color:var(--acc)}
+ .header{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+ .back{color:var(--text2);text-decoration:none;font-size:.65rem}
+ .back:hover{color:var(--acc)}
   h1{font-size:1rem;font-weight:700;letter-spacing:.1em}
-  .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
-  .filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
-  .filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
-  .event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
-  .event:hover{border-color:var(--text2)}
-  .event.highlight{animation:flash 2s ease}
+ .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+ .filter{font-size:.55rem;padding:.2rem.5rem;border:1px solid var(--border);color:var(--text2);cursor:pointer;text-transform:uppercase;background:var(--bg2)}
+ .filter:hover,.filter.active{border-color:var(--acc);color:var(--acc)}
+ .event{border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;background:var(--bg2);border-left:3px solid var(--border)}
+ .event:hover{border-color:var(--text2)}
+ .event.highlight{animation:flash 2s ease}
   @keyframes flash{0%,100%{border-color:var(--border)} 50%{border-color:var(--acc)}}
-  .event.past{opacity:.5}
-  .event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
-  .event.done .event-title{text-decoration:line-through;opacity:.6}
-  .event.private{opacity:.6}
-  .event.private .event-title::before{content:'🔒 '}
-  .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
-  .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
-  .event-title{font-size:.8rem;margin-bottom:.3rem}
-  .event-lieu{color:var(--text2);font-size:.65rem}
-  .event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
-  .loading{color:var(--text2);text-align:center;padding:2rem}
-  .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
+ .event.past{opacity:.5}
+ .event.today{border-color:var(--acc)!important;box-shadow:0 0 0 1px var(--acc)}
+ .event.done.event-title{text-decoration:line-through;opacity:.6}
+ .event.private{opacity:.6}
+ .event.private.event-title::before{content:'🔒 '}
+ .event-date{color:var(--acc);font-weight:700;font-size:.7rem;margin-bottom:.3rem}
+ .event-type{display:inline-block;font-size:.55rem;padding:.1rem.4rem;border:1px solid var(--text3);color:var(--text2);margin-bottom:.5rem;text-transform:uppercase}
+ .event-title{font-size:.8rem;margin-bottom:.3rem}
+ .event-lieu{color:var(--text2);font-size:.65rem}
+ .event-note{color:var(--acc);font-size:.7rem;margin-top:.5rem;font-style:italic}
+ .loading{color:var(--text2);text-align:center;padding:2rem}
+ .empty{color:var(--text3);text-align:center;padding:2rem;border:1px dashed var(--border)}
 
-  /* PDF / IMPRESSION COMPACT N&B */
   @media print{
-    :root{
-      --bg:#fff;--bg2:#fff;--border:#000;--text:#000;
-      --text2:#000;--text3:#000;--acc:#000
-    }
-   .header,.filters,#searchWrap,.no-print{display:none!important}
-    body{
-      padding:5mm;max-width:100%;background:#fff;color:#000;
-      font-size:9pt;line-height:1.2
-    }
-   .event{
-      background:#fff!important;
-      border:none!important;
-      border-left:none!important;
-      border-bottom:0.5pt solid #999!important;
-      padding:2mm 0!important;
-      margin-bottom:0!important;
-      page-break-inside:avoid;
-      box-shadow:none!important;
-      opacity:1!important
-    }
-   .event:last-child{border-bottom:none!important}
-   .event.past,.event.today,.event.future{opacity:1!important}
-   .event.done .event-title{text-decoration:line-through}
-   .event-date{color:#000!important;font-weight:700;font-size:8pt;margin-bottom:1mm}
-   .event-type{
-      display:inline-block;font-size:7pt;padding:0;
-      border:none!important;color:#000!important;
-      margin-bottom:1mm;text-transform:uppercase
-    }
-   .event-type::before{content:'['}
-   .event-type::after{content:'] '}
-   .event-title{font-size:9pt;margin-bottom:0.5mm;color:#000!important}
-   .event-lieu{color:#000!important;font-size:8pt}
-   .event-note{color:#000!important;font-size:8pt;margin-top:0.5mm;font-style:italic}
+    :root{--bg:#fff;--bg2:#fff;--border:#000;--text:#000;--text2:#000;--text3:#000;--acc:#000}
+  .header,.filters,#searchWrap,.no-print{display:none!important}
+    body{padding:5mm;max-width:100%;background:#fff;color:#000;font-size:9pt;line-height:1.2}
+  .event{background:#fff!important;border:none!important;border-left:none!important;border-bottom:0.5pt solid #999!important;padding:2mm 0!important;margin-bottom:0!important;page-break-inside:avoid;box-shadow:none!important;opacity:1!important}
+  .event:last-child{border-bottom:none!important}
+  .event.past,.event.today,.event.future{opacity:1!important}
+  .event.done.event-title{text-decoration:line-through}
+  .event-date{color:#000!important;font-weight:700;font-size:8pt;margin-bottom:1mm}
+  .event-type{display:inline-block;font-size:7pt;padding:0;border:none!important;color:#000!important;margin-bottom:1mm;text-transform:uppercase}
+  .event-type::before{content:'['}
+  .event-type::after{content:'] '}
+  .event-title{font-size:9pt;margin-bottom:0.5mm;color:#000!important}
+  .event-lieu{color:#000!important;font-size:8pt}
+  .event-note{color:#000!important;font-size:8pt;margin-top:0.5mm;font-style:italic}
   }
 </style>
 </head>
@@ -90,15 +69,12 @@
 
 <script>
 const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoAz7XEe0HoWl9Obx_IMHmYCa3Vje_APXUj_VTcxVxBeP81Q38hgLSKw83d5U9nHnLEc3YLLJEtRd_/pub?gid=0&single=true&output=csv';
-
 const PUBLIC_TYPES = ['concert', 'repetition', 'reunion'];
-
 const TYPE_COLORS = {
   'concert': '#ff375f','repetition': '#5e5ce6','reunion': '#30d158','rdv': '#ff9500',
   'vacances': '#af52de','voyage': '#5ac8fa','resto': '#ffcc00','admin': '#ff3b30',
   'anniverssaire': '#64d2ff','brouillon': '#8e8e93','autre': '#8e8e93'
 };
-
 const ADMIN_KEY = 'Simouns212';
 
 let allEvents = [];
@@ -113,11 +89,9 @@ let isAdmin = false;
 function normalize(str) {
   return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
-
 function getColor(type) {
   return TYPE_COLORS[normalize(type)] || TYPE_COLORS['autre'];
 }
-
 function parseDate(str) {
   const clean = str.trim();
   if(/^\d{2}\/\d{2}\/\d{4}$/.test(clean)) {
@@ -132,29 +106,24 @@ function parseDate(str) {
   }
   return new Date(clean);
 }
-
 function formatDateFR(d) {
   return d.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
-
 function getEventStatus(dateStr) {
   const d = parseDate(dateStr);
   const today = new Date();
-  // Force minuit sur les 2 pour comparer que la date
   d.setHours(0,0,0,0);
   today.setHours(0,0,0,0);
   if(d < today) return 'past';
   if(d.getTime() === today.getTime()) return 'today';
   return 'future';
 }
-
 function getWeekNumber(d) {
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
   return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
 }
-
 function getDateRange(view, year, month, week) {
   const start = new Date(year, 0, 1);
   const end = new Date(year, 11, 31, 23, 59);
@@ -170,7 +139,6 @@ function getDateRange(view, year, month, week) {
   }
   return {start, end};
 }
-
 function checkAdmin() {
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('admin') === ADMIN_KEY || localStorage.getItem('zinzin_admin') === '1') {
@@ -179,7 +147,6 @@ function checkAdmin() {
     document.querySelector('h1').innerHTML = 'AGENDA <span style="font-size:.5rem;color:#ff375f">ADMIN</span>';
   }
 }
-
 function renderControls() {
   const years = [...new Set(allEvents.map(e => parseDate(e.date).getFullYear()))].sort((a,b) => b - a);
   if(!years.includes(currentYear)) years.unshift(currentYear);
@@ -215,21 +182,18 @@ function renderControls() {
     };
   });
 }
-
 function changeMonth(delta) {
   currentMonth += delta;
   if(currentMonth < 0) { currentMonth = 11; currentYear--; }
   if(currentMonth > 11) { currentMonth = 0; currentYear++; }
   renderControls();renderEvents();
 }
-
 function changeWeek(delta) {
   currentWeek += delta;
   if(currentWeek < 1) { currentWeek = 52; currentYear--; }
   if(currentWeek > 52) { currentWeek = 1; currentYear++; }
   renderControls();renderEvents();
 }
-
 function renderTypeFilters(types) {
   const container = document.getElementById('filters');
   const allBtn = `<button class="filter ${currentFilter==='tout'?'active':''}" data-type="tout">TOUT</button>`;
@@ -252,15 +216,12 @@ function renderTypeFilters(types) {
     };
   });
 }
-
 function login() {
   const pass = prompt('Mot de passe admin :');
   if(pass === ADMIN_KEY) {localStorage.setItem('zinzin_admin', '1');location.reload();}
   else if(pass) {alert('Mauvais mot de passe');}
 }
-
 function logout() {localStorage.removeItem('zinzin_admin');location.reload();}
-
 function renderEvents() {
   const container = document.getElementById('events');
   let events = [...allEvents];
@@ -270,7 +231,6 @@ function renderEvents() {
     const d = parseDate(e.date);
     return d >= start && d <= end;
   });
-
   if(currentFilter === 'todo') {
     events = events.filter(e => e.todo && e.todo.trim()!== '' && (!e.fait || e.fait.trim()===''));
   } else if(currentFilter === 'done') {
@@ -278,23 +238,19 @@ function renderEvents() {
   } else if(currentFilter!== 'tout') {
     events = events.filter(e => normalize(e.type) === currentFilter);
   }
-
   if(currentSearch) {
     events = events.filter(e => {
         const haystack = `${e.titre} ${e.lieu} ${e.note} ${e.date}`;
         return normalize(haystack).includes(currentSearch);
     });
   }
-
   events.sort((a,b) => parseDate(a.date) - parseDate(b.date));
-
   if(events.length === 0){
     container.className = 'empty';
     const viewText = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]} ${currentYear}` : `S${currentWeek} ${currentYear}`;
     container.textContent = `Aucun événement ${viewText}`;
     return;
   }
-
   container.className = '';
   container.innerHTML = events.map((e,i) => {
     const color = getColor(e.type);
@@ -304,26 +260,26 @@ function renderEvents() {
     const isDone = e.fait && e.fait.trim()!== '';
     const todoIcon = isDone? '☑ ' : isTodo? '☐ ' : '';
     const dateId = normalize(e.date).replace(/\//g,'-');
-  return `
-  <div class="event ${status} ${isDone?'done':''} ${isPrivate && isAdmin?'private':''}" id="event-${dateId}-${i}" style="border-left-color:${color}">
-    <div class="event-date">${e.date} ${isPrivate && isAdmin? '🔒' : ''}</div>
-    ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
-    <div class="event-title">${todoIcon}${e.titre}</div>
-    ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
-    ${e.note? `<div class="event-note">${e.note}</div>` : ''}
-  </div>
-`;
-
+    return `
+    <div class="event ${status} ${isDone?'done':''} ${isPrivate && isAdmin?'private':''}" id="event-${dateId}-${i}" style="border-left-color:${color}">
+      <div class="event-date">${e.date}</div>
+      ${e.type? `<div class="event-type" style="border-color:${color};color:${color}">${e.type}</div>` : ''}
+      <div class="event-title">${todoIcon}${e.titre}</div>
+      ${e.lieu? `<div class="event-lieu">📍 ${e.lieu}</div>` : ''}
+      ${e.note? `<div class="event-note">${e.note}</div>` : ''}
+    </div>
+    `;
+  }).join('');
   focusDateFromURL();
 }
-
 function exportPDF() {
   const source = document.getElementById('events');
   const clone = source.cloneNode(true);
-  
-  // Force N&B + compact sur le clone
   clone.style.background = '#fff';
   clone.style.color = '#000';
+  clone.style.fontFamily = 'Arial, sans-serif';
+  clone.style.fontSize = '9pt';
+  clone.style.lineHeight = '1.2';
   clone.querySelectorAll('.event').forEach(el => {
     el.style.background = '#fff';
     el.style.color = '#000';
@@ -335,19 +291,35 @@ function exportPDF() {
     el.style.boxShadow = 'none';
     el.style.borderLeft = 'none';
   });
-  clone.querySelectorAll('.event-date,.event-type,.event-title,.event-lieu,.event-note').forEach(el => {
+  clone.querySelectorAll('.event-date').forEach(el => {
+    el.style.display = 'block';
     el.style.color = '#000';
+    el.style.fontWeight = '700';
+    el.style.fontSize = '8pt';
+    el.style.marginBottom = '0.5mm';
   });
   clone.querySelectorAll('.event-type').forEach(el => {
+    el.style.display = 'inline-block';
     el.style.border = 'none';
     el.style.padding = '0';
-    el.innerHTML = '[' + el.innerHTML + '] ';
+    el.style.color = '#000';
+    el.style.fontSize = '7pt';
+    el.style.marginBottom = '0.5mm';
+    el.innerHTML = '[' + el.textContent + '] ';
   });
-  
+  clone.querySelectorAll('.event-title').forEach(el => {
+    el.style.color = '#000';
+    el.style.fontSize = '9pt';
+    el.style.marginBottom = '0.5mm';
+    el.style.textDecoration = el.closest('.done')? 'line-through' : 'none';
+  });
+  clone.querySelectorAll('.event-lieu,.event-note').forEach(el => {
+    el.style.color = '#000';
+    el.style.fontSize = '8pt';
+  });
   let suffix = currentView==='year'? currentYear : currentView==='month'? `${['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][currentMonth]}-${currentYear}` : `S${currentWeek}-${currentYear}`;
   if(currentFilter==='todo') suffix += '-A-FAIRE';
   if(currentFilter==='done') suffix += '-FAIT';
-  
   const opt = {
     margin: 5,
     filename: `agenda-zinzin-${suffix}.pdf`,
@@ -357,7 +329,6 @@ function exportPDF() {
   };
   html2pdf().set(opt).from(clone).save();
 }
-
 function focusDateFromURL() {
   const params = new URLSearchParams(window.location.search);
   const dateCible = params.get('date');
@@ -371,7 +342,6 @@ function focusDateFromURL() {
     if(el) {el.scrollIntoView({ behavior: 'smooth', block: 'center' });el.classList.add('highlight');}
   }, 100);
 }
-
 function requestNotifPermission() {
   if (!('Notification' in window)) {alert('Notifications non supportées');return;}
   Notification.requestPermission().then(perm => {
@@ -381,7 +351,6 @@ function requestNotifPermission() {
     }
   });
 }
-
 function checkEventsDemain() {
   if(Notification.permission!== 'granted') return;
   const demain = new Date();demain.setDate(demain.getDate() + 1);
@@ -395,7 +364,6 @@ function checkEventsDemain() {
   });
   if(eventsDemain.length > 0) localStorage.setItem(notifKey, '1');
 }
-
 fetch(URL_CSV)
 .then(r => r.text())
 .then(csv => {
@@ -409,16 +377,13 @@ fetch(URL_CSV)
         lieu: clean[3] || '',note: clean[4] || '',todo: clean[5] || '',fait: clean[6] || ''
       };
     }).filter(e => e.date && e.titre);
-
     let types = [...new Set(allEvents.map(e => e.type).filter(Boolean))];
     if(!isAdmin) types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
-
     document.getElementById('searchInput').addEventListener('input', e => {
         currentSearch = normalize(e.target.value);renderEvents();
     });
     document.getElementById('pdfBtn').onclick = exportPDF;
     document.getElementById('notifBtn').onclick = requestNotifPermission;
-
     renderControls();renderTypeFilters(types);renderEvents();
     if(Notification.permission === 'granted') checkEventsDemain();
   })
