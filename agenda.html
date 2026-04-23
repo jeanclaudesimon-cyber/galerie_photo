@@ -94,17 +94,55 @@ function getColor(type) {
 }
 function parseDate(str) {
   const clean = str.trim();
+  // Format JJ/MM/AAAA
   if(/^\d{2}\/\d{2}\/\d{4}$/.test(clean)) {
     const [d,m,y] = clean.split('/');
     return new Date(y, m-1, d);
   }
+  // Format JJ/MM sans année = on met l'année en cours
+  if(/^\d{2}\/\d{2}$/.test(clean)) {
+    const [d,m] = clean.split('/');
+    return new Date(new Date().getFullYear(), m-1, d);
+  }
+  // Format AAAA
   if(/^\d{4}$/.test(clean)) return new Date(clean, 0, 1);
+  // Format "mai 2024"
   const months = {'janvier':0,'février':1,'mars':2,'avril':3,'mai':4,'juin':5,'juillet':6,'août':7,'septembre':8,'octobre':9,'novembre':10,'décembre':11};
   const match = clean.match(/(\w+)\s+(\d{4})/);
   if(match && months[normalize(match[1])]!== undefined) {
     return new Date(match[2], months[normalize(match[1])], 1);
   }
   return new Date(clean);
+}
+function generateRecurring(e, startYear, endYear) {
+  if(e.recur!== 'annuel') return [e];
+  
+  // Check si on a une année de naissance
+  const hasBirthYear = /^\d{2}\/\d{2}\/\d{4}$/.test(e.date.trim());
+  const d = parseDate(e.date);
+  const month = d.getMonth();
+  const day = d.getDate();
+  
+  let events = [];
+  for(let y = startYear; y <= endYear; y++) {
+    const newDate = new Date(y, month, day);
+    let note = e.note || '';
+    
+    // Si on connaît l'année de naissance, on calcule l'âge
+    if(hasBirthYear) {
+      const birthYear = parseInt(e.date.split('/')[2]);
+      const newAge = y - birthYear;
+      note = note? `${note} - ${newAge} ans` : `${newAge} ans`;
+    }
+    
+    events.push({
+  ...e,
+      date: formatDateFR(newDate),
+      note: note,
+      _originalDate: e.date
+    });
+  }
+  return events;
 }
 function formatDateFR(d) {
   return d.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
@@ -225,6 +263,12 @@ function logout() {localStorage.removeItem('zinzin_admin');location.reload();}
 function renderEvents() {
   const container = document.getElementById('events');
   let events = [...allEvents];
+  // Génère les annivs récurrents sur 3 ans : année passée, actuelle, suivante
+  const yearsToShow = [currentYear-1, currentYear, currentYear+1];
+  events = events.flatMap(e => generateRecurring(e, Math.min(...yearsToShow), Math.max(...yearsToShow)));
+  
+  if(!isAdmin) events = events.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
+  //... le reste ne change pas
   if(!isAdmin) events = events.filter(e => PUBLIC_TYPES.includes(normalize(e.type)));
   const {start, end} = getDateRange(currentView, currentYear, currentMonth, currentWeek);
   events = events.filter(e => {
@@ -373,9 +417,9 @@ fetch(URL_CSV)
       const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
       const clean = vals.map(v => v.replace(/^"|"$/g, '').trim());
       return {
-        date: clean[0] || '',type: clean[1] || '',titre: clean[2] || '',
-        lieu: clean[3] || '',note: clean[4] || '',todo: clean[5] || '',fait: clean[6] || ''
-      };
+  date: clean[0] || '',type: clean[1] || '',titre: clean[2] || '',
+  lieu: clean[3] || '',note: clean[4] || '',todo: clean[5] || '',fait: clean[6] || '',recur: clean[7] || ''
+};
     }).filter(e => e.date && e.titre);
     let types = [...new Set(allEvents.map(e => e.type).filter(Boolean))];
     if(!isAdmin) types = types.filter(t => PUBLIC_TYPES.includes(normalize(t)));
