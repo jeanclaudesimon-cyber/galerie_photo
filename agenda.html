@@ -414,8 +414,8 @@ fetch(URL_CSV)
     checkAdmin();
     const lines = csv.trim().split('\n');
     allEvents = lines.slice(1).map(line => {
-      const vals = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-      const clean = vals.map(v => v.replace(/^"|"$/g, '').trim());
+      const vals = line.split(',');
+const clean = vals.map(v => v.replace(/^"|"$/g, '').trim());
       return {
   date: clean[0] || '',type: clean[1] || '',titre: clean[2] || '',
   lieu: clean[3] || '',note: clean[4] || '',todo: clean[5] || '',fait: clean[6] || '',recur: clean[7] || ''
