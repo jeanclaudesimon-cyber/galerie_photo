@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,7 +24,7 @@
   --green:#006B3A;--red:#C0001A;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;transition:background.3s,color.3s;}
 body:not(.light)::before{content:'';position:fixed;top:-40%;left:-20%;width:80vw;height:80vw;background:radial-gradient(circle,rgba(255,184,0,0.07) 0%,transparent 65%);pointer-events:none;animation:pulse 8s ease-in-out infinite;}
 body:not(.light)::after{content:'';position:fixed;bottom:-30%;right:-20%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(0,170,255,0.06) 0%,transparent 65%);pointer-events:none;animation:pulse 10s ease-in-out 2s infinite reverse;}
 @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
@@ -36,22 +37,22 @@ header{padding:1.1rem 2rem;border-bottom:1px solid var(--border);display:flex;al
 .logo-text p{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);margin-top:2px;}
 .header-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
 .update-info{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text3);text-align:right;line-height:1.4;}
-.btn-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;}
+.btn-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all.2s;}
 .btn-icon:hover{border-color:var(--sun);color:var(--sun);}
 .year-row{padding:.7rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;z-index:9;}
 .year-tabs{display:flex;flex-wrap:wrap;gap:.3rem;}
-.year-tab{padding:.32rem .8rem;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-family:'Space Mono',monospace;font-size:.68rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.year-tab{padding:.32rem.8rem;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-family:'Space Mono',monospace;font-size:.68rem;cursor:pointer;transition:all.2s;white-space:nowrap;}
 .year-tab.active{background:linear-gradient(135deg,var(--sun),var(--sun2));border-color:transparent;color:#000;font-weight:700;box-shadow:0 0 12px rgba(255,184,0,0.35);}
 .year-tab:hover:not(.active){border-color:var(--sun);color:var(--sun);}
 .year-tab.future{border-style:dashed;opacity:.4;}
 .year-tab.future:hover{opacity:.7;}
 .vs-info{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);}
-main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn .35s ease;}
+main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn.35s ease;}
 .info-band{display:flex;gap:.4rem;flex-wrap:wrap;background:var(--card-bg);border:1px solid var(--card-border);border-radius:11px;padding:.65rem 1rem;margin-bottom:.9rem;align-items:center;}
-.chip{display:flex;align-items:center;gap:.3rem;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);padding:.18rem .48rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);}
+.chip{display:flex;align-items:center;gap:.3rem;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);padding:.18rem.48rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);}
 .chip strong{color:var(--sun);}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:.65rem;margin-bottom:.9rem;}
-.kpi{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.9rem 1rem;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.kpi{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:.9rem 1rem;position:relative;overflow:hidden;transition:transform.2s,box-shadow.2s;}
 .kpi:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,184,0,0.09);}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sun),var(--sun2));}
 .kpi-label{font-size:.58rem;font-family:'Space Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.28rem;}
@@ -61,7 +62,7 @@ main{padding:1.1rem 2rem;position:relative;z-index:8;animation:fadeIn .35s ease;
 .kpi-sub.up{color:var(--green);}.kpi-sub.down{color:var(--red);}.kpi-sub.neutral{color:var(--text3);}
 .kpi-icon{position:absolute;right:.8rem;top:.8rem;font-size:1.2rem;opacity:.11;}
 .prog-track{height:4px;background:rgba(255,255,255,0.09);border-radius:999px;overflow:hidden;margin-top:.35rem;}
-.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sun),var(--green));transition:width .8s ease;}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sun),var(--green));transition:width.8s ease;}
 .prog-lbl{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.52rem;color:var(--text3);margin-top:2px;}
 .g21{display:grid;grid-template-columns:2fr 1fr;gap:.85rem;margin-bottom:.85rem;}
 .g11{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.85rem;}
@@ -79,7 +80,7 @@ canvas{max-height:210px;}
 .week-nav{display:flex;align-items:center;gap:.4rem;}
 .week-sel{font-family:'Space Mono',monospace;font-size:.58rem;background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:2px 5px;cursor:pointer;}
 .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
-.roi-item{padding:.55rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);}
+.roi-item{padding:.55rem.7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);}
 .roi-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.18rem;font-weight:600;}
 .roi-val{font-size:1.05rem;font-weight:700;}
 .roi-bar-wrap{margin-top:.75rem;}
@@ -88,15 +89,15 @@ canvas{max-height:210px;}
 .roi-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--blue));transition:width 1s ease;}
 .roi-note{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text2);margin-top:4px;font-weight:600;}
 .sun-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:.5rem;}
-.sun-cell{text-align:center;padding:.28rem .05rem;border-radius:5px;}
+.sun-cell{text-align:center;padding:.28rem.05rem;border-radius:5px;}
 .sun-m{font-size:.52rem;color:var(--text2);font-family:'Space Mono',monospace;font-weight:700;}
 .sun-v{font-size:.6rem;font-weight:700;margin-top:1px;}
 .sun-b{height:3px;border-radius:999px;margin-top:2px;}
-.rec-item{padding:.5rem .7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);margin-bottom:.45rem;}
+.rec-item{padding:.5rem.7rem;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);margin-bottom:.45rem;}
 .rec-lbl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);margin-bottom:.15rem;font-weight:600;}
 .rec-val{font-size:1rem;font-weight:700;}
 .future-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 2rem;text-align:center;gap:.65rem;}
-.future-box .icon{font-size:2.2rem;opacity:.28;}
+.future-box.icon{font-size:2.2rem;opacity:.28;}
 .future-box h3{font-size:.95rem;color:var(--text2);}
 .future-box p{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--text3);max-width:280px;line-height:1.6;}
 .no-data-note{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text2);text-align:center;padding:2rem 1rem;opacity:.7;}
@@ -125,27 +126,27 @@ canvas{max-height:210px;}
 .pdf-header{border-bottom:3px solid #FFB800;padding-bottom:.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;}
 .pdf-header h1{font-size:16px;font-weight:800;color:#0A1628;margin:0;}
 .pdf-header p{font-size:9px;color:#666;margin:2px 0 0;}
-.pdf-header .pdf-date{font-size:9px;color:#999;text-align:right;}
-.pdf-section-title{font-size:11px;font-weight:700;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem;padding-left:.4rem;border-left:3px solid #FFB800;}
+.pdf-header.pdf-date{font-size:9px;color:#999;text-align:right;}
+.pdf-section-title{font-size:11px;font-weight:700;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0.4rem;padding-left:.4rem;border-left:3px solid #FFB800;}
 .pdf-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem;}
-.pdf-kpi{background:#F8F9FA;border:1px solid #E0E0E0;border-radius:6px;padding:.5rem .7rem;}
+.pdf-kpi{background:#F8F9FA;border:1px solid #E0E0E0;border-radius:6px;padding:.5rem.7rem;}
 .pdf-kpi-lbl{font-size:8px;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
 .pdf-kpi-val{font-size:14px;font-weight:800;color:#0A1628;}
 .pdf-kpi-unit{font-size:9px;font-weight:400;color:#888;}
 .pdf-kpi-sub{font-size:8px;color:#888;margin-top:1px;}
 .pdf-table{width:100%;border-collapse:collapse;font-size:9px;margin-bottom:1rem;}
-.pdf-table th{background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:center;font-size:8.5px;font-weight:700;}
+.pdf-table th{background:#0A1628;color:#fff;padding:.35rem.5rem;text-align:center;font-size:8.5px;font-weight:700;}
 .pdf-table th:first-child{text-align:left;}
-.pdf-table td{padding:.3rem .5rem;border-bottom:1px solid #F0F0F0;text-align:center;color:#333;}
+.pdf-table td{padding:.3rem.5rem;border-bottom:1px solid #F0F0F0;text-align:center;color:#333;}
 .pdf-table td:first-child{text-align:left;font-weight:600;color:#0A1628;}
 .pdf-table tr:nth-child(even) td{background:#F8F9FA;}
 .pdf-table tr.total-row td{background:#FFF8E7!important;font-weight:700;color:#0A1628;border-top:2px solid #FFB800;}
-.pdf-table .sun-col{color:#FF7A00;font-weight:700;}
-.pdf-table .green-col{color:#00995A;font-weight:700;}
-.pdf-table .blue-col{color:#0066CC;font-weight:600;}
-.pdf-table .red-col{color:#CC0000;font-weight:600;}
+.pdf-table.sun-col{color:#FF7A00;font-weight:700;}
+.pdf-table.green-col{color:#00995A;font-weight:700;}
+.pdf-table.blue-col{color:#0066CC;font-weight:600;}
+.pdf-table.red-col{color:#CC0000;font-weight:600;}
 .pdf-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin-bottom:1rem;}
-.pdf-info-item{background:#F8F9FA;border:1px solid #E8E8E8;border-radius:4px;padding:.35rem .6rem;display:flex;justify-content:space-between;align-items:center;}
+.pdf-info-item{background:#F8F9FA;border:1px solid #E8E8E8;border-radius:4px;padding:.35rem.6rem;display:flex;justify-content:space-between;align-items:center;}
 .pdf-info-lbl{font-size:8.5px;color:#666;}
 .pdf-info-val{font-size:9px;font-weight:700;color:#0A1628;}
 .pdf-footer{font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.5rem;}
@@ -156,62 +157,62 @@ footer{text-align:center;padding:.9rem;font-family:'Space Mono',monospace;font-s
 @media(max-width:768px){main,header,.year-row{padding:.85rem 1rem;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:420px){.logo-text p{display:none;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
 body.light header{background:#fff;border-bottom:2px solid #F59E0B;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-body.light .logo-text h1{color:#0D1B2A;}
-body.light .logo-text p{color:#4A5568;}
-body.light .update-info{color:#4A5568;background:#F1F5F9;border-radius:6px;padding:.2rem .5rem;}
-body.light .btn-icon{background:#F1F5F9;color:#2D3748;border:1px solid #CBD5E0;}
-body.light .btn-icon:hover{background:#E2E8F0;}
-body.light .year-row{background:#F1F5F9;border-bottom:1px solid #E2E8F0;}
-body.light .year-tab{background:#E2E8F0;color:#4A5568;border:1px solid #CBD5E0;font-weight:600;}
-body.light .year-tab:hover{background:#CBD5E0;color:#2D3748;}
-body.light .year-tab.active{background:#F59E0B;color:#fff;border-color:#D97706;}
-body.light .year-tab.future{background:#EDF2F7;color:#A0AEC0;}
-body.light .vs-info{color:#4A5568;}
+body.light.logo-text h1{color:#0D1B2A;}
+body.light.logo-text p{color:#4A5568;}
+body.light.update-info{color:#4A5568;background:#F1F5F9;border-radius:6px;padding:.2rem.5rem;}
+body.light.btn-icon{background:#F1F5F9;color:#2D3748;border:1px solid #CBD5E0;}
+body.light.btn-icon:hover{background:#E2E8F0;}
+body.light.year-row{background:#F1F5F9;border-bottom:1px solid #E2E8F0;}
+body.light.year-tab{background:#E2E8F0;color:#4A5568;border:1px solid #CBD5E0;font-weight:600;}
+body.light.year-tab:hover{background:#CBD5E0;color:#2D3748;}
+body.light.year-tab.active{background:#F59E0B;color:#fff;border-color:#D97706;}
+body.light.year-tab.future{background:#EDF2F7;color:#A0AEC0;}
+body.light.vs-info{color:#4A5568;}
 body.light main{background:#F5F7FA;}
-body.light .card{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-body.light .ct{border-bottom:1px solid #F1F5F9;}
-body.light .ct-l{color:#2D3748;font-weight:700;}
-body.light .ct-l span{color:#B86A00;}
-body.light .badge{background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;}
-body.light .info-band{background:#EDF2F7;border:1px solid #E2E8F0;}
-body.light .chip{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
-body.light .chip strong{color:#0D1B2A;}
-body.light .kpi{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
-body.light .kpi-icon{color:#B86A00;}
-body.light .kpi-label{color:#4A5568;}
-body.light .kpi-value{color:#0D1B2A;}
-body.light .kpi-unit{color:#4A5568;}
-body.light .kpi-sub.up{color:#006B3A;}
-body.light .kpi-sub.down{color:#C0001A;}
-body.light .kpi-sub.neutral{color:#4A5568;}
-body.light .prog-track{background:#E2E8F0;}
-body.light .prog-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
-body.light .prog-lbl{color:#4A5568;}
-body.light .mois-encours{background:#FFFBEB;border:2px solid #F59E0B;}
-body.light .mois-encours-title{color:#92400E;font-weight:800;}
-body.light .mois-encours-vals span{color:#2D3748;}
-body.light .mois-encours-vals strong{color:#0D1B2A;}
-body.light .mois-encours-track{background:#E2E8F0;}
-body.light .mois-encours-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
-body.light .mois-encours-sub{color:#4A5568;}
-body.light .mois-kpi{background:#FEF9EE;border:1px solid #FDE68A;}
-body.light .mois-kpi-val{color:#92400E;}
-body.light .mois-kpi-lbl{color:#6B7A8D;}
-body.light .roi-lbl{color:#4A5568;}
-body.light .roi-val{color:#0D1B2A;}
-body.light .roi-bar-lbl{color:#2D3748;font-weight:600;}
-body.light .roi-bar-track{background:#E2E8F0;}
-body.light .roi-bar-fill{background:linear-gradient(90deg,#00A86B,#0066CC);}
-body.light .roi-note{color:#4A5568;}
-body.light .rec-item{border-bottom:1px solid #F1F5F9;}
-body.light .rec-lbl{color:#4A5568;}
-body.light .rec-val{color:#0D1B2A;}
-body.light .sun-m{color:#4A5568!important;font-weight:600;}
-body.light .week-sel{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
-body.light .leg-item{color:#2D3748;}
+body.light.card{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
+body.light.ct{border-bottom:1px solid #F1F5F9;}
+body.light.ct-l{color:#2D3748;font-weight:700;}
+body.light.ct-l span{color:#B86A00;}
+body.light.badge{background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;}
+body.light.info-band{background:#EDF2F7;border:1px solid #E2E8F0;}
+body.light.chip{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
+body.light.chip strong{color:#0D1B2A;}
+body.light.kpi{background:#fff;border:1px solid #E2E8F0;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+body.light.kpi-icon{color:#B86A00;}
+body.light.kpi-label{color:#4A5568;}
+body.light.kpi-value{color:#0D1B2A;}
+body.light.kpi-unit{color:#4A5568;}
+body.light.kpi-sub.up{color:#006B3A;}
+body.light.kpi-sub.down{color:#C0001A;}
+body.light.kpi-sub.neutral{color:#4A5568;}
+body.light.prog-track{background:#E2E8F0;}
+body.light.prog-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
+body.light.prog-lbl{color:#4A5568;}
+body.light.mois-encours{background:#FFFBEB;border:2px solid #F59E0B;}
+body.light.mois-encours-title{color:#92400E;font-weight:800;}
+body.light.mois-encours-vals span{color:#2D3748;}
+body.light.mois-encours-vals strong{color:#0D1B2A;}
+body.light.mois-encours-track{background:#E2E8F0;}
+body.light.mois-encours-fill{background:linear-gradient(90deg,#F59E0B,#D97706);}
+body.light.mois-encours-sub{color:#4A5568;}
+body.light.mois-kpi{background:#FEF9EE;border:1px solid #FDE68A;}
+body.light.mois-kpi-val{color:#92400E;}
+body.light.mois-kpi-lbl{color:#6B7A8D;}
+body.light.roi-lbl{color:#4A5568;}
+body.light.roi-val{color:#0D1B2A;}
+body.light.roi-bar-lbl{color:#2D3748;font-weight:600;}
+body.light.roi-bar-track{background:#E2E8F0;}
+body.light.roi-bar-fill{background:linear-gradient(90deg,#00A86B,#0066CC);}
+body.light.roi-note{color:#4A5568;}
+body.light.rec-item{border-bottom:1px solid #F1F5F9;}
+body.light.rec-lbl{color:#4A5568;}
+body.light.rec-val{color:#0D1B2A;}
+body.light.sun-m{color:#4A5568!important;font-weight:600;}
+body.light.week-sel{background:#fff;color:#2D3748;border:1px solid #CBD5E0;}
+body.light.leg-item{color:#2D3748;}
 body.light footer{color:#4A5568;border-top:1px solid #E2E8F0;background:#fff;}
-body.light .future-box h3{color:#0D1B2A;}
-body.light .future-box p{color:#4A5568;}
+body.light.future-box h3{color:#0D1B2A;}
+body.light.future-box p{color:#4A5568;}
 </style>
 </head>
 <body>
@@ -248,7 +249,7 @@ body.light .future-box p{color:#4A5568;}
 // ===== CONFIG =====
 const URLS = {
   releve: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=656070211&single=true&output=csv',
-  bilan:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1636316695&single=true&output=csv',
+  bilan: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1636316695&single=true&output=csv',
   diagnostic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRARN0e-lX01eaxLii2A4vSI3TnkpuR3pkVnL4OLkIbRJXEYZjnvTIEnIOmDAlFZw/pub?gid=1696505362&single=true&output=csv',
 };
 const INSTALL_COST = 10374.23;
@@ -320,7 +321,7 @@ function loadStatic() {
     2023:{total:1224.5,note:'5 mois',monthly:[null,null,null,null,null,null,null,341.6,480.4,259.6,84.4,58.5],autoconso:[null,null,null,null,null,null,null,180,260,145,48,33],injection:[null,null,null,null,null,null,null,162,220,115,36,26],dailyByMonth:{}},
     2024:{total:3628.9,monthly:[143.6,113.9,296.4,372,434.7,468.2,495.5,532.2,358.3,253.3,92.3,68.5],autoconso:[79,63,163,205,239,257,272,292,197,139,51,38],injection:[65,51,133,167,196,211,224,240,161,114,41,31],dailyByMonth:{}},
     2025:{total:4526,monthly:[96.7,208.4,475.7,521.8,604.5,602.6,550,587.7,354.6,227.6,169.9,126.5],autoconso:[53,115,262,287,332,331,303,323,195,125,93,70],injection:[44,93,214,235,273,272,248,265,160,103,77,57],dailyByMonth:{}},
-    2026:{total:268.8,note:'Janv–Fév + Mars en cours',monthly:[30.7,142,96,null,null,null,null,null,null,null,null,null],autoconso:[17,78,53,null,null,null,null,null,null,null,null,null],injection:[14,64,43,null,null,null,null,null,null,null,null,null],
+    2026:{total:268.8,note:'Janv–Fév + Mars en cours',monthly:[30.7,142,96,null,null,null,null,null,null,null,null,null],autoconso:[17,78,53,null,null,null,null,null],injection:[14,64,43,null,null,null,null,null,null,null,null,null],
       dailyByMonth:{2:[
         {day:1,prod:15.1,ac:15.1,inj:0,consoRes:0,consoReel:0},
         {day:2,prod:20.4,ac:9.9,inj:10.5,consoRes:0,consoReel:9.9},
@@ -330,7 +331,6 @@ function loadStatic() {
       ]}},
   };
 }
-
 function processAll(relRows, bilanRows, diagRows) {
   const byYear = {};
   let startIdx = 0;
@@ -443,9 +443,8 @@ function renderYear(){
   const prev=pk?pData[pk]:null;
   const prevLbl=pk?String(pk):null;
   if(!d){
-    document.getElementById('main').innerHTML=`<div class="card"><div class="future-box"><div class="icon">🔮</div><h3>Données à venir pour ${curYear}</h3><p>Commence à saisir tes relevés dans Google Sheets — le tableau de bord se met à jour automatiquement !</p></div></div>`;
+    document.getElementById('main').innerHTML=`<div class="card"><div class="future-box"><div class="icon">🔮</div><h3>Données à venir pour ${curYear}</h3><p>Commence à saisir tes relevés dans Google Sheets — le tableau de bord se met à jour automatiquement!</p></div></div>`;
     return;
-    updateWeekSelect(curYear, parseInt(document.getElementById('sel-month').value));
   }
   const roi=computeROI();
   const valM=d.monthly.filter(x=>x);
@@ -460,7 +459,7 @@ function renderYear(){
   let bestWeek={lbl:'—',val:0};
   if(d.dailyByMonth){
     for(const[mi,days]of Object.entries(d.dailyByMonth)){
-      const ws=[0,0,0,0,0];
+      const ws=[0,0,0];
       days.forEach(({day,prod})=>{ws[Math.min(Math.floor((day-1)/7),4)]+=prod;});
       ws.forEach((v,i)=>{if(v>bestWeek.val)bestWeek={lbl:`S${i+1} ${MONTHS[parseInt(mi)]}`,val:Math.round(v*10)/10};});
     }
@@ -474,8 +473,8 @@ function renderYear(){
     const mDays = d.dailyByMonth[curMonthIdx].sort((a,b)=>a.day-b.day);
     const cumul = Math.round(mDays.reduce((a,b)=>a+b.prod,0)*10)/10;
     const histVals = [2024,2025].map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[curMonthIdx]:null).filter(x=>x);
-    const moyHist = histVals.length ? Math.round(histVals.reduce((a,b)=>a+b,0)/histVals.length) : null;
-    const pctVsMoy = moyHist ? Math.min(120,Math.round(cumul/moyHist*100)) : null;
+    const moyHist = histVals.length? Math.round(histVals.reduce((a,b)=>a+b,0)/histVals.length) : null;
+    const pctVsMoy = moyHist? Math.min(120,Math.round(cumul/moyHist*100)) : null;
     const joursRestants = daysInMonth - curDayOfMonth;
     const moyJour = Math.round(cumul/mDays.length*10)/10;
     moisEncoursHTML = `
@@ -508,6 +507,71 @@ function renderYear(){
       <div class="chip">💰 Économies cumulées <strong>${roi.totalSaved} €</strong></div>
       <div class="chip">ROI <strong>${roi.pct}%</strong></div>
     </div>
+
+    <!-- MODULE DOUBLE COMPTEUR -->
+    <div class="card" id="module-releve" style="margin-bottom:.9rem;">
+      <div class="ct">
+        <div class="ct-l"><span>📋</span>Gestion Relevé Juillet - Double Compteur</div>
+        <span class="badge">Jour + Nuit séparés</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem;">
+        <div style="padding:.7rem;background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);border-radius:8px;">
+          <div class="roi-lbl" style="color:var(--sun);font-weight:700;">☀️ COMPTEUR JOUR</div>
+          <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Juillet <span id="juillet-annee-j">2025</span></div>
+          <input type="number" id="input-jour-juillet" placeholder="4678" step="0.1"
+            style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
+            oninput="saveReleveConfig();renderReleveModule();">
+          <div style="margin-top:.5rem;">
+            <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
+            <input type="number" id="input-jour-max" placeholder="4500" step="0.1"
+              style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
+              oninput="saveReleveConfig();renderReleveModule();">
+          </div>
+          <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
+            <div>Estimé: <strong id="estim-jour" style="color:var(--sun)">—</strong></div>
+            <div>Marge: <strong id="marge-jour">—</strong></div>
+          </div>
+        </div>
+        <div style="padding:.7rem;background:rgba(0,170,255,0.08);border:1px solid rgba(0,170,255,0.2);border-radius:8px;">
+          <div class="roi-lbl" style="color:var(--blue);font-weight:700;">🌙 COMPTEUR NUIT</div>
+          <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Juillet <span id="juillet-annee-n">2025</span></div>
+          <input type="number" id="input-nuit-juillet" placeholder="74739" step="0.1"
+            style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
+            oninput="saveReleveConfig();renderReleveModule();">
+          <div style="margin-top:.5rem;">
+            <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
+            <input type="number" id="input-nuit-max" placeholder="70500" step="0.1"
+              style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
+              oninput="saveReleveConfig();renderReleveModule();">
+          </div>
+          <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
+            <div>Estimé: <strong id="estim-nuit" style="color:var(--blue)">—</strong></div>
+            <div>Marge: <strong id="marge-nuit">—</strong></div>
+          </div>
+        </div>
+      </div>
+      <div id="releve-resultats" style="display:none;">
+        <div class="roi-grid" style="margin-bottom:.7rem;">
+          <div class="roi-item">
+            <div class="roi-lbl">Total global estimé</div>
+            <div class="roi-val" id="index-estime-global">—</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-lbl">Marge globale</div>
+            <div class="roi-val" id="marge-globale">—</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-lbl">Boni hiver total</div>
+            <div class="roi-val" style="color:var(--green)" id="boni-hiver-total">—</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-lbl">Prod. depuis juillet</div>
+            <div class="roi-val" id="prod-depuis-juillet">—</div>
+          </div>
+        <div class="roi-note" id="conseil-releve" style="padding:.6rem;background:var(--glass);border-radius:8px;border-left:3px solid var(--sun);">Renseigne tes index</div>
+      </div>
+    </div>
+
     <div class="kpi-grid" id="kpi-grid"></div>
     <div class="g21">
       <div class="card">
@@ -532,15 +596,14 @@ function renderYear(){
     <div class="g11">
       <div class="card">
         <div class="ct">
-          <div class="ct-l"><span>📅</span>Semaines — 
+          <div class="ct-l"><span>📅</span>Semaines —
             <select class="week-sel" id="sel-month" onchange="renderWeekCharts()">
               ${MONTHS.map((m,i)=>`<option value="${i}"${i===(new Date().getMonth())?'selected':''}>${m}</option>`).join('')}
             </select>
           </div>
           <select class="week-sel" id="sel-week" onchange="renderDayChart()">
-  <option value="all">Vue globale</option>
-  <!-- Les semaines se génèrent en JS -->
-</select>
+            <option value="all">Vue globale</option>
+          </select>
         </div>
         <canvas id="cWeek"></canvas>
       </div>
@@ -622,7 +685,6 @@ function baseOpts(unit){
     plugins:{legend:{display:false},tooltip:{backgroundColor:isDark?'rgba(10,22,40,0.95)':'rgba(255,255,255,0.95)',borderColor:'rgba(255,184,0,0.25)',borderWidth:1,titleColor:'#FFB800',bodyColor:isDark?'rgba(255,255,255,0.8)':'rgba(0,0,0,0.75)',callbacks:{label:ctx=>` ${ctx.raw??'—'} ${unit}`}}},
     scales:{x:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}},y:{ticks:{color:tc,font:{family:'Space Mono',size:9}},grid:{color:gc}}}};
 }
-
 function renderCharts(d,prev,prevLbl,totalAC,totalInj){
   const isDark=!document.body.classList.contains('light');
   const maxV=Math.max(...d.monthly.filter(x=>x));
@@ -647,6 +709,7 @@ function renderCharts(d,prev,prevLbl,totalAC,totalInj){
   });
   charts.history=new Chart(document.getElementById('cHistory').getContext('2d'),{type:'line',data:{labels:hLbl,datasets:[{label:'Production (kWh)',data:hVal,borderColor:'#FFB800',backgroundColor:'rgba(255,184,0,0.06)',borderWidth:2,pointRadius:1.5,tension:.4,fill:true}]},options:{...baseOpts('kWh'),scales:{x:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:7},maxRotation:45},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}},y:{ticks:{color:isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.5)',font:{family:'Space Mono',size:8}},grid:{color:isDark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.07)'}}}}});
 }
+
 // ===== SEMAINES RÉELLES DYNAMIQUES =====
 function updateWeekSelect(year, monthIndex) {
   const sel = document.getElementById('sel-week');
@@ -655,7 +718,6 @@ function updateWeekSelect(year, monthIndex) {
   const firstDay = new Date(year, monthIndex, 1);
   const lastDay = new Date(year, monthIndex + 1, 0);
 
-  // Lundi de la semaine qui contient le 1er du mois
   let current = new Date(firstDay);
   const dayOfWeek = current.getDay();
   const mondayOffset = dayOfWeek === 0? 6 : dayOfWeek - 1;
@@ -667,7 +729,6 @@ function updateWeekSelect(year, monthIndex) {
     const sunday = new Date(current);
     sunday.setDate(monday.getDate() + 6);
 
-    // Coupe si la semaine déborde du mois
     const displayStart = monday < firstDay? firstDay : monday;
     const displayEnd = sunday > lastDay? lastDay : sunday;
 
@@ -679,6 +740,7 @@ function updateWeekSelect(year, monthIndex) {
     current.setDate(current.getDate() + 7);
   }
 }
+
 function renderWeekCharts(){
   const selM=document.getElementById('sel-month');
   const selW=document.getElementById('sel-week');
@@ -686,7 +748,6 @@ function renderWeekCharts(){
   const mIdx=parseInt(selM.value);
   const wVal=selW?selW.value:'all';
 
-  // Met à jour le select semaines quand on change de mois
   updateWeekSelect(curYear, mIdx);
 
   if(charts.week){try{charts.week.destroy();}catch(e){}}
@@ -694,7 +755,6 @@ function renderWeekCharts(){
   const days=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
 
   if(wVal==='all'){
-    // Vue globale : calcul des vraies semaines du mois
     const firstDay = new Date(curYear, mIdx, 1);
     const lastDay = new Date(curYear, mIdx + 1, 0);
     let current = new Date(firstDay);
@@ -722,7 +782,7 @@ function renderWeekCharts(){
             if(date >= monday && date <= sunday) total += prod;
           });
         } else if(d&&d.monthly[mIdx]){
-          total = d.monthly[mIdx] / 4.3; // approximation
+          total = d.monthly[mIdx] / 4.3;
         }
         weekTotals.push(Math.round(total*10)/10);
         weekLabels.push(`S${weekIndex+1} (${displayStart.getDate()}-${displayEnd.getDate()})`);
@@ -742,7 +802,6 @@ function renderWeekCharts(){
   }
 }
 
-
 function renderDayChart(){
   const selM=document.getElementById('sel-month');
   const selW=document.getElementById('sel-week');
@@ -755,7 +814,6 @@ function renderDayChart(){
   const d=pData[curYear];
   const allDays=d&&d.dailyByMonth?d.dailyByMonth[mIdx]:null;
 
-  // Calcul des vraies dates de la semaine sélectionnée
   const firstDay = new Date(curYear, mIdx, 1);
   const dayOfWeek = firstDay.getDay();
   const mondayOffset = dayOfWeek === 0? 6 : dayOfWeek - 1;
@@ -782,7 +840,6 @@ function renderDayChart(){
     const nd=canvas.nextSibling;if(nd&&nd.className==='no-data-note')nd.remove();
   }
 
-  // Filtre les jours de la vraie semaine
   const weekDays=allDays.filter(({day})=>{
     const date = new Date(curYear, mIdx, day);
     return date >= weekStart && date <= weekEnd;
@@ -790,11 +847,6 @@ function renderDayChart(){
 
   const lbls=weekDays.map(({day})=>`${String(day).padStart(2,'0')}/${String(mIdx+1).padStart(2,'0')}`);
 
-  // =====================================================================
-  // FIX GRAPHIQUE SEMAINE : Production en ligne pour éviter le
-  // chevauchement des stacks Chart.js (stack:'no' = groupe nommé 'no'
-  // qui se superpose à stack:'conso' → amber invisible sous vert/bleu)
-  // =====================================================================
   charts.week=new Chart(document.getElementById('cWeek').getContext('2d'),{
     type:'bar',
     data:{labels:lbls,datasets:[
@@ -831,19 +883,18 @@ function renderDayChart(){
         order:0,
       },
       {
-  label:'Conso Réelle',
-  data:weekDays.map(x=>Math.round(x.consoReel*10)/10),
-  type:'bar', // ← était 'line'
-  backgroundColor:'#137ff2', // violet semi-transparent
-  borderColor:'#0e0f30',
-  borderWidth:1,
-  borderRadius:4,
-  barPercentage: 0.5,
-  borderSkipped:false,
-  stack:'reel',
-  order:0,
-},
-
+        label:'Conso Réelle',
+        data:weekDays.map(x=>Math.round(x.consoReel*10)/10),
+        type:'bar',
+        backgroundColor:'#137ff2',
+        borderColor:'#0e0f30',
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage: 0.5,
+        borderSkipped:false,
+        stack:'reel',
+        order:0,
+      },
     ]},
     options:{
       responsive:true,
@@ -885,7 +936,6 @@ function exportPDF(){
   buildPDFContent();
   setTimeout(()=>{window.print();}, 200);
 }
-
 function buildPDFContent(){
   const now = new Date();
   const dateStr = now.toLocaleDateString('fr-BE',{day:'2-digit',month:'long',year:'numeric'});
@@ -902,15 +952,15 @@ function buildPDFContent(){
   const prev = prevKey?pData[prevKey]:null;
   const diff = prev?Math.round((d.total-prev.total)/prev.total*100):null;
   let kpiHTML = '';
-  [['Production totale',d.total.toFixed(1)+' kWh',prev?`${diff>=0?'+':''}${diff}% vs ${prevKey}`:''],['Autoconsommation',totalAC.toFixed(1)+' kWh',Math.round(totalAC/d.total*100)+'% de la prod.'],['Injection réseau',totalInj.toFixed(1)+' kWh',Math.round(totalInj/d.total*100)+'% de la prod.'],['Économies réalisées',savings+' €','@ '+KWH_PRICE_REAL+' €/kWh'],['Rendement spécifique',rend+' kWh/kWc','Moy. belge ~950 kWh/kWc'],['Objectif annuel',prog+'%',d.total.toFixed(1)+' / '+OBJECTIF+' kWh'],['ROI cumulé',roi.pct+'%',roi.totalSaved+' € / '+INSTALL_COST+' €']].forEach(([lbl,val,sub])=>{kpiHTML+=`<tr><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:9.5px;color:#333;">${lbl}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:10px;font-weight:700;color:#0A1628;text-align:right;">${val}</td><td style="padding:.35rem .6rem;border-bottom:1px solid #E8E8E8;font-size:8.5px;color:#666;text-align:right;">${sub}</td></tr>`;});
+  [['Production totale',d.total.toFixed(1)+' kWh',prev?`${diff>=0?'+':''}${diff}% vs ${prevKey}`:''],['Autoconsommation',totalAC.toFixed(1)+' kWh',Math.round(totalAC/d.total*100)+'% de la prod.'],['Injection réseau',totalInj.toFixed(1)+' kWh',Math.round(totalInj/d.total*100)+'% de la prod.'],['Économies réalisées',savings+' €','@ '+KWH_PRICE_REAL+' €/kWh'],['Rendement spécifique',rend+' kWh/kWc','Moy. belge ~950 kWh/kWc'],['Objectif annuel',prog+'%',d.total.toFixed(1)+' / '+OBJECTIF+' kWh'],['ROI cumulé',roi.pct+'%',roi.totalSaved+' € / '+INSTALL_COST+' €']].forEach(([lbl,val,sub])=>{kpiHTML+=`<tr><td style="padding:.35rem.6rem;border-bottom:1px solid #E8E8E8;font-size:9.5px;color:#333;">${lbl}</td><td style="padding:.35rem.6rem;border-bottom:1px solid #E8E8E8;font-size:10px;font-weight:700;color:#0A1628;text-align:right;">${val}</td><td style="padding:.35rem.6rem;border-bottom:1px solid #E8E8E8;font-size:8.5px;color:#666;text-align:right;">${sub}</td></tr>`;});
   let monthRows='';let totProd=0,totAC=0,totInj=0;
-  for(let m=0;m<12;m++){const p=d.monthly[m]?Math.round(d.monthly[m]*10)/10:null;const ac=d.autoconso&&d.autoconso[m]?Math.round(d.autoconso[m]*10)/10:null;const inj=d.injection&&d.injection[m]?Math.round(d.injection[m]*10)/10:null;const taux=p&&ac?Math.round(ac/p*100):null;const rendM=p?Math.round(p/SUNSHINE[m]*10)/10:null;if(p){totProd+=p;if(ac)totAC+=ac;if(inj)totInj+=inj;}const bg=m%2===0?'#FFFFFF':'#F8F9FA';monthRows+=`<tr style="background:${bg};"><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;">${MOIS_F[m]}</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#CC5500;font-weight:700;font-size:9px;">${p?p.toFixed(1):'—'}</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#007A45;font-weight:700;font-size:9px;">${ac?ac.toFixed(1):'—'}</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#0055AA;font-weight:600;font-size:9px;">${inj?inj.toFixed(1):'—'}</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${taux?taux+'%':'—'}</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${SUNSHINE[m]}h</td><td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${rendM?rendM:'—'}</td></tr>`;}
-  monthRows+=`<tr style="background:#FFF3CD;font-weight:700;border-top:2px solid #CC8800;"><td style="padding:.35rem .5rem;font-size:9.5px;font-weight:800;">TOTAL / MOY.</td><td style="padding:.35rem .5rem;text-align:right;color:#CC5500;font-size:9.5px;">${totProd.toFixed(1)}</td><td style="padding:.35rem .5rem;text-align:right;color:#007A45;font-size:9.5px;">${totAC.toFixed(1)}</td><td style="padding:.35rem .5rem;text-align:right;color:#0055AA;font-size:9.5px;">${totInj.toFixed(1)}</td><td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${totProd?Math.round(totAC/totProd*100)+'%':'—'}</td><td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${SUNSHINE.reduce((a,b)=>a+b,0)}h</td><td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;">${Math.round(totProd/SUNSHINE.reduce((a,b)=>a+b,0)*10)/10}</td></tr>`;
+  for(let m=0;m<12;m++){const p=d.monthly[m]?Math.round(d.monthly[m]*10)/10:null;const ac=d.autoconso&&d.autoconso[m]?Math.round(d.autoconso[m]*10)/10:null;const inj=d.injection&&d.injection[m]?Math.round(d.injection[m]*10)/10:null;const taux=p&&ac?Math.round(ac/p*100):null;const rendM=p?Math.round(p/SUNSHINE[m]*10)/10:null;if(p){totProd+=p;if(ac)totAC+=ac;if(inj)totInj+=inj;}const bg=m%2===0?'#FFFFFF':'#F8F9FA';monthRows+=`<tr style="background:${bg};"><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;">${MOIS_F[m]}</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#CC5500;font-weight:700;font-size:9px;">${p?p.toFixed(1):'—'}</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#007A45;font-weight:700;font-size:9px;">${ac?ac.toFixed(1):'—'}</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;color:#0055AA;font-weight:600;font-size:9px;">${inj?inj.toFixed(1):'—'}</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${taux?taux+'%':'—'}</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${SUNSHINE[m]}h</td><td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;">${rendM?rendM:'—'}</td></tr>`;}
+  monthRows+=`<tr style="background:#FFF3CD;font-weight:700;border-top:2px solid #CC8800;"><td style="padding:.35rem.5rem;font-size:9.5px;font-weight:800;">TOTAL / MOY.</td><td style="padding:.35rem.5rem;text-align:right;color:#CC5500;font-size:9.5px;">${totProd.toFixed(1)}</td><td style="padding:.35rem.5rem;text-align:right;color:#007A45;font-size:9.5px;">${totAC.toFixed(1)}</td><td style="padding:.35rem.5rem;text-align:right;color:#0055AA;font-size:9.5px;">${totInj.toFixed(1)}</td><td style="padding:.35rem.5rem;text-align:right;font-size:9.5px;">${totProd?Math.round(totAC/totProd*100)+'%':'—'}</td><td style="padding:.35rem.5rem;text-align:right;font-size:9.5px;">${SUNSHINE.reduce((a,b)=>a+b,0)}h</td><td style="padding:.35rem.5rem;text-align:right;font-size:9.5px;">${Math.round(totProd/SUNSHINE.reduce((a,b)=>a+b,0)*10)/10}</td></tr>`;
   const availYears=[2023,2024,2025,2026].filter(y=>pData[y]);
   let histRows='';let histTotals={};availYears.forEach(y=>{histTotals[y]=0;});
-  for(let m=0;m<12;m++){const vals=availYears.map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[m]:null);const maxVal=Math.max(...vals.filter(x=>x));const bg=m%2===0?'#FFFFFF':'#F8F9FA';let row=`<td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;background:${bg};">${MOIS_F[m]}</td>`;availYears.forEach((y,i)=>{const v=vals[i];if(v)histTotals[y]+=v;const isBest=v&&v===maxVal&&vals.filter(x=>x).length>1;row+=`<td style="padding:.3rem .5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;font-weight:${isBest?'800':'500'};color:${isBest?'#007A45':'#333'};background:${bg};">${v?v.toFixed(1):'—'}</td>`;});histRows+=`<tr>${row}</tr>`;}
-  let prog2026='';if(pData[2026]){const d26=pData[2026];const moisSaisis=d26.monthly.filter(x=>x).length;const proj=moisSaisis?Math.round(d26.total/moisSaisis*12):0;prog2026=`<tr style="background:#E8F4FD;border-top:2px solid #0055AA;"><td style="padding:.35rem .5rem;font-size:9px;font-weight:800;color:#0055AA;">2026 (projection)</td><td colspan="${availYears.length}" style="padding:.35rem .5rem;font-size:9px;color:#0055AA;">${d26.total.toFixed(1)} kWh saisis sur ${moisSaisis} mois → projection : <strong>${proj} kWh</strong> (${Math.round(proj/OBJECTIF*100)}% objectif)</td></tr>`;}
-  let totalRow=`<td style="padding:.35rem .5rem;font-size:9.5px;font-weight:800;background:#FFF3CD;">TOTAL ANNUEL</td>`;availYears.forEach(y=>{const isBest=histTotals[y]===Math.max(...availYears.map(y2=>histTotals[y2]));totalRow+=`<td style="padding:.35rem .5rem;text-align:right;font-size:9.5px;font-weight:${isBest?'800':'700'};color:${isBest?'#007A45':'#333'};background:#FFF3CD;">${histTotals[y].toFixed(1)}${isBest?' 🏆':''}</td>`;});
+  for(let m=0;m<12;m++){const vals=availYears.map(y=>pData[y]&&pData[y].monthly?pData[y].monthly[m]:null);const maxVal=Math.max(...vals.filter(x=>x));const bg=m%2===0?'#FFFFFF':'#F8F9FA';let row=`<td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;font-weight:600;font-size:9px;background:${bg};">${MOIS_F[m]}</td>`;availYears.forEach((y,i)=>{const v=vals[i];if(v)histTotals[y]+=v;const isBest=v&&v===maxVal&&vals.filter(x=>x).length>1;row+=`<td style="padding:.3rem.5rem;border-bottom:1px solid #E8E8E8;text-align:right;font-size:9px;font-weight:${isBest?'800':'500'};color:${isBest?'#007A45':'#333'};background:${bg};">${v?v.toFixed(1):'—'}</td>`;});histRows+=`<tr>${row}</tr>`;}
+  let prog2026='';if(pData[2026]){const d26=pData[2026];const moisSaisis=d26.monthly.filter(x=>x).length;const proj=moisSaisis?Math.round(d26.total/moisSaisis*12):0;prog2026=`<tr style="background:#E8F4FD;border-top:2px solid #0055AA;"><td style="padding:.35rem.5rem;font-size:9px;font-weight:800;color:#0055AA;">2026 (projection)</td><td colspan="${availYears.length}" style="padding:.35rem.5rem;font-size:9px;color:#0055AA;">${d26.total.toFixed(1)} kWh saisis sur ${moisSaisis} mois → projection : <strong>${proj} kWh</strong> (${Math.round(proj/OBJECTIF*100)}% objectif)</td></tr>`;}
+  let totalRow=`<td style="padding:.35rem.5rem;font-size:9.5px;font-weight:800;background:#FFF3CD;">TOTAL ANNUEL</td>`;availYears.forEach(y=>{const isBest=histTotals[y]===Math.max(...availYears.map(y2=>histTotals[y2]));totalRow+=`<td style="padding:.35rem.5rem;text-align:right;font-size:9.5px;font-weight:${isBest?'800':'700'};color:${isBest?'#007A45':'#333'};background:#FFF3CD;">${histTotals[y].toFixed(1)}${isBest?' 🏆':''}</td>`;});
   histRows+=`<tr>${totalRow}</tr>${prog2026}`;
   const curMonthIdx=now.getMonth();const curYearNow=now.getFullYear();const daysInMonth=new Date(curYearNow,curMonthIdx+1,0).getDate();
   let dailyHTML='<p style="font-size:9px;color:#888;text-align:center;padding:1rem;">Pas de données journalières disponibles.</p>';
@@ -923,17 +973,17 @@ function buildPDFContent(){
     const joursRestants=daysInMonth-now.getDate();const moyJour=Math.round(cumul/days.length*10)/10;
     const summaryLine=`${MOIS_F[curMonthIdx]} ${curYearNow} : ${cumul} kWh (${days.length} jours)${moyHist?' · Moy. hist.: '+moyHist+' kWh':''}${pctVsMoy?' · '+pctVsMoy+'% moy.':''} · ${moyJour} kWh/j · ${joursRestants} j restants`;
     let dayRows='';let runTotal=0;
-    days.forEach(({day,prod,ac,inj,consoReel})=>{runTotal=Math.round((runTotal+prod)*10)/10;const dateJ=new Date(curYearNow,curMonthIdx,day);const jourSem=dateJ.toLocaleDateString('fr-BE',{weekday:'short'});const bg=day%2===0?'#F8F9FA':'#FFFFFF';dayRows+=`<tr style="background:${bg};"><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;font-size:8.5px;font-weight:600;">${jourSem} ${day}</td><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#CC5500;font-weight:700;font-size:8.5px;">${prod.toFixed(1)}</td><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#007A45;font-weight:700;font-size:8.5px;">${ac?ac.toFixed(1):'—'}</td><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#0055AA;font-size:8.5px;">${inj?inj.toFixed(1):'—'}</td><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;">${consoReel?consoReel.toFixed(1):'—'}</td><td style="padding:.25rem .5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;color:#555;">${runTotal.toFixed(1)}</td></tr>`;});
+    days.forEach(({day,prod,ac,inj,consoReel})=>{runTotal=Math.round((runTotal+prod)*10)/10;const dateJ=new Date(curYearNow,curMonthIdx,day);const jourSem=dateJ.toLocaleDateString('fr-BE',{weekday:'short'});const bg=day%2===0?'#F8F9FA':'#FFFFFF';dayRows+=`<tr style="background:${bg};"><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;font-size:8.5px;font-weight:600;">${jourSem} ${day}</td><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#CC5500;font-weight:700;font-size:8.5px;">${prod.toFixed(1)}</td><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#007A45;font-weight:700;font-size:8.5px;">${ac?ac.toFixed(1):'—'}</td><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;text-align:right;color:#0055AA;font-size:8.5px;">${inj?inj.toFixed(1):'—'}</td><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;">${consoReel?consoReel.toFixed(1):'—'}</td><td style="padding:.25rem.5rem;border-bottom:1px solid #EEEEEE;text-align:right;font-size:8.5px;color:#555;">${runTotal.toFixed(1)}</td></tr>`;});
     const totAC2=Math.round(days.reduce((a,b)=>a+(b.ac||0),0)*10)/10;const totInj2=Math.round(days.reduce((a,b)=>a+(b.inj||0),0)*10)/10;const totCR=Math.round(days.reduce((a,b)=>a+(b.consoReel||0),0)*10)/10;
-    dayRows+=`<tr style="background:#FFF3CD;font-weight:800;border-top:2px solid #CC8800;"><td style="padding:.3rem .5rem;font-size:9px;">CUMUL</td><td style="padding:.3rem .5rem;text-align:right;color:#CC5500;font-size:9px;">${cumul.toFixed(1)}</td><td style="padding:.3rem .5rem;text-align:right;color:#007A45;font-size:9px;">${totAC2.toFixed(1)}</td><td style="padding:.3rem .5rem;text-align:right;color:#0055AA;font-size:9px;">${totInj2.toFixed(1)}</td><td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${totCR.toFixed(1)}</td><td style="padding:.3rem .5rem;text-align:right;font-size:9px;">${cumul.toFixed(1)}</td></tr>`;
-    dailyHTML=`<p style="font-size:9px;color:#333;margin-bottom:.6rem;padding:.4rem .6rem;background:#EEF6FF;border-left:3px solid #0055AA;border-radius:3px;">${summaryLine}</p><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#0A1628;color:#fff;"><th style="padding:.3rem .5rem;text-align:left;font-size:8.5px;">Jour</th><th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Prod.</th><th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Autoconso.</th><th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Injection</th><th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Conso. réelle</th><th style="padding:.3rem .5rem;text-align:right;font-size:8.5px;">Cumul</th></tr></thead><tbody>${dayRows}</tbody></table>`;
+    dayRows+=`<tr style="background:#FFF3CD;font-weight:800;border-top:2px solid #CC8800;"><td style="padding:.3rem.5rem;font-size:9px;">CUMUL</td><td style="padding:.3rem.5rem;text-align:right;color:#CC5500;font-size:9px;">${cumul.toFixed(1)}</td><td style="padding:.3rem.5rem;text-align:right;color:#007A45;font-size:9px;">${totAC2.toFixed(1)}</td><td style="padding:.3rem.5rem;text-align:right;color:#0055AA;font-size:9px;">${totInj2.toFixed(1)}</td><td style="padding:.3rem.5rem;text-align:right;font-size:9px;">${totCR.toFixed(1)}</td><td style="padding:.3rem.5rem;text-align:right;font-size:9px;">${cumul.toFixed(1)}</td></tr>`;
+    dailyHTML=`<p style="font-size:9px;color:#333;margin-bottom:.6rem;padding:.4rem.6rem;background:#EEF6FF;border-left:3px solid #0055AA;border-radius:3px;">${summaryLine}</p><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#0A1628;color:#fff;"><th style="padding:.3rem.5rem;text-align:left;font-size:8.5px;">Jour</th><th style="padding:.3rem.5rem;text-align:right;font-size:8.5px;">Prod.</th><th style="padding:.3rem.5rem;text-align:right;font-size:8.5px;">Autoconso.</th><th style="padding:.3rem.5rem;text-align:right;font-size:8.5px;">Injection</th><th style="padding:.3rem.5rem;text-align:right;font-size:8.5px;">Conso. réelle</th><th style="padding:.3rem.5rem;text-align:right;font-size:8.5px;">Cumul</th></tr></thead><tbody>${dayRows}</tbody></table>`;
   }
   const hs='border-bottom:3px solid #CC8800;padding-bottom:.5rem;margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:flex-end;';
   const ts='font-size:15px;font-weight:800;color:#0A1628;margin:0;';
   const ss='font-size:8.5px;color:#666;margin:2px 0 0;';
-  const sc='font-size:10px;font-weight:800;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem;padding-left:.4rem;border-left:3px solid #CC8800;';
-  const th='background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:right;font-size:8.5px;font-weight:700;';
-  const thl='background:#0A1628;color:#fff;padding:.35rem .5rem;text-align:left;font-size:8.5px;font-weight:700;';
+  const sc='font-size:10px;font-weight:800;color:#0A1628;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0.4rem;padding-left:.4rem;border-left:3px solid #CC8800;';
+  const th='background:#0A1628;color:#fff;padding:.35rem.5rem;text-align:right;font-size:8.5px;font-weight:700;';
+  const thl='background:#0A1628;color:#fff;padding:.35rem.5rem;text-align:left;font-size:8.5px;font-weight:700;';
   document.getElementById('pdf-print').innerHTML=`
   <div class="pdf-page">
     <div style="${hs}"><div><h1 style="${ts}">☀️ Suivi Solaire — Saint-Léger · ${curYear}</h1><p style="${ss}">SunPower Maxeon 3 · 10×420Wc · 4,2 kWc · Plein Sud 33° · Gaume 6747, BE · Installation Août 2023</p></div><div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div></div>
@@ -945,20 +995,137 @@ function buildPDFContent(){
   </div>
   <div class="pdf-page">
     <div style="${hs}"><div><h1 style="${ts}">☀️ Suivi Solaire — Comparaison historique</h1><p style="${ss}">SunPower Maxeon 3 · Saint-Léger · Depuis Août 2023</p></div><div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div></div>
-    <div style="${sc}">Production mensuelle par année (kWh)</div>
+    <div style="${sc}">Production mensuelle — Toutes années</div>
     <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;"><thead><tr><th style="${thl}">Mois</th>${availYears.map(y=>`<th style="${th}">${y}</th>`).join('')}</tr></thead><tbody>${histRows}</tbody></table>
-    <div style="${sc}">Installation & ROI</div>
-    <table style="width:100%;border-collapse:collapse;border:1px solid #E0E0E0;"><thead><tr><th style="${thl}">Paramètre</th><th style="${th}">Valeur</th></tr></thead><tbody>${[['Coût installation',INSTALL_COST.toFixed(2)+' €'],['Économies cumulées',roi.totalSaved+' €'],['ROI atteint',roi.pct+'%'],['Années restantes',roi.yearsLeft+' ans'],['Tarif kWh réel',KWH_PRICE_REAL+' €/kWh']].map(([l,v],i)=>`<tr style="background:${i%2?'#F8F9FA':'#FFF'};"><td style="padding:.3rem .5rem;font-size:9px;border-bottom:1px solid #EEE;">${l}</td><td style="padding:.3rem .5rem;font-size:9.5px;font-weight:700;text-align:right;border-bottom:1px solid #EEE;">${v}</td></tr>`).join('')}</tbody></table>
-    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">🏆 = Meilleure valeur · Page 2/3</div>
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">🏆 = Meilleure année pour ce mois · Page 2/3</div>
   </div>
   <div class="pdf-page">
-    <div style="${hs}"><div><h1 style="${ts}">☀️ Suivi Solaire — Relevé journalier ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</h1><p style="${ss}">SunPower Maxeon 3 · Saint-Léger · Données saisies à 22h</p></div><div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div></div>
-    <div style="${sc}">Relevé journalier — ${MOIS_F[new Date().getMonth()]} ${new Date().getFullYear()}</div>
+    <div style="${hs}"><div><h1 style="${ts}">☀️ Suivi Solaire — Suivi journalier</h1><p style="${ss}">Détail quotidien ${MOIS_F[curMonthIdx]} ${curYearNow} · Comparaison historique</p></div><div style="font-size:8.5px;color:#999;text-align:right;">Édité le ${dateStr}</div></div>
+    <div style="${sc}">${MOIS_F[curMonthIdx]} ${curYearNow} — Détail quotidien</div>
     ${dailyHTML}
-    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">Prod.=Production · Autoconso.=PV-Injection · Conso.réelle=Autoconso.+Conso.nuit · Page 3/3</div>
+    <div style="font-size:7.5px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.4rem;margin-top:.6rem;">Production journalière détaillée · Page 3/3</div>
   </div>`;
 }
 
+// ===== MODULE RELEVÉ JUILLET - DOUBLE COMPTEUR SÉPARÉ =====
+function getReleveConfig(){
+  const cfg = localStorage.getItem('solaire_releve_cfg_v2');
+  if(cfg) return JSON.parse(cfg);
+  return {
+    jourJuillet: 4678,
+    nuitJuillet: 74739,
+    jourMax: 4500,
+    nuitMax: 70500
+  };
+}
+
+function saveReleveConfig(){
+  const cfg = {
+    jourJuillet: parseFloat(document.getElementById('input-jour-juillet').value) || null,
+    nuitJuillet: parseFloat(document.getElementById('input-nuit-juillet').value) || null,
+    jourMax: parseFloat(document.getElementById('input-jour-max').value) || null,
+    nuitMax: parseFloat(document.getElementById('input-nuit-max').value) || null
+  };
+  localStorage.setItem('solaire_releve_cfg_v2', JSON.stringify(cfg));
+}
+
+function renderReleveModule(){
+  const now = new Date();
+  const anneeActuelle = now.getFullYear();
+  const mois = now.getMonth();
+
+  const anneeJuilletDernier = mois >= 6? anneeActuelle : anneeActuelle - 1;
+
+  document.getElementById('juillet-annee-j').textContent = anneeJuilletDernier;
+  document.getElementById('juillet-annee-n').textContent = anneeJuilletDernier;
+
+  const cfg = getReleveConfig();
+  document.getElementById('input-jour-juillet').value = cfg.jourJuillet || '';
+  document.getElementById('input-nuit-juillet').value = cfg.nuitJuillet || '';
+  document.getElementById('input-jour-max').value = cfg.jourMax || '';
+  document.getElementById('input-nuit-max').value = cfg.nuitMax || '';
+
+  if(!cfg.jourJuillet ||!cfg.nuitJuillet ||!cfg.jourMax ||!cfg.nuitMax){
+    document.getElementById('releve-resultats').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('releve-resultats').style.display = 'block';
+
+  let prodDepuisJuillet = 0;
+  const d = pData[anneeJuilletDernier];
+  if(d && d.monthly){
+    for(let m=6; m<12; m++){
+      if(d.monthly[m]) prodDepuisJuillet += d.monthly[m];
+    }
+  }
+  const d2 = pData[anneeJuilletDernier + 1];
+  if(d2 && d2.monthly){
+    for(let m=0; m<=mois; m++){
+      if(d2.monthly[m]) prodDepuisJuillet += d2.monthly[m];
+    }
+  }
+
+  const ratioJourProd = 0.2;
+  const ratioNuitProd = 0.8;
+
+  const prodJour = prodDepuisJuillet * ratioJourProd;
+  const prodNuit = prodDepuisJuillet * ratioNuitProd;
+
+  const estimJour = Math.round((cfg.jourJuillet - prodJour) * 10) / 10;
+  const estimNuit = Math.round((cfg.nuitJuillet - prodNuit) * 10) / 10;
+  const estimGlobal = Math.round((estimJour + estimNuit) * 10) / 10;
+
+  const margeJour = Math.round((estimJour - cfg.jourMax) * 10) / 10;
+  const margeNuit = Math.round((estimNuit - cfg.nuitMax) * 10) / 10;
+  const margeGlobale = Math.round((estimGlobal - (cfg.jourMax + cfg.nuitMax)) * 10) / 10;
+
+  const boniHiverTotal = Math.max(0, margeGlobale);
+
+  document.getElementById('estim-jour').textContent = estimJour.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').textContent = margeJour.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').style.color = margeJour > 100? 'var(--green)' : margeJour > 0? 'var(--sun)' : 'var(--red)';
+
+  document.getElementById('estim-nuit').textContent = estimNuit.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').textContent = margeNuit.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').style.color = margeNuit > 200? 'var(--green)' : margeNuit > 0? 'var(--sun)' : 'var(--red)';
+
+  document.getElementById('index-estime-global').textContent = estimGlobal.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').textContent = margeGlobale.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').style.color = margeGlobale > 300? 'var(--green)' : margeGlobale > 0? 'var(--sun)' : 'var(--red)';
+  document.getElementById('boni-hiver-total').textContent = boniHiverTotal.toFixed(1) + ' kWh';
+  document.getElementById('prod-depuis-juillet').textContent = prodDepuisJuillet.toFixed(1) + ' kWh';
+
+  let conseil = '';
+  const conseilEl = document.getElementById('conseil-releve');
+
+  if(margeJour < 0 || margeNuit < 0){
+    conseil = `⚠️ DANGER : ${margeJour < 0? 'Jour sous limite de ' + Math.abs(margeJour).toFixed(0) + ' kWh. ' : ''}${margeNuit < 0? 'Nuit sous limite de ' + Math.abs(margeNuit).toFixed(0) + ' kWh.' : ''} Tu vas payer.`;
+    conseilEl.style.borderLeftColor = 'var(--red)';
+    conseilEl.style.color = 'var(--red)';
+  } else if(margeGlobale < 100){
+    conseil = `🔴 Critique : Plus que ${margeGlobale.toFixed(0)} kWh au total. Jour: ${margeJour.toFixed(0)} / Nuit: ${margeNuit.toFixed(0)}. Garde tout pour l'hiver.`;
+    conseilEl.style.borderLeftColor = 'var(--red)';
+    conseilEl.style.color = 'var(--red)';
+  } else if(margeGlobale < 400){
+    conseil = `🟡 Attention : ${margeGlobale.toFixed(0)} kWh de marge totale. Jour: ${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit.toFixed(0)} kWh. Le jour bouge moins maintenant.`;
+    conseilEl.style.borderLeftColor = 'var(--sun)';
+    conseilEl.style.color = 'var(--sun)';
+  } else {
+    conseil = `✅ Tranquille : ${margeGlobale.toFixed(0)} kWh de boni total. Jour: ${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit.toFixed(0)} kWh.`;
+    conseilEl.style.borderLeftColor = 'var(--green)';
+    conseilEl.style.color = 'var(--green)';
+  }
+  conseilEl.textContent = conseil;
+}
+
+const origRenderYear = renderYear;
+renderYear = function(){
+  origRenderYear();
+  setTimeout(renderReleveModule, 100);
+}
+
+// ===== INIT =====
 function refreshData(){fetchAll();}
 fetchAll();
 </script>
