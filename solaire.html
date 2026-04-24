@@ -1029,15 +1029,7 @@ function saveReleveConfig(){
   localStorage.setItem('solaire_releve_cfg_v3', JSON.stringify(cfg));
 }
 
-function saveReleveConfig(){
-  const cfg = {
-    jourJuillet: parseFloat(document.getElementById('input-jour-juillet').value) || null,
-    nuitJuillet: parseFloat(document.getElementById('input-nuit-juillet').value) || null,
-    jourMax: parseFloat(document.getElementById('input-jour-max').value) || null,
-    nuitMax: parseFloat(document.getElementById('input-nuit-max').value) || null
-  };
-  localStorage.setItem('solaire_releve_cfg_v2', JSON.stringify(cfg));
-}
+
 
 function renderReleveModule(){
   const cfg = getReleveConfig();
