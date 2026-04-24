@@ -515,38 +515,38 @@ function renderYear(){
         <span class="badge">Jour + Nuit séparés</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem;">
-        <div style="padding:.7rem;background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);border-radius:8px;">
-          <div class="roi-lbl" style="color:var(--sun);font-weight:700;">☀️ COMPTEUR JOUR</div>
-          <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Juillet <span id="juillet-annee-j">2025</span></div>
-          <input type="number" id="input-jour-juillet" placeholder="4678" step="0.1"
-            style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
-            oninput="saveReleveConfig();renderReleveModule();">
-          <div style="margin-top:.5rem;">
-            <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
-            <input type="number" id="input-jour-max" placeholder="4500" step="0.1"
-              style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
-              oninput="saveReleveConfig();renderReleveModule();">
-          </div>
-          <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
-            <div>Estimé: <strong id="estim-jour" style="color:var(--sun)">—</strong></div>
-            <div>Marge: <strong id="marge-jour">—</strong></div>
-          </div>
-        </div>
-        <div style="padding:.7rem;background:rgba(0,170,255,0.08);border:1px solid rgba(0,170,255,0.2);border-radius:8px;">
-          <div class="roi-lbl" style="color:var(--blue);font-weight:700;">🌙 COMPTEUR NUIT</div>
-          <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Juillet <span id="juillet-annee-n">2025</span></div>
-          <input type="number" id="input-nuit-juillet" placeholder="74739" step="0.1"
-            style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
-            oninput="saveReleveConfig();renderReleveModule();">
-          <div style="margin-top:.5rem;">
-            <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
-            <input type="number" id="input-nuit-max" placeholder="70500" step="0.1"
-              style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
-              oninput="saveReleveConfig();renderReleveModule();">
-          </div>
-          <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
-            <div>Estimé: <strong id="estim-nuit" style="color:var(--blue)">—</strong></div>
-            <div>Marge: <strong id="marge-nuit">—</strong></div>
+  <div style="padding:.7rem;background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);border-radius:8px;">
+    <div class="roi-lbl" style="color:var(--sun);font-weight:700;">☀️ COMPTEUR JOUR</div>
+    <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Index actuel</div>
+    <input type="number" id="input-jour-actuel" placeholder="3851.3" step="0.1"
+      style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
+      oninput="saveReleveConfig();renderReleveModule();">
+    <div style="margin-top:.5rem;">
+      <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
+      <input type="number" id="input-jour-max" placeholder="4678" step="0.1"
+        style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
+        oninput="saveReleveConfig();renderReleveModule();">
+    </div>
+    <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
+      <div>Actuel: <strong id="estim-jour" style="color:var(--sun)">—</strong></div>
+      <div>Marge: <strong id="marge-jour">—</strong></div>
+    </div>
+  </div>
+  <div style="padding:.7rem;background:rgba(0,170,255,0.08);border:1px solid rgba(0,170,255,0.2);border-radius:8px;">
+    <div class="roi-lbl" style="color:var(--blue);font-weight:700;">🌙 COMPTEUR NUIT</div>
+    <div style="font-size:.58rem;color:var(--text3);margin-bottom:.3rem;">Index actuel</div>
+    <input type="number" id="input-nuit-actuel" placeholder="74955.6" step="0.1"
+      style="width:100%;padding:.5rem.7rem;border-radius:8px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.9rem;"
+      oninput="saveReleveConfig();renderReleveModule();">
+    <div style="margin-top:.5rem;">
+      <div class="roi-lbl" style="font-size:.55rem;">Limite à ne PAS dépasser</div>
+      <input type="number" id="input-nuit-max" placeholder="74739" step="0.1"
+        style="width:100%;padding:.4rem.6rem;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;"
+        oninput="saveReleveConfig();renderReleveModule();">
+    </div>
+    <div style="margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.62rem;">
+      <div>Actuel: <strong id="estim-nuit" style="color:var(--blue)">—</strong></div>
+      <div>Marge: <strong id="marge-nuit">—</strong></div>
           </div>
         </div>
       </div>
@@ -1007,16 +1007,26 @@ function buildPDFContent(){
   </div>`;
 }
 
-// ===== MODULE RELEVÉ JUILLET - DOUBLE COMPTEUR SÉPARÉ =====
+// ===== MODULE RELEVÉ - INDEX ACTUELS DIRECT =====
 function getReleveConfig(){
-  const cfg = localStorage.getItem('solaire_releve_cfg_v2');
+  const cfg = localStorage.getItem('solaire_releve_cfg_v3');
   if(cfg) return JSON.parse(cfg);
   return {
-    jourJuillet: 4678,
-    nuitJuillet: 74739,
-    jourMax: 4500,
-    nuitMax: 70500
+    jourActuel: 3851.3,
+    nuitActuel: 74955.6,
+    jourMax: 4678,
+    nuitMax: 74739
   };
+}
+
+function saveReleveConfig(){
+  const cfg = {
+    jourActuel: parseFloat(document.getElementById('input-jour-actuel').value) || null,
+    nuitActuel: parseFloat(document.getElementById('input-nuit-actuel').value) || null,
+    jourMax: parseFloat(document.getElementById('input-jour-max').value) || null,
+    nuitMax: parseFloat(document.getElementById('input-nuit-max').value) || null
+  };
+  localStorage.setItem('solaire_releve_cfg_v3', JSON.stringify(cfg));
 }
 
 function saveReleveConfig(){
@@ -1030,58 +1040,169 @@ function saveReleveConfig(){
 }
 
 function renderReleveModule(){
-  const now = new Date();
-  const anneeActuelle = now.getFullYear();
-  const mois = now.getMonth();
-  const anneeJuilletDernier = mois >= 6? anneeActuelle : anneeActuelle - 1;
-
-  document.getElementById('juillet-annee-j').textContent = anneeJuilletDernier;
-  document.getElementById('juillet-annee-n').textContent = anneeJuilletDernier;
-
   const cfg = getReleveConfig();
-  document.getElementById('input-jour-juillet').value = cfg.jourJuillet || '';
-  document.getElementById('input-nuit-juillet').value = cfg.nuitJuillet || '';
+  document.getElementById('input-jour-actuel').value = cfg.jourActuel || '';
+  document.getElementById('input-nuit-actuel').value = cfg.nuitActuel || '';
   document.getElementById('input-jour-max').value = cfg.jourMax || '';
   document.getElementById('input-nuit-max').value = cfg.nuitMax || '';
 
-  if(!cfg.jourJuillet ||!cfg.nuitJuillet ||!cfg.jourMax ||!cfg.nuitMax){
+  if(!cfg.jourActuel ||!cfg.nuitActuel ||!cfg.jourMax ||!cfg.nuitMax){
     document.getElementById('releve-resultats').style.display = 'none';
     return;
   }
 
   document.getElementById('releve-resultats').style.display = 'block';
 
-  // ===== CALCUL CORRECT : on prend la CONSO RÉSEAU depuis juillet, pas la production =====
-  let consoReseauJour = 0;
-  let consoReseauNuit = 0;
+  const margeJour = Math.round((cfg.jourMax - cfg.jourActuel) * 10) / 10;
+  const margeNuit = Math.round((cfg.nuitMax - cfg.nuitActuel) * 10) / 10;
+  const margeGlobale = Math.round((margeJour + margeNuit) * 10) / 10;
 
-  // Depuis juillet année N jusqu'à maintenant
-  const d = pData[anneeJuilletDernier];
-  if(d && d.dailyByMonth){
-    // Juillet à Décembre année N
-    for(let m=6; m<12; m++){
-      if(d.dailyByMonth[m]){
-        d.dailyByMonth[m].forEach(j => {
-          // consoRes = conso réseau jour, on split 20/80 par défaut
-          consoReseauJour += (j.consoRes || 0) * 0.2;
-          consoReseauNuit += (j.consoRes || 0) * 0.8;
-        });
-      }
-    }
+  const indexGlobal = Math.round((cfg.jourActuel + cfg.nuitActuel) * 10) / 10;
+  const limiteGlobale = Math.round((cfg.jourMax + cfg.nuitMax) * 10) / 10;
+
+  document.getElementById('estim-jour').textContent = cfg.jourActuel.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').textContent = (margeJour>=0?'+':'') + margeJour.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').style.color = margeJour > 0? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('estim-nuit').textContent = cfg.nuitActuel.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').textContent = (margeNuit>=0?'+':'') + margeNuit.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').style.color = margeNuit > 0? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('index-estime-global').textContent = indexGlobal.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').textContent = (margeGlobale>=0?'+':'') + margeGlobale.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').style.color = margeGlobale > 0? 'var(--green)' : 'var(--red)';
+  document.getElementById('boni-hiver-total').textContent = Math.max(0, margeGlobale).toFixed(1) + ' kWh';
+  document.getElementById('prod-depuis-juillet').textContent = limiteGlobale.toFixed(1) + ' kWh limite';
+
+  let conseil = '';
+  const conseilEl = document.getElementById('conseil-releve');
+
+  if(margeGlobale < 0){
+    conseil = `⚠️ DANGER : Tu dépasses de ${Math.abs(margeGlobale).toFixed(0)} kWh au total. Jour: ${margeJour>=0?'+':''}${margeJour.toFixed(0)} / Nuit: ${margeNuit>=0?'+':''}${margeNuit.toFixed(0)}. Tu vas payer.`;
+    conseilEl.style.borderLeftColor = 'var(--red)';
+    conseilEl.style.color = 'var(--red)';
+  } else {
+    conseil = `✅ BONI : Tu as ${margeGlobale.toFixed(0)} kWh d'avance au total. Jour: +${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit>=0?'+':''}${margeNuit.toFixed(0)} kWh.`;
+    conseilEl.style.borderLeftColor = 'var(--green)';
+    conseilEl.style.color = 'var(--green)';
+  }
+  conseilEl.textContent = conseil;
+}
+
+44 lignes masquées
+C'est tout. Sauvegarde et refresh.
+
+Avec tes chiffres 3851.3 / 74955.6 ça va afficher +610.1 kWh de boni en vert ✅
+
+et ça je l'enlève // ===== MODULE RELEVÉ JUILLET - DOUBLE COMPTEUR SÉPARÉ =====
+function getReleveConfig(){
+  const cfg = localStorage.getItem('solaire_releve_cfg_v2');
+  if(cfg) return JSON.parse(cfg);
+  return {
+    jourJuillet: 4678,
+    nuitJuillet: 74739,
+    jourMax: 4500,
+    nuitMax: 70500
+  };
+}
+
+Aujourd’hui
+Oui, tu l'enlèves.
+
+Remplace-la par celle-ci :
+
+JavaScript
+// ===== MODULE RELEVÉ - INDEX ACTUELS DIRECT =====
+function getReleveConfig(){
+  const cfg = localStorage.getItem('solaire_releve_cfg_v3');
+  if(cfg) return JSON.parse(cfg);
+  return {
+    jourActuel: 3851.3,
+    nuitActuel: 74955.6,
+    jourMax: 4678,
+    nuitMax: 74739
+  };
+}
+
+function saveReleveConfig(){
+  const cfg = {
+    jourActuel: parseFloat(document.getElementById('input-jour-actuel').value) || null,
+    nuitActuel: parseFloat(document.getElementById('input-nuit-actuel').value) || null,
+    jourMax: parseFloat(document.getElementById('input-jour-max').value) || null,
+    nuitMax: parseFloat(document.getElementById('input-nuit-max').value) || null
+  };
+  localStorage.setItem('solaire_releve_cfg_v3', JSON.stringify(cfg));
+}
+
+16 lignes masquées
+Donc résumé :
+
+✅ Tu as déjà changé le HTML <div style="display:grid...">
+✅ Remplace getReleveConfig() + saveReleveConfig() par celles au-dessus
+✅ Remplace renderReleveModule() par celle que je t'ai donnée juste avant
+Après ça, tu rentres tes index actuels et ça calcule direct : +610.1 kWh de boni avec tes chiffres.
+
+et je change aussi la function renderRelevemodule
+Aujourd’hui
+Oui, exactement.
+
+Tu changes 3 trucs au total :
+
+Le HTML → t'as déjà fait <div style="display:grid...">
+getReleveConfig() + saveReleveConfig() → remplace par la version v3 que je viens de donner
+renderReleveModule() → remplace par celle que je t'ai donnée 2 messages plus haut
+Récap complet de renderReleveModule() à coller :
+
+JavaScript
+function renderReleveModule(){
+  const cfg = getReleveConfig();
+  document.getElementById('input-jour-actuel').value = cfg.jourActuel || '';
+  document.getElementById('input-nuit-actuel').value = cfg.nuitActuel || '';
+  document.getElementById('input-jour-max').value = cfg.jourMax || '';
+  document.getElementById('input-nuit-max').value = cfg.nuitMax || '';
+
+  if(!cfg.jourActuel ||!cfg.nuitActuel ||!cfg.jourMax ||!cfg.nuitMax){
+    document.getElementById('releve-resultats').style.display = 'none';
+    return;
   }
 
-  // Janvier à mois actuel année N+1
-  const d2 = pData[anneeJuilletDernier + 1];
-  if(d2 && d2.dailyByMonth){
-    for(let m=0; m<=mois; m++){
-      if(d2.dailyByMonth[m]){
-        d2.dailyByMonth[m].forEach(j => {
-          consoReseauJour += (j.consoRes || 0) * 0.2;
-          consoReseauNuit += (j.consoRes || 0) * 0.8;
-        });
-      }
-    }
+  document.getElementById('releve-resultats').style.display = 'block';
+
+  const margeJour = Math.round((cfg.jourMax - cfg.jourActuel) * 10) / 10;
+  const margeNuit = Math.round((cfg.nuitMax - cfg.nuitActuel) * 10) / 10;
+  const margeGlobale = Math.round((margeJour + margeNuit) * 10) / 10;
+
+  const indexGlobal = Math.round((cfg.jourActuel + cfg.nuitActuel) * 10) / 10;
+  const limiteGlobale = Math.round((cfg.jourMax + cfg.nuitMax) * 10) / 10;
+
+  document.getElementById('estim-jour').textContent = cfg.jourActuel.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').textContent = (margeJour>=0?'+':'') + margeJour.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').style.color = margeJour > 0? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('estim-nuit').textContent = cfg.nuitActuel.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').textContent = (margeNuit>=0?'+':'') + margeNuit.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').style.color = margeNuit > 0? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('index-estime-global').textContent = indexGlobal.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').textContent = (margeGlobale>=0?'+':'') + margeGlobale.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').style.color = margeGlobale > 0? 'var(--green)' : 'var(--red)';
+  document.getElementById('boni-hiver-total').textContent = Math.max(0, margeGlobale).toFixed(1) + ' kWh';
+  document.getElementById('prod-depuis-juillet').textContent = limiteGlobale.toFixed(1) + ' kWh limite';
+
+  let conseil = '';
+  const conseilEl = document.getElementById('conseil-releve');
+
+  if(margeGlobale < 0){
+    conseil = `⚠️ DANGER : Tu dépasses de ${Math.abs(margeGlobale).toFixed(0)} kWh au total. Jour: ${margeJour>=0?'+':''}${margeJour.toFixed(0)} / Nuit: ${margeNuit>=0?'+':''}${margeNuit.toFixed(0)}. Tu vas payer.`;
+    conseilEl.style.borderLeftColor = 'var(--red)';
+    conseilEl.style.color = 'var(--red)';
+  } else {
+    conseil = `✅ BONI : Tu as ${margeGlobale.toFixed(0)} kWh d'avance au total. Jour: +${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit>=0?'+':''}${margeNuit.toFixed(0)} kWh.`;
+    conseilEl.style.borderLeftColor = 'var(--green)';
+    conseilEl.style.color = 'var(--green)';
   }
+  conseilEl.textContent = conseil;
+}
 
   // Si pas de données journalières, on estime via injection
   if(consoReseauJour === 0 && consoReseauNuit === 0){
