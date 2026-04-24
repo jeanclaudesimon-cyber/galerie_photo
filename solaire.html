@@ -1033,7 +1033,6 @@ function renderReleveModule(){
   const now = new Date();
   const anneeActuelle = now.getFullYear();
   const mois = now.getMonth();
-
   const anneeJuilletDernier = mois >= 6? anneeActuelle : anneeActuelle - 1;
 
   document.getElementById('juillet-annee-j').textContent = anneeJuilletDernier;
@@ -1052,67 +1051,89 @@ function renderReleveModule(){
 
   document.getElementById('releve-resultats').style.display = 'block';
 
-  let prodDepuisJuillet = 0;
+  // ===== CALCUL CORRECT : on prend la CONSO RÉSEAU depuis juillet, pas la production =====
+  let consoReseauJour = 0;
+  let consoReseauNuit = 0;
+
+  // Depuis juillet année N jusqu'à maintenant
   const d = pData[anneeJuilletDernier];
-  if(d && d.monthly){
+  if(d && d.dailyByMonth){
+    // Juillet à Décembre année N
     for(let m=6; m<12; m++){
-      if(d.monthly[m]) prodDepuisJuillet += d.monthly[m];
+      if(d.dailyByMonth[m]){
+        d.dailyByMonth[m].forEach(j => {
+          // consoRes = conso réseau jour, on split 20/80 par défaut
+          consoReseauJour += (j.consoRes || 0) * 0.2;
+          consoReseauNuit += (j.consoRes || 0) * 0.8;
+        });
+      }
     }
   }
+
+  // Janvier à mois actuel année N+1
   const d2 = pData[anneeJuilletDernier + 1];
-  if(d2 && d2.monthly){
+  if(d2 && d2.dailyByMonth){
     for(let m=0; m<=mois; m++){
-      if(d2.monthly[m]) prodDepuisJuillet += d2.monthly[m];
+      if(d2.dailyByMonth[m]){
+        d2.dailyByMonth[m].forEach(j => {
+          consoReseauJour += (j.consoRes || 0) * 0.2;
+          consoReseauNuit += (j.consoRes || 0) * 0.8;
+        });
+      }
     }
   }
 
-  const ratioJourProd = 0.2;
-  const ratioNuitProd = 0.8;
+  // Si pas de données journalières, on estime via injection
+  if(consoReseauJour === 0 && consoReseauNuit === 0){
+    // Fallback : on prend 30% de la prod comme conso réseau estimée
+    let prodDepuisJuillet = 0;
+    if(d && d.monthly){ for(let m=6; m<12; m++){ if(d.monthly[m]) prodDepuisJuillet += d.monthly[m]; } }
+    if(d2 && d2.monthly){ for(let m=0; m<=mois; m++){ if(d2.monthly[m]) prodDepuisJuillet += d2.monthly[m]; } }
+    consoReseauJour = prodDepuisJuillet * 0.06; // 20% de 30%
+    consoReseauNuit = prodDepuisJuillet * 0.24; // 80% de 30%
+  }
 
-  const prodJour = prodDepuisJuillet * ratioJourProd;
-  const prodNuit = prodDepuisJuillet * ratioNuitProd;
-
-  const estimJour = Math.round((cfg.jourJuillet - prodJour) * 10) / 10;
-  const estimNuit = Math.round((cfg.nuitJuillet - prodNuit) * 10) / 10;
+  const estimJour = Math.round((cfg.jourJuillet + consoReseauJour) * 10) / 10;
+  const estimNuit = Math.round((cfg.nuitJuillet + consoReseauNuit) * 10) / 10;
   const estimGlobal = Math.round((estimJour + estimNuit) * 10) / 10;
 
-  const margeJour = Math.round((estimJour - cfg.jourMax) * 10) / 10;
-  const margeNuit = Math.round((estimNuit - cfg.nuitMax) * 10) / 10;
-  const margeGlobale = Math.round((estimGlobal - (cfg.jourMax + cfg.nuitMax)) * 10) / 10;
+  const margeJour = Math.round((cfg.jourMax - estimJour) * 10) / 10;
+  const margeNuit = Math.round((cfg.nuitMax - estimNuit) * 10) / 10;
+  const margeGlobale = Math.round(((cfg.jourMax + cfg.nuitMax) - estimGlobal) * 10) / 10;
 
   const boniHiverTotal = Math.max(0, margeGlobale);
 
   document.getElementById('estim-jour').textContent = estimJour.toFixed(1) + ' kWh';
-  document.getElementById('marge-jour').textContent = margeJour.toFixed(1) + ' kWh';
+  document.getElementById('marge-jour').textContent = (margeJour>=0?'+':'') + margeJour.toFixed(1) + ' kWh';
   document.getElementById('marge-jour').style.color = margeJour > 100? 'var(--green)' : margeJour > 0? 'var(--sun)' : 'var(--red)';
 
   document.getElementById('estim-nuit').textContent = estimNuit.toFixed(1) + ' kWh';
-  document.getElementById('marge-nuit').textContent = margeNuit.toFixed(1) + ' kWh';
+  document.getElementById('marge-nuit').textContent = (margeNuit>=0?'+':'') + margeNuit.toFixed(1) + ' kWh';
   document.getElementById('marge-nuit').style.color = margeNuit > 200? 'var(--green)' : margeNuit > 0? 'var(--sun)' : 'var(--red)';
 
   document.getElementById('index-estime-global').textContent = estimGlobal.toFixed(1) + ' kWh';
-  document.getElementById('marge-globale').textContent = margeGlobale.toFixed(1) + ' kWh';
+  document.getElementById('marge-globale').textContent = (margeGlobale>=0?'+':'') + margeGlobale.toFixed(1) + ' kWh';
   document.getElementById('marge-globale').style.color = margeGlobale > 300? 'var(--green)' : margeGlobale > 0? 'var(--sun)' : 'var(--red)';
   document.getElementById('boni-hiver-total').textContent = boniHiverTotal.toFixed(1) + ' kWh';
-  document.getElementById('prod-depuis-juillet').textContent = prodDepuisJuillet.toFixed(1) + ' kWh';
+  document.getElementById('prod-depuis-juillet').textContent = (consoReseauJour + consoReseauNuit).toFixed(1) + ' kWh réseau';
 
   let conseil = '';
   const conseilEl = document.getElementById('conseil-releve');
 
   if(margeJour < 0 || margeNuit < 0){
-    conseil = `⚠️ DANGER : ${margeJour < 0? 'Jour sous limite de ' + Math.abs(margeJour).toFixed(0) + ' kWh. ' : ''}${margeNuit < 0? 'Nuit sous limite de ' + Math.abs(margeNuit).toFixed(0) + ' kWh.' : ''} Tu vas payer.`;
+    conseil = `⚠️ DANGER : ${margeJour < 0? 'Jour dépasse de ' + Math.abs(margeJour).toFixed(0) + ' kWh. ' : ''}${margeNuit < 0? 'Nuit dépasse de ' + Math.abs(margeNuit).toFixed(0) + ' kWh.' : ''} Tu vas payer.`;
     conseilEl.style.borderLeftColor = 'var(--red)';
     conseilEl.style.color = 'var(--red)';
   } else if(margeGlobale < 100){
-    conseil = `🔴 Critique : Plus que ${margeGlobale.toFixed(0)} kWh au total. Jour: ${margeJour.toFixed(0)} / Nuit: ${margeNuit.toFixed(0)}. Garde tout pour l'hiver.`;
+    conseil = `🔴 Critique : Plus que ${margeGlobale.toFixed(0)} kWh au total. Jour: +${margeJour.toFixed(0)} / Nuit: +${margeNuit.toFixed(0)}. Garde tout pour l'hiver.`;
     conseilEl.style.borderLeftColor = 'var(--red)';
     conseilEl.style.color = 'var(--red)';
   } else if(margeGlobale < 400){
-    conseil = `🟡 Attention : ${margeGlobale.toFixed(0)} kWh de marge totale. Jour: ${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit.toFixed(0)} kWh. Le jour bouge moins maintenant.`;
+    conseil = `🟡 Attention : ${margeGlobale.toFixed(0)} kWh de marge totale. Jour: +${margeJour.toFixed(0)} kWh / Nuit: +${margeNuit.toFixed(0)} kWh.`;
     conseilEl.style.borderLeftColor = 'var(--sun)';
     conseilEl.style.color = 'var(--sun)';
   } else {
-    conseil = `✅ Tranquille : ${margeGlobale.toFixed(0)} kWh de boni total. Jour: ${margeJour.toFixed(0)} kWh / Nuit: ${margeNuit.toFixed(0)} kWh.`;
+    conseil = `✅ Tranquille : ${margeGlobale.toFixed(0)} kWh de boni total. Jour: +${margeJour.toFixed(0)} kWh / Nuit: +${margeNuit.toFixed(0)} kWh.`;
     conseilEl.style.borderLeftColor = 'var(--green)';
     conseilEl.style.color = 'var(--green)';
   }
