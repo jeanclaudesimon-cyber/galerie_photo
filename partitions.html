@@ -244,7 +244,7 @@ folder.loadAttributes((err, folder) => {
 
   loading.style.display = 'none';
 
-  folder.children.forEach(file => {
+  folder.children.forEach((file, index) => {
     if (!file.name.toLowerCase().endsWith('.pdf')) return;
 
     const name = file.name.replace(/\.pdf$/i, '');
@@ -259,15 +259,23 @@ folder.loadAttributes((err, folder) => {
     const card = document.createElement('div');
     card.className = 'pdf-card';
     card.dataset.type = type;
-    // On encode l'URL pour éviter les soucis avec les caractères spéciaux
     card.innerHTML = `
       <h3>${name}</h3>
-      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024).toFixed(1)} MB</div>
+      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
       <div class="pdf-actions">
-        <button class="pdf-btn" onclick="viewPDF('${encodeURIComponent(file.link)}', '${name.replace(/'/g, "\\'")}')">Voir</button>
+        <button class="pdf-btn" data-url="${file.link}" data-title="${name}">Voir</button>
       </div>
     `;
     grid.appendChild(card);
+  });
+
+  // Event delegation pour les boutons Voir
+  grid.addEventListener('click', e => {
+    if (e.target.classList.contains('pdf-btn')) {
+      const url = e.target.dataset.url;
+      const title = e.target.dataset.title;
+      viewPDF(url, title);
+    }
   });
 
   if (grid.children.length === 0) {
@@ -288,23 +296,23 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// Viewer PDF - version corrigée
-async function viewPDF(encodedUrl, title) {
-  const url = decodeURIComponent(encodedUrl);
+// Viewer PDF
+async function viewPDF(url, title) {
   document.getElementById('pdf-title').textContent = title;
   document.getElementById('pdf-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
   document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
 
   try {
-    const file = mega.File.fromURL(url); // URL complète avec #hash
+    console.log('Loading from:', url); // pour debug
+    const file = mega.File.fromURL(url);
     await file.loadAttributes();
     const data = await file.downloadBuffer();
     const blob = new Blob([data], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);
     document.getElementById('pdf-frame').src = blobUrl;
   } catch (e) {
-    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR DE CHARGEMENT</p>';
+    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR DE CHARGEMENT<br><small>' + e.message + '</small></p>';
     console.error('Mega error:', e);
   }
 }
