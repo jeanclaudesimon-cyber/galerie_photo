@@ -241,35 +241,34 @@ folder.loadAttributes((err, folder) => {
     console.error(err);
     return;
   }
-  
+
   loading.style.display = 'none';
-  
+
   folder.children.forEach(file => {
     if (!file.name.toLowerCase().endsWith('.pdf')) return;
-    
+
     const name = file.name.replace(/\.pdf$/i, '');
     const lowerName = name.toLowerCase();
-    
+
     // Détection auto du type
     let type = 'autre';
     if (lowerName.includes('basse') || lowerName.includes('bass')) type = 'basse';
     else if (lowerName.includes('guitare') || lowerName.includes('guitar')) type = 'guitare';
     else if (lowerName.includes('piano')) type = 'piano';
-    
+
     const card = document.createElement('div');
     card.className = 'pdf-card';
     card.dataset.type = type;
     card.innerHTML = `
       <h3>${name}</h3>
-      <div class="pdf-meta">${type.toUpperCase()} · PDF</div>
+      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
       <div class="pdf-actions">
-        <button class="pdf-btn" onclick="viewPDF('${file.link}', '${name}')">Voir</button>
-        <a href="${file.link}" target="_blank" class="pdf-btn secondary">Télécharger</a>
+        <button class="pdf-btn" onclick="viewPDF('${file.downloadId}', '${name}')">Voir</button>
       </div>
     `;
     grid.appendChild(card);
   });
-  
+
   if (grid.children.length === 0) {
     loading.textContent = 'AUCUN PDF TROUVÉ DANS LE DOSSIER';
     loading.style.display = 'block';
@@ -283,26 +282,39 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.add('active');
     const filter = btn.dataset.filter;
     document.querySelectorAll('.pdf-card').forEach(card => {
-      card.style.display = filter === 'all' || card.dataset.type === filter ? 'block' : 'none';
+      card.style.display = filter === 'all' || card.dataset.type === filter? 'block' : 'none';
     });
   });
 });
 
-// Viewer PDF
-function viewPDF(url, title) {
+// Viewer PDF - version qui marche
+async function viewPDF(downloadId, title) {
   document.getElementById('pdf-title').textContent = title;
-  document.getElementById('pdf-frame').src = url;
   document.getElementById('pdf-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
+  document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
+
+  try {
+    const file = mega.File.fromURL(`https://mega.nz/file/${downloadId}`);
+    await file.loadAttributes();
+    const data = await file.downloadBuffer();
+    const blob = new Blob([data], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    document.getElementById('pdf-frame').src = url;
+  } catch (e) {
+    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR DE CHARGEMENT</p>';
+    console.error(e);
+  }
 }
 
 function closePDF() {
+  const frame = document.getElementById('pdf-frame');
+  if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
   document.getElementById('pdf-modal').classList.remove('show');
   document.getElementById('pdf-frame').src = '';
   document.body.style.overflow = 'auto';
 }
 
-// Fermer avec ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closePDF();
 });
