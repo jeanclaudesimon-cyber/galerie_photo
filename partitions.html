@@ -234,7 +234,9 @@ const folder = mega.File.fromURL(MEGA_FOLDER);
 const grid = document.getElementById('grid');
 const loading = document.getElementById('loading');
 
-// Charge les fichiers Mega
+// On stocke les fichiers pour les retrouver par index
+const megaFiles = [];
+
 folder.loadAttributes((err, folder) => {
   if (err) {
     loading.textContent = 'ERREUR DE CHARGEMENT MEGA';
@@ -247,10 +249,11 @@ folder.loadAttributes((err, folder) => {
   folder.children.forEach((file, index) => {
     if (!file.name.toLowerCase().endsWith('.pdf')) return;
 
+    megaFiles[index] = file; // on garde la ref
+
     const name = file.name.replace(/\.pdf$/i, '');
     const lowerName = name.toLowerCase();
 
-    // Détection auto du type
     let type = 'autre';
     if (lowerName.includes('basse') || lowerName.includes('bass')) type = 'basse';
     else if (lowerName.includes('guitare') || lowerName.includes('guitar')) type = 'guitare';
@@ -261,20 +264,19 @@ folder.loadAttributes((err, folder) => {
     card.dataset.type = type;
     card.innerHTML = `
       <h3>${name}</h3>
-      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
+      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024).toFixed(1)} MB</div>
       <div class="pdf-actions">
-        <button class="pdf-btn" data-url="${file.link}" data-title="${name}">Voir</button>
+        <button class="pdf-btn" data-index="${index}">Voir</button>
       </div>
     `;
     grid.appendChild(card);
   });
 
-  // Event delegation pour les boutons Voir
   grid.addEventListener('click', e => {
     if (e.target.classList.contains('pdf-btn')) {
-      const url = e.target.dataset.url;
-      const title = e.target.dataset.title;
-      viewPDF(url, title);
+      const idx = e.target.dataset.index;
+      const file = megaFiles[idx];
+      viewPDF(file);
     }
   });
 
@@ -296,17 +298,15 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// Viewer PDF
-async function viewPDF(url, title) {
-  document.getElementById('pdf-title').textContent = title;
+// Viewer PDF - on utilise direct l'objet file, pas d'URL
+async function viewPDF(file) {
+  document.getElementById('pdf-title').textContent = file.name.replace(/\.pdf$/i, '');
   document.getElementById('pdf-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
   document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
 
   try {
-    console.log('Loading from:', url); // pour debug
-    const file = mega.File.fromURL(url);
-    await file.loadAttributes();
+    await file.loadAttributes(); // déjà fait mais on assure
     const data = await file.downloadBuffer();
     const blob = new Blob([data], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);
