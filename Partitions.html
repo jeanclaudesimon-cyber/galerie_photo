@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partitions - Simoun's Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    :root {
+      --accent: #FFB200;
+      --accent-dark: #E09E00;
+      --bg: #0a0a0a;
+      --card: #141414;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --text2: #a0a0a0;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Josefin Sans', sans-serif; }
+    
+    #partitions-hero {
+      padding: 6rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    #partitions-hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+    #partitions-hero p {
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: 3px;
+      color: var(--text2);
+      text-transform: uppercase;
+    }
+    
+    #filters {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      padding: .5rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(255,178,0,.2);
+    }
+    
+    #loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem;
+      color: var(--text2);
+      letter-spacing: 2px;
+    }
+    
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .pdf-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.4rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .pdf-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(255,178,0,.15);
+    }
+    .pdf-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      margin-bottom: .4rem;
+      word-break: break-word;
+    }
+    .pdf-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: .6rem;
+      color: var(--text2);
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+    .pdf-actions {
+      display: flex;
+      gap: .6rem;
+    }
+    .pdf-btn {
+      flex: 1;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: .5rem;
+      border-radius: 4px;
+      font-family: 'Space Mono', monospace;
+      font-size: .6rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .pdf-btn.secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .back-home {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem;
+      z-index: 99;
+    }
+
+    /* Modal PDF Viewer */
+    #pdf-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.95);
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+    #pdf-modal.show { display: flex; align-items: center; justify-content: center; }
+    #pdf-container {
+      width: 90%;
+      height: 90%;
+      max-width: 1200px;
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    #pdf-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #pdf-title {
+      font-family: 'Cinzel', serif;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+    #pdf-close {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: .4rem .8rem;
+      border-radius: 4px;
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    #pdf-frame {
+      flex: 1;
+      border: none;
+      border-radius: 0 0 6px 6px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← Home</a>
+
+<section id="partitions-hero">
+  <h1>Partitions</h1>
+  <p>Basse · Guitare · Piano · Depuis Mega</p>
+</section>
+
+<div id="filters">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+  <button class="filter-btn" data-filter="basse">Basse</button>
+  <button class="filter-btn" data-filter="guitare">Guitare</button>
+  <button class="filter-btn" data-filter="piano">Piano</button>
+</div>
+
+<div id="loading">CHARGEMENT DES PARTITIONS DEPUIS MEGA...</div>
+<div id="grid"></div>
+
+<!-- Modal PDF Viewer -->
+<div id="pdf-modal">
+  <div id="pdf-container">
+    <div id="pdf-header">
+      <div id="pdf-title">Partition</div>
+      <button id="pdf-close" onclick="closePDF()">FERMER ✕</button>
+    </div>
+    <iframe id="pdf-frame" src=""></iframe>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/megajs@1/dist/main.browser-umd.js"></script>
+<script>
+// Config Mega
+const MEGA_FOLDER = 'https://mega.nz/folder/lYElCTCL#BaiQn3752erZ58KHfYd2gg';
+const folder = mega.File.fromURL(MEGA_FOLDER);
+
+const grid = document.getElementById('grid');
+const loading = document.getElementById('loading');
+
+// Charge les fichiers Mega
+folder.loadAttributes((err, folder) => {
+  if (err) {
+    loading.textContent = 'ERREUR DE CHARGEMENT MEGA';
+    console.error(err);
+    return;
+  }
+  
+  loading.style.display = 'none';
+  
+  folder.children.forEach(file => {
+    if (!file.name.toLowerCase().endsWith('.pdf')) return;
+    
+    const name = file.name.replace(/\.pdf$/i, '');
+    const lowerName = name.toLowerCase();
+    
+    // Détection auto du type
+    let type = 'autre';
+    if (lowerName.includes('basse') || lowerName.includes('bass')) type = 'basse';
+    else if (lowerName.includes('guitare') || lowerName.includes('guitar')) type = 'guitare';
+    else if (lowerName.includes('piano')) type = 'piano';
+    
+    const card = document.createElement('div');
+    card.className = 'pdf-card';
+    card.dataset.type = type;
+    card.innerHTML = `
+      <h3>${name}</h3>
+      <div class="pdf-meta">${type.toUpperCase()} · PDF</div>
+      <div class="pdf-actions">
+        <button class="pdf-btn" onclick="viewPDF('${file.link}', '${name}')">Voir</button>
+        <a href="${file.link}" target="_blank" class="pdf-btn secondary">Télécharger</a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  
+  if (grid.children.length === 0) {
+    loading.textContent = 'AUCUN PDF TROUVÉ DANS LE DOSSIER';
+    loading.style.display = 'block';
+  }
+});
+
+// Filtres
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.pdf-card').forEach(card => {
+      card.style.display = filter === 'all' || card.dataset.type === filter ? 'block' : 'none';
+    });
+  });
+});
+
+// Viewer PDF
+function viewPDF(url, title) {
+  document.getElementById('pdf-title').textContent = title;
+  document.getElementById('pdf-frame').src = url;
+  document.getElementById('pdf-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePDF() {
+  document.getElementById('pdf-modal').classList.remove('show');
+  document.getElementById('pdf-frame').src = '';
+  document.body.style.overflow = 'auto';
+}
+
+// Fermer avec ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePDF();
+});
+</script>
+
+</body>
+</html>
