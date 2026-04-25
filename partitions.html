@@ -259,11 +259,12 @@ folder.loadAttributes((err, folder) => {
     const card = document.createElement('div');
     card.className = 'pdf-card';
     card.dataset.type = type;
+    // On encode l'URL pour éviter les soucis avec les caractères spéciaux
     card.innerHTML = `
       <h3>${name}</h3>
-      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024 / 1024).toFixed(1)} MB</div>
+      <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024).toFixed(1)} MB</div>
       <div class="pdf-actions">
-        <button class="pdf-btn" onclick="viewPDF('${file.downloadId}', '${name}')">Voir</button>
+        <button class="pdf-btn" onclick="viewPDF('${encodeURIComponent(file.link)}', '${name.replace(/'/g, "\\'")}')">Voir</button>
       </div>
     `;
     grid.appendChild(card);
@@ -287,23 +288,24 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// Viewer PDF - version qui marche
-async function viewPDF(downloadId, title) {
+// Viewer PDF - version corrigée
+async function viewPDF(encodedUrl, title) {
+  const url = decodeURIComponent(encodedUrl);
   document.getElementById('pdf-title').textContent = title;
   document.getElementById('pdf-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
   document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
 
   try {
-    const file = mega.File.fromURL(`https://mega.nz/file/${downloadId}`);
+    const file = mega.File.fromURL(url); // URL complète avec #hash
     await file.loadAttributes();
     const data = await file.downloadBuffer();
     const blob = new Blob([data], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    document.getElementById('pdf-frame').src = url;
+    const blobUrl = URL.createObjectURL(blob);
+    document.getElementById('pdf-frame').src = blobUrl;
   } catch (e) {
     document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR DE CHARGEMENT</p>';
-    console.error(e);
+    console.error('Mega error:', e);
   }
 }
 
