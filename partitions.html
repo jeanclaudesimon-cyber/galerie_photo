@@ -227,7 +227,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/megajs@1/dist/main.browser-umd.js"></script>
 <script>
-// Config Mega
 const MEGA_FOLDER = 'https://mega.nz/folder/lYElCTCL#BaiQn3752erZ58KHfYd2gg';
 const folder = mega.File.fromURL(MEGA_FOLDER);
 
@@ -264,24 +263,39 @@ folder.loadAttributes((err, folder) => {
       <h3>${name}</h3>
       <div class="pdf-meta">${type.toUpperCase()} · PDF · ${(file.size / 1024).toFixed(1)} MB</div>
       <div class="pdf-actions">
-        <button class="pdf-btn" data-index="${index}">Voir</button>
+        <button class="pdf-btn" data-index="${index}">Ouvrir</button>
       </div>
     `;
     grid.appendChild(card);
   });
 
-  grid.addEventListener('click', e => {
+  grid.addEventListener('click', async e => {
     if (e.target.classList.contains('pdf-btn')) {
-      const idx = e.target.dataset.index;
-      const file = megaFiles[idx];
-      viewPDF(file);
+      const btn = e.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Chargement...';
+      btn.disabled = true;
+
+      try {
+        const file = megaFiles[btn.dataset.index];
+        const data = await new Promise((resolve, reject) => {
+          file.download((err, data) => err? reject(err) : resolve(data));
+        });
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, '_blank');
+
+        // Nettoie l'URL après 1 min pour libérer la mémoire
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch (e) {
+        alert('Erreur: ' + e.message);
+        console.error(e);
+      }
+
+      btn.textContent = originalText;
+      btn.disabled = false;
     }
   });
-
-  if (grid.children.length === 0) {
-    loading.textContent = 'AUCUN PDF TROUVÉ DANS LE DOSSIER';
-    loading.style.display = 'block';
-  }
 });
 
 // Filtres
@@ -295,37 +309,8 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
   });
 });
-
-// Viewer PDF - version avec download() + stream
-async function viewPDF(file) {
-  try {
-    const data = await new Promise((resolve, reject) => {
-      file.download((err, data) => {
-        if (err) reject(err);
-        else resolve(data);
-      });
-    });
-    const blob = new Blob([data], { type: 'application/pdf' });
-    const blobUrl = URL.createObjectURL(blob);
-    window.open(blobUrl, '_blank'); // ouvre dans un nouvel onglet
-  } catch (e) {
-    alert('Erreur Mega: ' + e.message);
-    console.error('Mega error:', e);
-  }
-}
-
-function closePDF() {
-  const frame = document.getElementById('pdf-frame');
-  if (frame.src.startsWith('blob:')) URL.revokeObjectURL(frame.src);
-  document.getElementById('pdf-modal').classList.remove('show');
-  document.getElementById('pdf-frame').src = '';
-  document.body.style.overflow = 'auto';
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePDF();
-});
 </script>
+
 
 </body>
 </html>
