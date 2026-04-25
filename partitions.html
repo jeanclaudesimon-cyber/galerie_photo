@@ -298,25 +298,18 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 
 // Viewer PDF - version avec download() + stream
 async function viewPDF(file) {
-  document.getElementById('pdf-title').textContent = file.name.replace(/\.pdf$/i, '');
-  document.getElementById('pdf-modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
-
   try {
-    // On utilise download() qui gère mieux les clés
     const data = await new Promise((resolve, reject) => {
       file.download((err, data) => {
         if (err) reject(err);
         else resolve(data);
       });
     });
-
     const blob = new Blob([data], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);
-    document.getElementById('pdf-frame').src = blobUrl;
+    window.open(blobUrl, '_blank'); // ouvre dans un nouvel onglet
   } catch (e) {
-    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR: ' + e.message + '</p>';
+    alert('Erreur Mega: ' + e.message);
     console.error('Mega error:', e);
   }
 }
