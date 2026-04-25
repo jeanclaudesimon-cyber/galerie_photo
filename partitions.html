@@ -233,8 +233,6 @@ const folder = mega.File.fromURL(MEGA_FOLDER);
 
 const grid = document.getElementById('grid');
 const loading = document.getElementById('loading');
-
-// On stocke les fichiers pour les retrouver par index
 const megaFiles = [];
 
 folder.loadAttributes((err, folder) => {
@@ -249,7 +247,7 @@ folder.loadAttributes((err, folder) => {
   folder.children.forEach((file, index) => {
     if (!file.name.toLowerCase().endsWith('.pdf')) return;
 
-    megaFiles[index] = file; // on garde la ref
+    megaFiles[index] = file;
 
     const name = file.name.replace(/\.pdf$/i, '');
     const lowerName = name.toLowerCase();
@@ -298,7 +296,7 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// Viewer PDF - on utilise direct l'objet file, pas d'URL
+// Viewer PDF - version avec download() + stream
 async function viewPDF(file) {
   document.getElementById('pdf-title').textContent = file.name.replace(/\.pdf$/i, '');
   document.getElementById('pdf-modal').classList.add('show');
@@ -306,13 +304,19 @@ async function viewPDF(file) {
   document.getElementById('pdf-frame').srcdoc = '<p style="color:#FFB200;font-family:monospace;text-align:center;padding:2rem;">CHARGEMENT DU PDF DEPUIS MEGA...</p>';
 
   try {
-    await file.loadAttributes(); // déjà fait mais on assure
-    const data = await file.downloadBuffer();
+    // On utilise download() qui gère mieux les clés
+    const data = await new Promise((resolve, reject) => {
+      file.download((err, data) => {
+        if (err) reject(err);
+        else resolve(data);
+      });
+    });
+
     const blob = new Blob([data], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);
     document.getElementById('pdf-frame').src = blobUrl;
   } catch (e) {
-    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR DE CHARGEMENT<br><small>' + e.message + '</small></p>';
+    document.getElementById('pdf-frame').srcdoc = '<p style="color:#ff375f;font-family:monospace;text-align:center;padding:2rem;">ERREUR: ' + e.message + '</p>';
     console.error('Mega error:', e);
   }
 }
